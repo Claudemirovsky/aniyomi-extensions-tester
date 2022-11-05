@@ -31,8 +31,13 @@ object CliOptions {
             description = "Show JSON data instead of tables"
         )
 
+        val searchStr by parser.option(
+            ArgType.String, "search", "s",
+            description = "Text to use when testing the search"
+        ).default("world")
+
         val showAll by parser.option(
-            ArgType.Boolean, "show-all", "S",
+            ArgType.Boolean, "show-all", "A",
             description = "Show all items of lists, instead of the first ~3"
         )
 
@@ -47,7 +52,7 @@ object CliOptions {
         )
 
         val stopOnError by parser.option(
-            ArgType.Boolean, "stop-on-error", "s",
+            ArgType.Boolean, "stop-on-error", "X",
             description = "Stop the tests on the first error"
         )
 
@@ -69,6 +74,7 @@ object CliOptions {
             episodeUrl ?: "",
             episodeNumber ?: 1,
             printJson ?: false,
+            searchStr,
             showAll ?: false,
             stopOnError ?: false,
             tests
