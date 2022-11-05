@@ -1,4 +1,4 @@
-rootProject.name = "Aniyomi Extensions Inspector"
+rootProject.name = "Aniyomi Extensions Tester"
 
 include("server")
 
