@@ -82,11 +82,14 @@ configure(projects) {
         implementation("io.github.config4k:config4k:0.4.2")
 
         // dex2jar
-        val dex2jarVersion = "v35"
+        val dex2jarVersion = "v57"
         implementation("com.github.ThexXTURBOXx.dex2jar:dex-translator:$dex2jarVersion")
         implementation("com.github.ThexXTURBOXx.dex2jar:dex-tools:$dex2jarVersion")
 
         // APK parser
         implementation("net.dongliu:apk-parser:2.6.10")
+
+        // CLI
+        implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     }
 }
