@@ -2,10 +2,37 @@ package eu.kanade.tachiyomi.animesource.model
 
 import android.net.Uri
 import eu.kanade.tachiyomi.network.ProgressListener
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import okhttp3.Headers
 import rx.subjects.Subject
 
+@Serializable
 data class Track(val url: String, val lang: String)
+
+@Serializable
+data class VideoDto(
+    val url: String = "",
+    val quality: String = "",
+    val videoUrl: String? = null,
+    val headers: JsonObject,
+    val subtitleTracks: List<Track> = emptyList()
+) {
+    constructor(
+        url: String,
+        quality: String,
+        videoUrl: String?,
+        headers: Headers,
+        subtitleTracks: List<Track>
+    ) : this(
+        url,
+        quality,
+        videoUrl,
+        JsonObject(headers.map { it.first to JsonPrimitive(it.second) }.toMap()),
+        subtitleTracks
+    )
+}
 
 open class Video(
     val url: String = "",
