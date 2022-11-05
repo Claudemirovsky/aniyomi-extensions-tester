@@ -10,6 +10,7 @@ package eu.kanade.tachiyomi.network
 import android.content.Context
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
@@ -22,6 +23,12 @@ class NetworkHelper(context: Context) {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
+        if (System.getProperty("DEBUG")?.equals("true") ?: false) {
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.HEADERS
+            }
+            builder.addInterceptor(loggingInterceptor)
+        }
         builder.build()
     }
 
