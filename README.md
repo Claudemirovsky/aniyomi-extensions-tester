@@ -1,6 +1,52 @@
-# Aniyomi extensions inspector
+# Aniyomi extensions tester
 
-This is a fork of [tachiyomi-extensions-inspector](https://github.com/tachiyomiorg/tachiyomi-extensions-inspector)(a headless fork of [Tachidesk](https://github.com/Suwayomi/Tachidesk)) that is used to inspect (i.e. extract some information from) [Aniyomi's extension APKs](http://github.com/jmir1/aniyomi-extensions).
+This is a fork of [tachiyomi-extensions-inspector](https://github.com/tachiyomiorg/tachiyomi-extensions-inspector)(a headless fork of [Tachidesk](https://github.com/Suwayomi/Tachidesk)) modified to be able to test [aniyomi extensions](https://github.com/jmir1/aniyomi-extensions/tree/repo/apk).
+
+## Features
+- Can help a LOT to debug extensions
+- Easy to use
+- Works on pure Linux and Android
+- Has enough options to meet most of your needs.
+
+## Compiling
+First, run the `getAndroid` script, to generate the needed android.jar file (only once)
+```bash
+$ ./AndroidCompat/getAndroid.sh
+```
+
+Then compile the project:
+```bash
+$ ./gradlew :server:shadowJar
+```
+output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
+
+## Usage
+```bash
+$ java -jar server/build/aniyomi-extensions-tester-<version>.jar -h
+Usage: aniyomi-extension-tester options_list
+Arguments:
+    apksPath -> Apk file or directory with apks { String }
+Options:
+    --anime-url -> Target anime url { String }
+    --debug, -d [false] -> Enable okHttp debug
+    --print-json, -J -> Show JSON data instead of tables
+    --increment-pages, -i [false] -> Try using pagination when possible
+    --search, -s [world] -> Text to use when testing the search { String }
+    --show-all, -A -> Show all items of lists, instead of the first ~3
+    --episode-url -> Target episode url { String }
+    --episode-number -> Target episode number { Int }
+    --stop-on-error, -X -> Stop the tests on the first error
+    --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
+    --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
+    --help, -h -> Usage info
+```
+
+## TODO
+- [ ] Implement all main functions from extensions (2 left, fetchEpisodeList and fetchVideoList)
+- [ ] Support search filters
+- [ ] Test and check thumbnail URLs and video URLs
+- [ ] Show time spent on every test completed
+- [ ] Honor all CLI options (2 left)
 
 ## Credits
 
