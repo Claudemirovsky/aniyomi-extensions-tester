@@ -22,7 +22,7 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-<version>.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v0.0.1.jar -h
 Usage: aniyomi-extension-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
@@ -32,21 +32,23 @@ Options:
     --print-json, -J -> Show JSON data instead of tables
     --increment-pages, -i [false] -> Try using pagination when possible
     --search, -s [world] -> Text to use when testing the search { String }
-    --show-all, -A -> Show all items of lists, instead of the first ~3
+    --show-all, -A -> Show all items of lists, instead of the first ~2
     --episode-url -> Target episode url { String }
     --episode-number -> Target episode number { Int }
+    --results-count, -c [2] -> Amount of items to print from result lists { Int }
     --stop-on-error, -X -> Stop the tests on the first error
     --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
     --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
     --help, -h -> Usage info
+
 ```
 
 ## TODO
-- [ ] Implement all main functions from extensions (2 left, fetchEpisodeList and fetchVideoList)
+- [x] Implement all main functions from extensions
 - [ ] Support search filters
 - [ ] Test and check thumbnail URLs and video URLs
 - [ ] Show time spent on every test completed
-- [ ] Honor all CLI options (2 left)
+- [x] Honor all CLI options
 
 ## Credits
 
