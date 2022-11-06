@@ -126,13 +126,13 @@ class ExtensionTests(
     @Suppress("IMPLICIT_CAST_TO_ANY")
     private fun <T> printItemOrJson(item: T) {
         if (configs.printJson) {
-            val casted = when (item) {
-                is SAnime -> item as SAnimeImpl
-                is SEpisode -> item as SEpisodeImpl
-                is Video -> VideoDto(item)
-                else -> item
+            val jsonStr = when (item) {
+                is SAnime -> json.encodeToString(item as SAnimeImpl)
+                is SEpisode -> json.encodeToString(item as SEpisodeImpl)
+                is Video -> json.encodeToString(VideoDto(item))
+                else -> null
             }
-            println(json.encodeToString(casted))
+            jsonStr?.let(::println)
         } else when (item) {
             is SAnime -> printAnime(item)
             is SEpisode -> printEpisode(item)

@@ -53,7 +53,7 @@ fun printEpisode(episode: SEpisode) {
     printLine("Name", episode.name)
     printLine(
         "Episode number",
-        episode.episode_number.toString().trimEnd { it == '.' || it == '0' }
+        episode.episode_number.toString().trimEnd { it == '0' }.trimEnd { it == '.' }
     )
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0)
