@@ -19,20 +19,14 @@ data class VideoDto(
     val headers: JsonObject? = null,
     val subtitleTracks: List<Track> = emptyList()
 ) {
-    constructor(
-        url: String,
-        quality: String,
-        videoUrl: String?,
-        headers: Headers?,
-        subtitleTracks: List<Track>
-    ) : this(
-        url,
-        quality,
-        videoUrl,
-        headers?.map { it.first to JsonPrimitive(it.second) }?.toMap()?.let {
+    constructor(video: Video) : this(
+        video.url,
+        video.quality,
+        video.videoUrl,
+        video.headers?.map { it.first to JsonPrimitive(it.second) }?.toMap()?.let {
             JsonObject(it)
         },
-        subtitleTracks
+        video.subtitleTracks
     )
 }
 
