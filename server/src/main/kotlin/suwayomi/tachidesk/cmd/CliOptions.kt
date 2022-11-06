@@ -31,6 +31,11 @@ object CliOptions {
             description = "Show JSON data instead of tables"
         )
 
+        val increment by parser.option(
+            ArgType.Boolean, "increment-pages", "i",
+            description = "Try using pagination when possible"
+        ).default(false)
+
         val searchStr by parser.option(
             ArgType.String, "search", "s",
             description = "Text to use when testing the search"
@@ -73,6 +78,7 @@ object CliOptions {
             animeUrl ?: "",
             episodeUrl ?: "",
             episodeNumber ?: 1,
+            increment,
             printJson ?: false,
             searchStr,
             showAll ?: false,

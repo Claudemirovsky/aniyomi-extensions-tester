@@ -7,22 +7,27 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import rx.Observable
+import suwayomi.tachidesk.cmd.RED
+import suwayomi.tachidesk.cmd.RESET
 import suwayomi.tachidesk.cmd.dto.ConfigsDto
+import suwayomi.tachidesk.cmd.printAnime
+import suwayomi.tachidesk.cmd.printLine
+import suwayomi.tachidesk.cmd.printTitle
 import kotlin.system.exitProcess
 
 class ExtensionTests(
     private val source: AnimeHttpSource,
-    private val config: ConfigsDto
+    private val configs: ConfigsDto
 ) {
     private val logger = KotlinLogging.logger {}
 
     private val json = Json { prettyPrint = true }
 
-    private var ANIDETAILS_URL: String = config.animeUrl
-    private var EP_URL: String = config.animeUrl
+    private var ANIDETAILS_URL: String = configs.animeUrl
+    private var EP_URL: String = configs.episodeUrl
 
     private val tests by lazy {
-        val list = config.tests.split(",")
+        val list = configs.tests.split(",")
         list.mapNotNull {
             runCatching {
                 TestsEnum.valueOf(it.uppercase())
@@ -43,21 +48,51 @@ class ExtensionTests(
                     else -> null
                 }
             } catch (e: Exception) {
-                if (config.stopOnError) {
-                    logger.error("Test($it): ", e)
+                logger.error("Test($it): ", e)
+                if (configs.stopOnError)
                     exitProcess(-1)
-                }
             }
         }
+        println()
+        printTitle("END ALL TESTS")
     }
 
     private fun testPopularAnimesPage() {
-        val popularAnimes = parseObservable<AnimesPage>(source.fetchPopularAnime(1))
-        val animes = popularAnimes.animes.map {
-            val anime = it as SAnimeImpl
-            json.encodeToString(anime)
+        printAnimesPage("POPULAR ANIMES") { page: Int ->
+            source.fetchPopularAnime(page)
         }
-        println(animes)
+    }
+
+    private fun printAnimesPage(title: String, block: (page: Int) -> Observable<AnimesPage>) {
+        printTitle("START $title TEST")
+        var page = 0
+        do {
+            page++
+            val results = parseObservable<AnimesPage>(
+                block(page)
+            )
+            println()
+            printLine("Page", "$page")
+            printLine("Results", results.animes.size.toString())
+            printLine("Has next page", results.hasNextPage.toString())
+            val animes = results.animes.let {
+                if (!configs.showAll)
+                    it.take(3)
+                else it
+            }
+
+            animes.forEach {
+                if (configs.printJson) {
+                    val anime = it as SAnimeImpl
+                    println(json.encodeToString(anime))
+                } else {
+                    printAnime(it)
+                }
+            }
+            if (!configs.increment || !results.hasNextPage) break
+            else println("${RED}Incrementing page number$RESET")
+        } while (page < 2)
+        printTitle("END $title")
     }
 
     private fun <T> parseObservable(observable: Observable<T>): T {

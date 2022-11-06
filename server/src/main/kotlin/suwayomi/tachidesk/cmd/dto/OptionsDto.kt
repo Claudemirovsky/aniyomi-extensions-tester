@@ -11,6 +11,7 @@ data class ConfigsDto(
     val animeUrl: String = "",
     val episodeUrl: String = "",
     val episodeNumber: Int = 1,
+    val increment: Boolean = false,
     val printJson: Boolean = false,
     val searchStr: String = "",
     val showAll: Boolean = false,
