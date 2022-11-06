@@ -1,5 +1,6 @@
 package suwayomi.tachidesk.anime.impl.extension.tester
 
+import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
 import eu.kanade.tachiyomi.animesource.model.SAnimeImpl
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
@@ -42,8 +43,8 @@ class ExtensionTests(
                     TestsEnum.POPULAR -> testPopularAnimesPage()
                     TestsEnum.LATEST -> {
                         if (source.supportsLatest) testLatestAnimesPage()
-                    } /*
-                    TestsEnum.SEARCH -> testSearchAnimesPage()
+                    }
+                    TestsEnum.SEARCH -> testSearchAnimesPage()/*
                     TestsEnun.ANIDETAILS -> testAnimeDetails()
                     TestsEnum.EPLIST -> testEpisodeList()
                     TestsEnum.VIDEOLIST -> testVideoList()*/
@@ -57,6 +58,12 @@ class ExtensionTests(
         }
         println()
         printTitle("END ALL TESTS")
+    }
+
+    private fun testSearchAnimesPage() {
+        printAnimesPage("SEARCH ANIMES PAGE") { page: Int ->
+            source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
+        }
     }
 
     private fun testLatestAnimesPage() {
