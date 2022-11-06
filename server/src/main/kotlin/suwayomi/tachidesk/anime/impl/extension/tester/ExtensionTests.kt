@@ -39,8 +39,10 @@ class ExtensionTests(
         tests.forEach {
             try {
                 when (it) {
-                    TestsEnum.POPULAR -> testPopularAnimesPage()/*
-                    TestsEnum.LATEST -> testLatestAnimesPage()
+                    TestsEnum.POPULAR -> testPopularAnimesPage()
+                    TestsEnum.LATEST -> {
+                        if (source.supportsLatest) testLatestAnimesPage()
+                    } /*
                     TestsEnum.SEARCH -> testSearchAnimesPage()
                     TestsEnun.ANIDETAILS -> testAnimeDetails()
                     TestsEnum.EPLIST -> testEpisodeList()
@@ -57,16 +59,23 @@ class ExtensionTests(
         printTitle("END ALL TESTS")
     }
 
+    private fun testLatestAnimesPage() {
+        printAnimesPage("LATEST ANIMES PAGE") { page: Int ->
+            source.fetchLatestUpdates(page)
+        }
+    }
+
     private fun testPopularAnimesPage() {
-        printAnimesPage("POPULAR ANIMES") { page: Int ->
+        printAnimesPage("POPULAR ANIMES PAGE") { page: Int ->
             source.fetchPopularAnime(page)
         }
     }
 
     private fun printAnimesPage(title: String, block: (page: Int) -> Observable<AnimesPage>) {
+        println()
         printTitle("START $title TEST")
         var page = 0
-        do {
+        while (true) {
             page++
             val results = parseObservable<AnimesPage>(
                 block(page)
@@ -89,9 +98,9 @@ class ExtensionTests(
                     printAnime(it)
                 }
             }
-            if (!configs.increment || !results.hasNextPage) break
+            if (!configs.increment || !results.hasNextPage || page >= 2) break
             else println("${RED}Incrementing page number$RESET")
-        } while (page < 2)
+        }
         printTitle("END $title")
     }
 
