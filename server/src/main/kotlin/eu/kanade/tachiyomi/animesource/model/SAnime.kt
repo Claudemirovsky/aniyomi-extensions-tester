@@ -64,5 +64,18 @@ interface SAnime : Serializable {
         fun create(): SAnime {
             return SAnimeImpl()
         }
+
+        fun getStatus(status: Int): String {
+            return when (status) {
+                0 -> "UNKNOWN"
+                1 -> "ONGOING"
+                2 -> "COMPLETED"
+                3 -> "LICENSED"
+                4 -> "PUBLISHING_FINISHED"
+                5 -> "CANCELLED"
+                6 -> "ON_HIATUS"
+                else -> "UNKNOWN"
+            }
+        }
     }
 }
