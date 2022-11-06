@@ -82,7 +82,7 @@ object CliOptions {
         val configs = ConfigsDto(
             animeUrl ?: "",
             episodeUrl ?: "",
-            episodeNumber ?: 1,
+            episodeNumber ?: -1,
             increment,
             printJson ?: false,
             resultsCount,

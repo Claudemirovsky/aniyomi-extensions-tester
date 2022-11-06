@@ -56,8 +56,8 @@ class ExtensionTests(
                     }
                     TestsEnum.SEARCH -> testSearchAnimesPage()
                     TestsEnum.ANIDETAILS -> testAnimeDetails()
-                    TestsEnum.EPLIST -> testEpisodeList()/*
-                    TestsEnum.VIDEOLIST -> testVideoList()*/
+                    TestsEnum.EPLIST -> testEpisodeList()
+                    TestsEnum.VIDEOLIST -> testVideoList()
                     else -> null
                 }
             } catch (e: Exception) {
@@ -114,10 +114,53 @@ class ExtensionTests(
             source.fetchEpisodeList(anime)
         )
 
-        val episodeList = if (!configs.showAll) result.take(configs.resultsCount) else result
+        printLine("Episodes", result.size.toString())
 
-        episodeList.forEach {
-            printItemOrJson<SEpisode>(it)
+        if (result.size > 0) {
+            if (configs.episodeUrl.isBlank()) {
+                EP_URL = result.first().url
+            } else if (configs.episodeNumber > -1) {
+                run loop@{
+                    result.forEach {
+                        if (it.episode_number.toInt() == configs.episodeNumber) {
+                            EP_URL = it.url
+                            return@loop
+                        }
+                    }
+                }
+            } else EP_OBJ = result.first()
+
+            val episodeList = if (!configs.showAll) {
+                result.take(configs.resultsCount)
+            } else result
+
+            episodeList.forEach {
+                printItemOrJson<SEpisode>(it)
+            }
+        }
+
+        printTitle("END $title TEST")
+    }
+
+    private fun testVideoList() {
+        val title = "VIDEO LIST"
+        println()
+        printTitle("START $title TEST")
+
+        val episode = EP_OBJ ?: SEpisode.create().apply {
+            url = EP_URL
+        }
+
+        printLine("EP URL", episode.url)
+
+        val videoList = parseObservable<List<Video>>(
+            source.fetchVideoList(episode)
+        )
+
+        printLine("Videos", videoList.size.toString())
+
+        videoList.forEach {
+            printItemOrJson<Video>(it)
         }
 
         printTitle("END $title TEST")
@@ -144,7 +187,6 @@ class ExtensionTests(
     private fun getSAnime(): SAnime {
         return ANIME_OBJ ?: SAnime.create().apply {
             url = ANIDETAILS_URL
-            title = ""
         }
     }
 

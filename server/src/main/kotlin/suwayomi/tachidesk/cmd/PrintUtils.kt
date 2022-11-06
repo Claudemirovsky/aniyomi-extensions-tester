@@ -12,12 +12,17 @@ const val RESET = "\u001B[0m"
 
 fun printLine(first: String, second: String?, width: Int = 15, subPad: Int = 1) {
     if (second == null) return
+
     val paddedFirst = first.padEnd(width)
     val paddedSecond = "-> $second".padStart(width - paddedFirst.length)
     val result = GREEN + paddedFirst + paddedSecond
         .replaceFirst("->", "$RESET->$CYAN") + RESET
-    val pad = if (subPad < 1) 1 else subPad
-    println(String.format("%${pad}s", result))
+
+    val paddedResult =
+        if (subPad <= 1) result
+        else String.format("%${subPad}s%s", "", result)
+
+    println(paddedResult)
 }
 
 fun String.center(width: Int, char: Char = '='): String {
@@ -71,7 +76,7 @@ fun printVideo(video: Video) {
             printLine("Video Headers", "")
         }
         ?.forEach { (first, second) ->
-            printLine(first, second, subPad = 6)
+            printLine(first, second, width = 25, subPad = 6)
         }
     if (video.subtitleTracks.size > 0) {
         printLine("Subs", "")
