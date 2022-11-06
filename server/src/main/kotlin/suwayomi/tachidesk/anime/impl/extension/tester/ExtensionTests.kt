@@ -2,6 +2,7 @@ package suwayomi.tachidesk.anime.impl.extension.tester
 
 import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
+import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SAnimeImpl
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import kotlinx.serialization.encodeToString
@@ -25,6 +26,7 @@ class ExtensionTests(
     private val json = Json { prettyPrint = true }
 
     private var ANIDETAILS_URL: String = configs.animeUrl
+    private var ANIME_OBJ: SAnime? = null
     private var EP_URL: String = configs.episodeUrl
 
     private val tests by lazy {
@@ -44,8 +46,8 @@ class ExtensionTests(
                     TestsEnum.LATEST -> {
                         if (source.supportsLatest) testLatestAnimesPage()
                     }
-                    TestsEnum.SEARCH -> testSearchAnimesPage()/*
-                    TestsEnun.ANIDETAILS -> testAnimeDetails()
+                    TestsEnum.SEARCH -> testSearchAnimesPage()
+                    TestsEnum.ANIDETAILS -> testAnimeDetails()/*
                     TestsEnum.EPLIST -> testEpisodeList()
                     TestsEnum.VIDEOLIST -> testVideoList()*/
                     else -> null
@@ -60,9 +62,9 @@ class ExtensionTests(
         printTitle("END ALL TESTS")
     }
 
-    private fun testSearchAnimesPage() {
-        printAnimesPage("SEARCH ANIMES PAGE") { page: Int ->
-            source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
+    private fun testPopularAnimesPage() {
+        printAnimesPage("POPULAR ANIMES PAGE") { page: Int ->
+            source.fetchPopularAnime(page)
         }
     }
 
@@ -72,9 +74,36 @@ class ExtensionTests(
         }
     }
 
-    private fun testPopularAnimesPage() {
-        printAnimesPage("POPULAR ANIMES PAGE") { page: Int ->
-            source.fetchPopularAnime(page)
+    private fun testSearchAnimesPage() {
+        printAnimesPage("SEARCH ANIMES PAGE") { page: Int ->
+            source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
+        }
+    }
+
+    private fun testAnimeDetails() {
+        println()
+        printTitle("START ANIME DETAILS TEST")
+
+        val anime = ANIME_OBJ ?: SAnime.create().apply {
+            url = ANIDETAILS_URL
+            title = ""
+        }
+
+        val details = parseObservable<SAnime>(
+            source.fetchAnimeDetails(anime)
+        )
+
+        details.url.ifEmpty { details.url = anime.url }
+        printAnimeOrJson(details)
+        printTitle("END ANIME DETAILS TEST")
+    }
+
+    private fun printAnimeOrJson(anime: SAnime) {
+        if (configs.printJson) {
+            val animeObj = anime as SAnimeImpl
+            println(json.encodeToString(animeObj))
+        } else {
+            printAnime(anime)
         }
     }
 
@@ -98,13 +127,11 @@ class ExtensionTests(
             }
 
             animes.forEach {
-                if (configs.printJson) {
-                    val anime = it as SAnimeImpl
-                    println(json.encodeToString(anime))
-                } else {
-                    printAnime(it)
-                }
+                if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null)
+                    ANIME_OBJ = it
+                printAnimeOrJson(it)
             }
+
             if (!configs.increment || !results.hasNextPage || page >= 2) break
             else println("${RED}Incrementing page number$RESET")
         }
