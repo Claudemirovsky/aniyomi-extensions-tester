@@ -114,7 +114,7 @@ class ExtensionTests(
             source.fetchEpisodeList(anime)
         )
 
-        val episodeList = if (!configs.showAll) result.take(3) else result
+        val episodeList = if (!configs.showAll) result.take(configs.resultsCount) else result
 
         episodeList.forEach {
             printItemOrJson<SEpisode>(it)
@@ -163,7 +163,7 @@ class ExtensionTests(
             printLine("Has next page", results.hasNextPage.toString())
             val animes = results.animes.let {
                 if (!configs.showAll)
-                    it.take(3)
+                    it.take(configs.resultsCount)
                 else it
             }
 

@@ -13,6 +13,7 @@ data class ConfigsDto(
     val episodeNumber: Int = 1,
     val increment: Boolean = false,
     val printJson: Boolean = false,
+    val resultsCount: Int = 2,
     val searchStr: String = "",
     val showAll: Boolean = false,
     val stopOnError: Boolean = false,

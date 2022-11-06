@@ -43,7 +43,7 @@ object CliOptions {
 
         val showAll by parser.option(
             ArgType.Boolean, "show-all", "A",
-            description = "Show all items of lists, instead of the first ~3"
+            description = "Show all items of lists, instead of the first ~2"
         )
 
         val episodeUrl by parser.option(
@@ -55,6 +55,11 @@ object CliOptions {
             ArgType.Int, "episode-number",
             description = "Target episode number"
         )
+
+        val resultsCount by parser.option(
+            ArgType.Int, "results-count", "c",
+            description = "Amount of items to print from result lists"
+        ).default(2)
 
         val stopOnError by parser.option(
             ArgType.Boolean, "stop-on-error", "X",
@@ -80,6 +85,7 @@ object CliOptions {
             episodeNumber ?: 1,
             increment,
             printJson ?: false,
+            resultsCount,
             searchStr,
             showAll ?: false,
             stopOnError ?: false,
