@@ -12,6 +12,8 @@ import mu.KotlinLogging
 import suwayomi.tachidesk.anime.impl.extension.AnimeExtension
 import suwayomi.tachidesk.anime.impl.extension.tester.ExtensionTests
 import suwayomi.tachidesk.cmd.CliOptions.parseArgs
+import suwayomi.tachidesk.cmd.GREEN
+import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.server.applicationSetup
 import java.io.File
 import java.nio.file.Files
@@ -49,6 +51,9 @@ suspend fun main(args: Array<String>) {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }
         pkgName to sources.map { source ->
+            println()
+            printTitle("SOURCE: ${source.name}", barColor = GREEN)
+            println()
             ExtensionTests(source, options.configs).runTests()
         }
     }

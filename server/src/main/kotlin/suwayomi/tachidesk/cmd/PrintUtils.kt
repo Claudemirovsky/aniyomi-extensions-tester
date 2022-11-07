@@ -33,10 +33,10 @@ fun String.center(width: Int, char: Char = '='): String {
     return paddedEnd
 }
 
-fun printTitle(title: String) {
-    val newTitle = YELLOW + " $title ".center(70, '=')
+fun printTitle(title: String, barColor: String = YELLOW) {
+    val newTitle = barColor + " $title ".center(70, '=')
         .replaceFirst(" ", " $RESET")
-        .replace(" ==", "$YELLOW ==") + RESET
+        .replace(" ==", "$barColor ==") + RESET
     println(newTitle)
 }
 

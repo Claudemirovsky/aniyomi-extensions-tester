@@ -23,6 +23,8 @@ import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.printVideo
 import kotlin.system.exitProcess
 
+class FailedTestException(error: String = "") : Exception(error)
+
 class ExtensionTests(
     private val source: AnimeHttpSource,
     private val configs: ConfigsDto
@@ -58,8 +60,11 @@ class ExtensionTests(
                     TestsEnum.ANIDETAILS -> testAnimeDetails()
                     TestsEnum.EPLIST -> testEpisodeList()
                     TestsEnum.VIDEOLIST -> testVideoList()
-                    else -> null
                 }
+            } catch (e: FailedTestException) {
+                printTitle("${it.name} TEST FAILED", barColor = RED)
+                if (configs.stopOnError)
+                    exitProcess(-1)
             } catch (e: Exception) {
                 logger.error("Test($it): ", e)
                 if (configs.stopOnError)
@@ -224,10 +229,11 @@ class ExtensionTests(
 
     private fun <T> parseObservable(observable: Observable<T>): T {
         var data: T? = null
-        observable.subscribe(
-            { it -> data = it },
-            { e: Throwable -> throw e }
-        )
-        return data!!
+        observable
+            .subscribe(
+                { it -> data = it },
+                { e: Throwable -> logger.error("ERROR: ", e) }
+            )
+        return data ?: throw FailedTestException()
     }
 }
