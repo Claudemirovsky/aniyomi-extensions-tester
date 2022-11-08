@@ -24,7 +24,11 @@ class NetworkHelper(context: Context) {
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
         if (System.getProperty("DEBUG")?.equals("true") ?: false) {
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
+            val loggingInterceptor = HttpLoggingInterceptor(
+                object : HttpLoggingInterceptor.Logger {
+                    override fun log(message: String) = println(message)
+                }
+            ).apply {
                 level = HttpLoggingInterceptor.Level.HEADERS
             }
             builder.addInterceptor(loggingInterceptor)
