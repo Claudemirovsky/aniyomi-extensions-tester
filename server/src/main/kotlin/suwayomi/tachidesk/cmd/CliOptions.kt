@@ -22,14 +22,24 @@ object CliOptions {
             description = "Target anime url"
         )
 
+        val dateFormat by parser.option(
+            ArgType.String, "date-format", "f",
+            description = "Format to use when printing episode date"
+        ).default("dd/MM/yyyy")
+
         val debug by parser.option(
             ArgType.Boolean, "debug", "d",
             description = "Enable okHttp debug"
         ).default(false)
 
-        val printJson by parser.option(
-            ArgType.Boolean, "json", "j",
-            description = "Show JSON data instead of tables"
+        val episodeNumber by parser.option(
+            ArgType.Int, "episode-number", "n",
+            description = "Target episode number"
+        )
+
+        val episodeUrl by parser.option(
+            ArgType.String, "episode-url", "e",
+            description = "Target episode url"
         )
 
         val increment by parser.option(
@@ -37,10 +47,15 @@ object CliOptions {
             description = "Try using pagination when possible"
         ).default(false)
 
-        val dateFormat by parser.option(
-            ArgType.String, "date-format", "f",
-            description = "Format to use when printing episode date"
-        ).default("dd/MM/yyyy")
+        val printJson by parser.option(
+            ArgType.Boolean, "json", "j",
+            description = "Show JSON data instead of tables"
+        )
+
+        val resultsCount by parser.option(
+            ArgType.Int, "results-count", "c",
+            description = "Amount of items to print from result lists"
+        ).default(2)
 
         val searchStr by parser.option(
             ArgType.String, "search", "s",
@@ -51,21 +66,6 @@ object CliOptions {
             ArgType.Boolean, "show-all", "A",
             description = "Show all items of lists, instead of the first ~2"
         )
-
-        val episodeUrl by parser.option(
-            ArgType.String, "episode-url", "e",
-            description = "Target episode url"
-        )
-
-        val episodeNumber by parser.option(
-            ArgType.Int, "episode-number", "n",
-            description = "Target episode number"
-        )
-
-        val resultsCount by parser.option(
-            ArgType.Int, "results-count", "c",
-            description = "Amount of items to print from result lists"
-        ).default(2)
 
         val stopOnError by parser.option(
             ArgType.Boolean, "stop-on-error", "X",
