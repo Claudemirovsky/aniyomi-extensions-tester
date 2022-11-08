@@ -9,6 +9,7 @@ data class OptionsDto(
 
 data class ConfigsDto(
     val animeUrl: String = "",
+    val dateFormat: String = "",
     val episodeUrl: String = "",
     val episodeNumber: Int = -1,
     val increment: Boolean = false,

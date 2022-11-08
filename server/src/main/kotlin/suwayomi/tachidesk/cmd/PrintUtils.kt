@@ -3,6 +3,7 @@ package suwayomi.tachidesk.cmd
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
+import java.text.SimpleDateFormat
 
 const val RED = "\u001B[91;1m"
 const val GREEN = "\u001B[92;1m"
@@ -53,7 +54,7 @@ fun printAnime(anime: SAnime) {
     println()
 }
 
-fun printEpisode(episode: SEpisode) {
+fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
     println()
     printLine("Name", episode.name)
     printLine(
@@ -62,15 +63,16 @@ fun printEpisode(episode: SEpisode) {
     )
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0)
-        printLine("Date of upload", episode.date_upload.toString())
+        printLine("Date of upload", formatter.format(episode.date_upload))
     println()
 }
 
 fun printVideo(video: Video) {
     println()
     printLine("Quality", video.quality)
-    printLine("URL", video.url)
     printLine("Video URL", video.videoUrl)
+    if (video.url != video.videoUrl)
+        printLine("URL", video.url)
     video.headers
         ?.also {
             printLine("Video Headers", "")

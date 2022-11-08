@@ -21,6 +21,7 @@ import suwayomi.tachidesk.cmd.printEpisode
 import suwayomi.tachidesk.cmd.printLine
 import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.printVideo
+import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
 
 class FailedTestException(error: String = "") : Exception(error)
@@ -32,6 +33,12 @@ class ExtensionTests(
     private val logger = KotlinLogging.logger {}
 
     private val json = Json { prettyPrint = true }
+
+    private val DATE_FORMATTER by lazy {
+        runCatching {
+            SimpleDateFormat(configs.dateFormat)
+        }.getOrDefault(SimpleDateFormat("dd/mm/yyyy"))
+    }
 
     private var ANIDETAILS_URL: String = configs.animeUrl
     private var ANIME_OBJ: SAnime? = null
@@ -183,7 +190,7 @@ class ExtensionTests(
             jsonStr?.let(::println)
         } else when (item) {
             is SAnime -> printAnime(item)
-            is SEpisode -> printEpisode(item)
+            is SEpisode -> printEpisode(item, DATE_FORMATTER)
             is Video -> printVideo(item)
             else -> null
         }

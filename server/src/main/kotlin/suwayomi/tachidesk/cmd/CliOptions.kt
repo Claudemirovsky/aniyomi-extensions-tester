@@ -8,6 +8,7 @@ import suwayomi.tachidesk.cmd.dto.ConfigsDto
 import suwayomi.tachidesk.cmd.dto.OptionsDto
 
 object CliOptions {
+
     fun parseArgs(args: Array<String>): OptionsDto {
         val parser = ArgParser("aniyomi-extension-tester")
 
@@ -17,7 +18,7 @@ object CliOptions {
         )
 
         val animeUrl by parser.option(
-            ArgType.String, "anime-url",
+            ArgType.String, "anime-url", "a",
             description = "Target anime url"
         )
 
@@ -27,7 +28,7 @@ object CliOptions {
         ).default(false)
 
         val printJson by parser.option(
-            ArgType.Boolean, "print-json", "J",
+            ArgType.Boolean, "json", "j",
             description = "Show JSON data instead of tables"
         )
 
@@ -35,6 +36,11 @@ object CliOptions {
             ArgType.Boolean, "increment-pages", "i",
             description = "Try using pagination when possible"
         ).default(false)
+
+        val dateFormat by parser.option(
+            ArgType.String, "date-format", "f",
+            description = "Format to use when printing episode date"
+        ).default("dd/MM/yyyy")
 
         val searchStr by parser.option(
             ArgType.String, "search", "s",
@@ -47,12 +53,12 @@ object CliOptions {
         )
 
         val episodeUrl by parser.option(
-            ArgType.String, "episode-url",
+            ArgType.String, "episode-url", "e",
             description = "Target episode url"
         )
 
         val episodeNumber by parser.option(
-            ArgType.Int, "episode-number",
+            ArgType.Int, "episode-number", "n",
             description = "Target episode number"
         )
 
@@ -81,6 +87,7 @@ object CliOptions {
 
         val configs = ConfigsDto(
             animeUrl ?: "",
+            dateFormat,
             episodeUrl ?: "",
             episodeNumber ?: -1,
             increment,
