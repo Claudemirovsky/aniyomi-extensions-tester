@@ -17,7 +17,8 @@ data class VideoDto(
     val quality: String = "",
     val videoUrl: String? = null,
     val headers: JsonObject? = null,
-    val subtitleTracks: List<Track> = emptyList()
+    val subtitleTracks: List<Track> = emptyList(),
+    val isWorking: Boolean = false
 ) {
     constructor(video: Video) : this(
         video.url,
@@ -26,7 +27,8 @@ data class VideoDto(
         video.headers?.map { it.first to JsonPrimitive(it.second) }?.toMap()?.let {
             JsonObject(it)
         },
-        video.subtitleTracks
+        video.subtitleTracks,
+        video.isWorking
     )
 }
 
@@ -38,6 +40,7 @@ open class Video(
     // "url", "language-label-2", "url2", "language-label-2"
     val subtitleTracks: List<Track> = emptyList(),
     val audioTracks: List<Track> = emptyList(),
+    var isWorking: Boolean = false
 ) : ProgressListener {
 
     @Suppress("UNUSED_PARAMETER")

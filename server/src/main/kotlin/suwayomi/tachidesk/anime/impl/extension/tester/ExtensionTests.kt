@@ -9,9 +9,11 @@ import eu.kanade.tachiyomi.animesource.model.SEpisodeImpl
 import eu.kanade.tachiyomi.animesource.model.Video
 import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
+import eu.kanade.tachiyomi.network.HEAD
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
+import okhttp3.Headers
 import rx.Observable
 import suwayomi.tachidesk.cmd.RED
 import suwayomi.tachidesk.cmd.RESET
@@ -160,8 +162,12 @@ class ExtensionTests(
         )
 
         printLine("Videos", videoList.size.toString())
+        if (videoList.size == 0)
+            throw FailedTestException()
 
         videoList.forEach {
+            val test = testMediaResult(it.videoUrl ?: it.url, true, it.headers)
+            it.isWorking = test
             printItemOrJson<Video>(it)
         }
     }
@@ -180,8 +186,26 @@ class ExtensionTests(
             is SAnime -> printAnime(item)
             is SEpisode -> printEpisode(item, DATE_FORMATTER)
             is Video -> printVideo(item)
-            else -> null
         }
+    }
+
+    private fun testMediaResult(
+        url: String,
+        video: Boolean = false,
+        headers: Headers? = null
+    ): Boolean {
+
+        val newHeaders = Headers.Builder().apply {
+            addAll(headers ?: source.headers)
+            add("Range", "bytes=0-1")
+        }.build()
+
+        val req = source.client.newCall(HEAD(url, newHeaders)).execute()
+        if (!req.isSuccessful) return false
+
+        val resType = req.header("content-type", "") ?: ""
+        val mimeTypes = listOf("video/", "/x-mpegURL", "/vnd.apple.mpegurl")
+        return if (video) mimeTypes.any { it in resType } else "image/" in resType
     }
 
     private fun getSAnime(): SAnime {

@@ -15,13 +15,19 @@ const val YELLOW = "\u001B[93;1m"
 const val CYAN = "\u001B[96;1m"
 const val RESET = "\u001B[0m"
 
-fun printLine(first: String, second: String?, width: Int = 15, subPad: Int = 1) {
+fun printLine(
+    first: String,
+    second: String?,
+    width: Int = 15,
+    subPad: Int = 1,
+    color: String = CYAN
+) {
     if (second == null) return
 
     val paddedFirst = first.padEnd(width)
     val paddedSecond = "-> $second".padStart(width - paddedFirst.length)
     val result = GREEN + paddedFirst + paddedSecond
-        .replaceFirst("->", "$RESET->$CYAN") + RESET
+        .replaceFirst("->", "$RESET->$color") + RESET
 
     val paddedResult =
         if (subPad <= 1) result
@@ -75,6 +81,10 @@ fun printVideo(video: Video) {
     printLine("Video URL", video.videoUrl)
     if (video.url != video.videoUrl)
         printLine("URL", video.url)
+
+    if (video.isWorking) printLine("IS WORKING", "YES", color = GREEN)
+    else printLine("IS WORKING", "NO", color = RED)
+
     video.headers
         ?.also {
             printLine("Video Headers", "")
