@@ -22,32 +22,32 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v0.0.1.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v1.0.0.jar -h
 Usage: aniyomi-extension-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
 Options:
-    --anime-url -> Target anime url { String }
+    --anime-url, -a -> Target anime url { String }
+    --date-format, -f [dd/MM/yyyy] -> Format to use when printing episode date { String }
     --debug, -d [false] -> Enable okHttp debug
-    --print-json, -J -> Show JSON data instead of tables
+    --episode-number, -n -> Target episode number { Int }
+    --episode-url, -e -> Target episode url { String }
     --increment-pages, -i [false] -> Try using pagination when possible
+    --json, -j -> Show JSON data instead of tables
+    --results-count, -c [2] -> Amount of items to print from result lists { Int }
     --search, -s [world] -> Text to use when testing the search { String }
     --show-all, -A -> Show all items of lists, instead of the first ~2
-    --episode-url -> Target episode url { String }
-    --episode-number -> Target episode number { Int }
-    --results-count, -c [2] -> Amount of items to print from result lists { Int }
     --stop-on-error, -X -> Stop the tests on the first error
     --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
     --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
     --help, -h -> Usage info
-
 ```
 
 ## TODO
 - [x] Implement all main functions from extensions
 - [ ] Support search filters
 - [ ] Test and check thumbnail URLs and video URLs
-- [ ] Show time spent on every test completed
+- [x] Show time spent on every test
 - [x] Honor all CLI options
 
 ## Credits
