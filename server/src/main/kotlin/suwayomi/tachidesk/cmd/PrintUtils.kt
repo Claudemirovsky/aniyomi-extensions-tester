@@ -3,7 +3,11 @@ package suwayomi.tachidesk.cmd
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
+import suwayomi.tachidesk.anime.impl.extension.tester.TestsEnum
 import java.text.SimpleDateFormat
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 const val RED = "\u001B[91;1m"
 const val GREEN = "\u001B[92;1m"
@@ -51,7 +55,6 @@ fun printAnime(anime: SAnime) {
     printLine("Author", anime.author)
     printLine("Genres", anime.genre)
     printLine("Description", anime.description)
-    println()
 }
 
 fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
@@ -64,7 +67,6 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0)
         printLine("Date of upload", formatter.format(episode.date_upload))
-    println()
 }
 
 fun printVideo(video: Video) {
@@ -87,6 +89,26 @@ fun printVideo(video: Video) {
             printLine("Sub URL", it.url, subPad = 6)
         }
     }
+}
 
+@ExperimentalTime
+fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
+    val title = when (test) {
+        TestsEnum.ANIDETAILS -> "ANIME DETAILS"
+        TestsEnum.EPLIST -> "EPISODE LIST"
+        TestsEnum.VIDEOLIST -> "VIDEO LIST"
+        else -> "${test.name} PAGE"
+    } + " TEST"
+    timeTest(title, YELLOW, testBlock)
+}
+
+@ExperimentalTime
+fun timeTest(title: String, color: String = YELLOW, testBlock: () -> Unit) {
     println()
+    printTitle("STARTING $title", color)
+    measureTimedValue(testBlock).also {
+        val secs = it.duration.toDouble(DurationUnit.SECONDS)
+        println()
+        printTitle("COMPLETED $title IN ${String.format("%.2f", secs)}s", color)
+    }
 }

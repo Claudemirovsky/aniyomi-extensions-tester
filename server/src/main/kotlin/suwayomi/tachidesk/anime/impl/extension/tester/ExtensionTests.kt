@@ -21,8 +21,10 @@ import suwayomi.tachidesk.cmd.printEpisode
 import suwayomi.tachidesk.cmd.printLine
 import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.printVideo
+import suwayomi.tachidesk.cmd.timeTestFromEnum
 import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
+import kotlin.time.ExperimentalTime
 
 class FailedTestException(error: String = "") : Exception(error)
 
@@ -55,55 +57,54 @@ class ExtensionTests(
         }
     }
 
+    @ExperimentalTime
     fun runTests() {
-        tests.forEach {
+        tests.forEach { test ->
             try {
-                when (it) {
-                    TestsEnum.POPULAR -> testPopularAnimesPage()
-                    TestsEnum.LATEST -> {
-                        if (source.supportsLatest) testLatestAnimesPage()
-                    }
-                    TestsEnum.SEARCH -> testSearchAnimesPage()
-                    TestsEnum.ANIDETAILS -> testAnimeDetails()
-                    TestsEnum.EPLIST -> testEpisodeList()
-                    TestsEnum.VIDEOLIST -> testVideoList()
+                val testFunction: () -> Unit = when (test) {
+                    TestsEnum.POPULAR -> { { testPopularAnimesPage() } }
+                    TestsEnum.LATEST -> { { testLatestAnimesPage() } }
+                    TestsEnum.SEARCH -> { { testSearchAnimesPage() } }
+                    TestsEnum.ANIDETAILS -> { { testAnimeDetails() } }
+                    TestsEnum.EPLIST -> { { testEpisodeList() } }
+                    TestsEnum.VIDEOLIST -> { { testVideoList() } }
                 }
+
+                if (test == TestsEnum.LATEST) {
+                    if (source.supportsLatest)
+                        timeTestFromEnum(test) { testFunction() }
+                } else timeTestFromEnum(test) { testFunction() }
             } catch (e: FailedTestException) {
-                printTitle("${it.name} TEST FAILED", barColor = RED)
+                printTitle("${test.name} TEST FAILED", barColor = RED)
                 if (configs.stopOnError)
                     exitProcess(-1)
             } catch (e: Exception) {
-                logger.error("Test($it): ", e)
+                logger.error("Test($test): ", e)
                 if (configs.stopOnError)
                     exitProcess(-1)
             }
         }
-        println()
-        printTitle("END ALL TESTS")
     }
 
     private fun testPopularAnimesPage() {
-        printAnimesPage("POPULAR ANIMES PAGE") { page: Int ->
+        printAnimesPage() { page: Int ->
             source.fetchPopularAnime(page)
         }
     }
 
     private fun testLatestAnimesPage() {
-        printAnimesPage("LATEST ANIMES PAGE") { page: Int ->
+        printAnimesPage() { page: Int ->
             source.fetchLatestUpdates(page)
         }
     }
 
     private fun testSearchAnimesPage() {
-        printAnimesPage("SEARCH ANIMES PAGE") { page: Int ->
+        printAnimesPage() { page: Int ->
             source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
         }
     }
 
     private fun testAnimeDetails() {
-        println()
-        printTitle("START ANIME DETAILS TEST")
-
         val anime = getSAnime()
 
         val details = parseObservable<SAnime>(
@@ -112,14 +113,9 @@ class ExtensionTests(
 
         details.url.ifEmpty { details.url = anime.url }
         printItemOrJson<SAnime>(details)
-        printTitle("END ANIME DETAILS TEST")
     }
 
     private fun testEpisodeList() {
-        println()
-        val title = "EPISODE LIST"
-        printTitle("START $title TEST")
-
         val anime = getSAnime()
 
         val result = parseObservable<List<SEpisode>>(
@@ -150,15 +146,9 @@ class ExtensionTests(
                 printItemOrJson<SEpisode>(it)
             }
         }
-
-        printTitle("END $title TEST")
     }
 
     private fun testVideoList() {
-        val title = "VIDEO LIST"
-        println()
-        printTitle("START $title TEST")
-
         val episode = EP_OBJ ?: SEpisode.create().apply {
             url = EP_URL
         }
@@ -174,8 +164,6 @@ class ExtensionTests(
         videoList.forEach {
             printItemOrJson<Video>(it)
         }
-
-        printTitle("END $title TEST")
     }
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -202,9 +190,7 @@ class ExtensionTests(
         }
     }
 
-    private fun printAnimesPage(title: String, block: (page: Int) -> Observable<AnimesPage>) {
-        println()
-        printTitle("START $title TEST")
+    private fun printAnimesPage(block: (page: Int) -> Observable<AnimesPage>) {
         var page = 0
         while (true) {
             page++
@@ -231,7 +217,6 @@ class ExtensionTests(
             if (!configs.increment || !results.hasNextPage || page >= 2) break
             else println("${RED}Incrementing page number$RESET")
         }
-        printTitle("END $title TEST")
     }
 
     private fun <T> parseObservable(observable: Observable<T>): T {
