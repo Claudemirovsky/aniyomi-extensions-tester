@@ -20,10 +20,13 @@ interface SAnime : Serializable {
 
     var thumbnail_url: String?
 
+    var is_thumbnail_loading: Boolean
+
     var initialized: Boolean
 
     fun copyFrom(other: SAnime) {
         title = other.title
+        is_thumbnail_loading = other.is_thumbnail_loading
 
         if (other.author != null) {
             author = other.author

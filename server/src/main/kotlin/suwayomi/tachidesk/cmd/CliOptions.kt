@@ -22,6 +22,11 @@ object CliOptions {
             description = "Target anime url"
         )
 
+        val checkThumbnails by parser.option(
+            ArgType.Boolean, "check-thumbnails",
+            description = "Check if thumbnails are loading"
+        ).default(false)
+
         val dateFormat by parser.option(
             ArgType.String, "date-format", "f",
             description = "Format to use when printing episode date"
@@ -87,6 +92,7 @@ object CliOptions {
 
         val configs = ConfigsDto(
             animeUrl ?: "",
+            checkThumbnails,
             dateFormat,
             episodeUrl ?: "",
             episodeNumber ?: -1,

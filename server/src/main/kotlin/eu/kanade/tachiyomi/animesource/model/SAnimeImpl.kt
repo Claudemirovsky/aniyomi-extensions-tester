@@ -20,5 +20,8 @@ data class SAnimeImpl(
 
     override var thumbnail_url: String? = null,
 
+    override var is_thumbnail_loading: Boolean = false,
+
     override var initialized: Boolean = false
+
 ) : SAnime

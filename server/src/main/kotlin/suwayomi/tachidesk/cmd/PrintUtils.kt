@@ -18,7 +18,7 @@ const val RESET = "\u001B[0m"
 fun printLine(
     first: String,
     second: String?,
-    width: Int = 15,
+    width: Int = 17,
     subPad: Int = 1,
     color: String = CYAN
 ) {
@@ -51,11 +51,13 @@ fun printTitle(title: String, barColor: String = YELLOW) {
     println(newTitle)
 }
 
-fun printAnime(anime: SAnime) {
+fun printAnime(anime: SAnime, checkThumb: Boolean = false) {
     println()
     printLine("Title", anime.title)
     printLine("Anime URL", anime.url)
     printLine("Thumbnail URL", anime.thumbnail_url)
+    if (checkThumb)
+        printIfWorks(anime.is_thumbnail_loading, "Thumbnail loads?")
     printLine("Status", SAnime.getStatus(anime.status))
     printLine("Artist", anime.artist)
     printLine("Author", anime.author)
@@ -78,12 +80,10 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
 fun printVideo(video: Video) {
     println()
     printLine("Quality", video.quality)
+    printIfWorks(video.isWorking, "Is playing?")
     printLine("Video URL", video.videoUrl)
     if (video.url != video.videoUrl)
         printLine("URL", video.url)
-
-    if (video.isWorking) printLine("IS WORKING", "YES", color = GREEN)
-    else printLine("IS WORKING", "NO", color = RED)
 
     video.headers
         ?.also {
@@ -99,6 +99,11 @@ fun printVideo(video: Video) {
             printLine("Sub URL", it.url, subPad = 6)
         }
     }
+}
+
+fun printIfWorks(value: Boolean, title: String) {
+    if (value) printLine(title, "YES", color = GREEN)
+    else printLine(title, "NO", color = RED)
 }
 
 @ExperimentalTime

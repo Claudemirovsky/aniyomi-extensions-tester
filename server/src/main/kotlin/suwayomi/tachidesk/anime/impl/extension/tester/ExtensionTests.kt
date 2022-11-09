@@ -114,6 +114,8 @@ class ExtensionTests(
         )
 
         details.url.ifEmpty { details.url = anime.url }
+        if (configs.checkThumbnails)
+            details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
         printItemOrJson<SAnime>(details)
     }
 
@@ -183,18 +185,18 @@ class ExtensionTests(
             }
             jsonStr?.let(::println)
         } else when (item) {
-            is SAnime -> printAnime(item)
+            is SAnime -> printAnime(item, configs.checkThumbnails)
             is SEpisode -> printEpisode(item, DATE_FORMATTER)
             is Video -> printVideo(item)
         }
     }
 
     private fun testMediaResult(
-        url: String,
+        url: String?,
         video: Boolean = false,
         headers: Headers? = null
     ): Boolean {
-
+        if (url == null) return false
         val newHeaders = Headers.Builder().apply {
             addAll(headers ?: source.headers)
             add("Range", "bytes=0-1")
@@ -234,7 +236,8 @@ class ExtensionTests(
             animes.forEach {
                 if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null)
                     ANIME_OBJ = it
-
+                if (configs.checkThumbnails)
+                    it.is_thumbnail_loading = testMediaResult(it.thumbnail_url)
                 printItemOrJson<SAnime>(it)
             }
 
