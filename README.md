@@ -22,12 +22,13 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v1.0.0.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v1.1.0.jar -h
 Usage: aniyomi-extension-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
 Options:
     --anime-url, -a -> Target anime url { String }
+    --check-thumbnails [false] -> Check if thumbnails are loading
     --date-format, -f [dd/MM/yyyy] -> Format to use when printing episode date { String }
     --debug, -d [false] -> Enable okHttp debug
     --episode-number, -n -> Target episode number { Int }
@@ -42,11 +43,10 @@ Options:
     --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
     --help, -h -> Usage info
 ```
-
 ## TODO
 - [x] Implement all main functions from extensions
 - [ ] Support search filters
-- [ ] Test and check thumbnail URLs and video URLs
+- [x] Test and check thumbnail URLs and video URLs
 - [x] Show time spent on every test
 - [x] Honor all CLI options
 
