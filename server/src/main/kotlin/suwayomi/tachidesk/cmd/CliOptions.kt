@@ -88,6 +88,12 @@ object CliOptions {
             description = "Directory to put temporary data"
         ).default(System.getProperty("java.io.tmpdir"))
 
+        val userAgent by parser.option(
+            ArgType.String,
+            "user-agent", "U",
+            description = "Set and use a specific user agent"
+        )
+
         parser.parse(args)
 
         val configs = ConfigsDto(
@@ -105,6 +111,6 @@ object CliOptions {
             tests
         )
 
-        return OptionsDto(apksPath, tmpDir, debug, configs)
+        return OptionsDto(apksPath, configs, debug, tmpDir, userAgent)
     }
 }

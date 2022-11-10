@@ -30,7 +30,8 @@ suspend fun main(args: Array<String>) {
 
     val options = parseArgs(args)
 
-    if (options.debugMode) System.setProperty("DEBUG", "true")
+    if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
+    options.userAgent?.let { System.setProperty("ANIEXT_TESTER_UA", it) }
 
     val apksPath = options.apksPath
 

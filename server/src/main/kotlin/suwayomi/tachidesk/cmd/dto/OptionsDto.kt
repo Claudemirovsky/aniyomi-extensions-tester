@@ -2,9 +2,10 @@ package suwayomi.tachidesk.cmd.dto
 
 data class OptionsDto(
     val apksPath: String,
-    val tmpDir: String,
+    val configs: ConfigsDto,
     val debugMode: Boolean,
-    val configs: ConfigsDto
+    val tmpDir: String,
+    val userAgent: String?
 )
 
 data class ConfigsDto(
