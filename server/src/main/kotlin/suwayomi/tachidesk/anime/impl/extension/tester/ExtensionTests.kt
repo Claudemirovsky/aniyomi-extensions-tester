@@ -24,6 +24,7 @@ import suwayomi.tachidesk.cmd.printLine
 import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.printVideo
 import suwayomi.tachidesk.cmd.timeTestFromEnum
+import java.net.ProtocolException
 import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
 import kotlin.time.ExperimentalTime
@@ -202,7 +203,12 @@ class ExtensionTests(
             add("Range", "bytes=0-1")
         }.build()
 
-        val req = source.client.newCall(HEAD(url, newHeaders)).execute()
+        val req = try {
+            source.client.newCall(HEAD(url, newHeaders)).execute()
+        } catch (e: ProtocolException) {
+            return testMediaResult(url, video, headers)
+        }
+
         if (!req.isSuccessful) return false
 
         val resType = req.header("content-type", "") ?: ""
