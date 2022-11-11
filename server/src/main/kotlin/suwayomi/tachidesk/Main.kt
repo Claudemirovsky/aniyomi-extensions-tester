@@ -8,6 +8,9 @@ package suwayomi.tachidesk
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import mu.KotlinLogging
 import suwayomi.tachidesk.anime.impl.extension.AnimeExtension
 import suwayomi.tachidesk.anime.impl.extension.tester.ExtensionTests
@@ -52,11 +55,26 @@ suspend fun main(args: Array<String>) {
     val extensionsInfo = extensions.associate {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }
-        pkgName to sources.map { source ->
-            timeTest("${source.name} TESTS", color = GREEN) {
-                ExtensionTests(source, options.configs).runTests()
+        pkgName to buildJsonArray {
+            sources.map { source ->
+                timeTest("${source.name} TESTS", color = GREEN) {
+                    add(
+                        buildJsonObject {
+                            put("name", source.name)
+                            put("result", ExtensionTests(source, options.configs).runTests())
+                        }
+                    )
+                }
+                println()
             }
-            println()
+        }
+    }
+
+    if (options.configs.jsonFiles) {
+        extensionsInfo.map {
+            val pkgName = it.key.substringAfter("eu.kanade.tachiyomi.animeextension.")
+            val result = it.value.toString()
+            File("${options.configs.jsonFilesDir}/results-$pkgName.json").writeText(result)
         }
     }
 }

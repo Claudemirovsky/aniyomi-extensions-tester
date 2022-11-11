@@ -19,5 +19,7 @@ data class ConfigsDto(
     val searchStr: String = "",
     val showAll: Boolean = false,
     val stopOnError: Boolean = false,
-    val tests: String = ""
+    val tests: String = "",
+    val jsonFiles: Boolean = false,
+    val jsonFilesDir: String = "."
 )

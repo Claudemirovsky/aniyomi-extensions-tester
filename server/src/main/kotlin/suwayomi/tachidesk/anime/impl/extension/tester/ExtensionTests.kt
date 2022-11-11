@@ -2,6 +2,7 @@ package suwayomi.tachidesk.anime.impl.extension.tester
 
 import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
+import eu.kanade.tachiyomi.animesource.model.AnimesPageDto
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SAnimeImpl
 import eu.kanade.tachiyomi.animesource.model.SEpisode
@@ -12,6 +13,13 @@ import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.HEAD
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import mu.KotlinLogging
 import okhttp3.Headers
 import rx.Observable
@@ -28,7 +36,9 @@ import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
 import kotlin.time.ExperimentalTime
 
-class FailedTestException(error: String = "") : Exception(error)
+class FailedTestException(error: Throwable) : Exception(error) {
+    constructor(error: String = "") : this(Exception(error))
+}
 
 class ExtensionTests(
     private val source: AnimeHttpSource,
@@ -50,6 +60,13 @@ class ExtensionTests(
     private var EP_URL: String = configs.episodeUrl
     private var EP_OBJ: SEpisode? = null
 
+    private var TEST_RESULT_POPULAR: JsonObject? = null
+    private var TEST_RESULT_LATEST: JsonObject? = null
+    private var TEST_RESULT_SEARCH: JsonObject? = null
+    private var TEST_RESULT_ANIDETAILS: JsonObject? = null
+    private var TEST_RESULT_EPLIST: JsonObject? = null
+    private var TEST_RESULT_VIDEOLIST: JsonObject? = null
+
     private val tests by lazy {
         val list = configs.tests.split(",")
         list.mapNotNull {
@@ -60,7 +77,7 @@ class ExtensionTests(
     }
 
     @ExperimentalTime
-    fun runTests() {
+    fun runTests(): JsonObject {
         tests.forEach { test ->
             try {
                 val testFunction: () -> Unit = when (test) {
@@ -77,31 +94,34 @@ class ExtensionTests(
                         timeTestFromEnum(test) { testFunction() }
                 } else timeTestFromEnum(test) { testFunction() }
             } catch (e: FailedTestException) {
+                writeTestError(test, e)
                 printTitle("${test.name} TEST FAILED", barColor = RED)
                 if (configs.stopOnError)
                     exitProcess(-1)
             } catch (e: Exception) {
+                writeTestError(test, e)
                 logger.error("Test($test): ", e)
                 if (configs.stopOnError)
                     exitProcess(-1)
             }
         }
+        return testResults()
     }
 
     private fun testPopularAnimesPage() {
-        printAnimesPage() { page: Int ->
+        TEST_RESULT_POPULAR = printAnimesPage() { page: Int ->
             source.fetchPopularAnime(page)
         }
     }
 
     private fun testLatestAnimesPage() {
-        printAnimesPage() { page: Int ->
+        TEST_RESULT_LATEST = printAnimesPage() { page: Int ->
             source.fetchLatestUpdates(page)
         }
     }
 
     private fun testSearchAnimesPage() {
-        printAnimesPage() { page: Int ->
+        TEST_RESULT_SEARCH = printAnimesPage() { page: Int ->
             source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
         }
     }
@@ -117,6 +137,7 @@ class ExtensionTests(
         if (configs.checkThumbnails)
             details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
         printItemOrJson<SAnime>(details)
+        TEST_RESULT_ANIDETAILS = resultObject(json.encodeToJsonElement(details as SAnimeImpl).jsonObject)
     }
 
     private fun testEpisodeList() {
@@ -149,6 +170,8 @@ class ExtensionTests(
             episodeList.forEach {
                 printItemOrJson<SEpisode>(it)
             }
+            val sEpisodeImplList = episodeList.map { it as SEpisodeImpl }
+            TEST_RESULT_EPLIST = resultObject(json.encodeToJsonElement(sEpisodeImplList).jsonArray)
         }
     }
 
@@ -172,6 +195,8 @@ class ExtensionTests(
             it.isWorking = test
             printItemOrJson<Video>(it)
         }
+        val videoDtoList = videoList.map { VideoDto(it) }
+        TEST_RESULT_VIDEOLIST = resultObject(json.encodeToJsonElement(videoDtoList).jsonArray)
     }
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -216,13 +241,15 @@ class ExtensionTests(
         }
     }
 
-    private fun printAnimesPage(block: (page: Int) -> Observable<AnimesPage>) {
+    private fun printAnimesPage(block: (page: Int) -> Observable<AnimesPage>): JsonObject {
         var page = 0
+        val animesPages = mutableListOf<AnimesPageDto>()
         while (true) {
             page++
             val results = parseObservable<AnimesPage>(
                 block(page)
             )
+            animesPages.add(AnimesPageDto(results))
             println()
             printLine("Page", "$page")
             printLine("Results", results.animes.size.toString())
@@ -244,15 +271,64 @@ class ExtensionTests(
             if (!configs.increment || !results.hasNextPage || page >= 2) break
             else println("${RED}Incrementing page number$RESET")
         }
+        return resultObject(json.encodeToJsonElement(animesPages).jsonArray)
     }
 
     private fun <T> parseObservable(observable: Observable<T>): T {
         var data: T? = null
+        var error = Throwable()
         observable
             .subscribe(
                 { it -> data = it },
-                { e: Throwable -> logger.error("ERROR: ", e) }
+                { e: Throwable ->
+                    error = e
+                    logger.error("ERROR: ", e)
+                }
             )
-        return data ?: throw FailedTestException()
+        return data ?: throw FailedTestException(error)
+    }
+
+    private fun testResults(): JsonObject {
+        return buildJsonObject {
+            TEST_RESULT_POPULAR?.let { put("popular", it) }
+            TEST_RESULT_LATEST?.let { put("latest", it) }
+            TEST_RESULT_SEARCH?.let { put("search", it) }
+            TEST_RESULT_ANIDETAILS?.let { put("details", it) }
+            TEST_RESULT_EPLIST?.let { put("episodes", it) }
+            TEST_RESULT_VIDEOLIST?.let { put("videos", it) }
+        }
+    }
+
+    private fun writeTestError(test: TestsEnum, e: Exception) {
+        val res = resultObject(null, e, false)
+        when (test) {
+            TestsEnum.POPULAR -> {
+                TEST_RESULT_POPULAR = res
+            }
+            TestsEnum.LATEST -> {
+                TEST_RESULT_LATEST = res
+            }
+            TestsEnum.SEARCH -> {
+                TEST_RESULT_SEARCH = res
+            }
+            TestsEnum.ANIDETAILS -> {
+                TEST_RESULT_ANIDETAILS = res
+            }
+            TestsEnum.EPLIST -> {
+                TEST_RESULT_EPLIST = res
+            }
+            TestsEnum.VIDEOLIST -> {
+                TEST_RESULT_VIDEOLIST = res
+            }
+        }
+    }
+
+    private fun resultObject(result: JsonElement? = null, error: Exception? = null, passed: Boolean = true) = buildJsonObject {
+        put("passed", passed)
+        if (passed && result != null) {
+            put("result", result)
+        } else if (!passed && error != null) {
+            put("error", error.toString())
+        }
     }
 }

@@ -40,6 +40,8 @@ Options:
     --show-all, -A -> Show all items of lists, instead of the first ~2
     --stop-on-error, -X -> Stop the tests on the first error
     --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
+    --json-files, -J [false] -> Output JSON files with results
+    --json-dir, -D [.] -> Directory (that exists) in which to put the JSON result files
     --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
     --help, -h -> Usage info
 ```
