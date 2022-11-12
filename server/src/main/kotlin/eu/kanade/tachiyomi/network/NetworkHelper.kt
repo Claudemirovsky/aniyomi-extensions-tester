@@ -12,8 +12,6 @@ import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import java.net.InetSocketAddress
-import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
@@ -28,8 +26,7 @@ class NetworkHelper(context: Context) {
             .writeTimeout(5, TimeUnit.MINUTES)
             .addInterceptor(UserAgentInterceptor())
         System.getProperty("ANIEXT_TESTER_PROXY")?.let {
-            parseProxy(it)?.let { proxy ->
-                builder.proxy(proxy)
+            parseProxy(it)?.let {
                 builder.ignoreAllSSLErrors()
             }
         }
@@ -53,20 +50,21 @@ class NetworkHelper(context: Context) {
     }
 
     val defaultUserAgent by lazy {
-        System.getProperty("ANIEXT_TESTER_UA")
+        System.getProperty("http.agent")
             ?: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0"
     }
 
-    private fun parseProxy(proxy: String): Proxy? {
+    private fun parseProxy(proxy: String): Boolean? {
         if (proxy.isBlank()) return null
-        val port = proxy.substringAfterLast(":").toIntOrNull() ?: return null
+        val port = proxy.substringAfterLast(":")
+        if (port.any { !it.isDigit() }) return null
         val host = proxy.substringBeforeLast(":").substringAfter("://")
-        val type = if (proxy.substringBefore("://").startsWith("socks")) {
-            Proxy.Type.SOCKS
-        } else {
-            Proxy.Type.HTTP
+        val type = proxy.substringBefore("://").let {
+            if ("socks" in it) "socks"
+            else it + "."
         }
-
-        return Proxy(type, InetSocketAddress(host, port))
+        System.setProperty("${type}ProxyHost", host)
+        System.setProperty("${type}ProxyPort", port)
+        return true
     }
 }

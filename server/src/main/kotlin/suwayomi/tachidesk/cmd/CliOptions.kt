@@ -59,7 +59,7 @@ object CliOptions {
 
         val proxy by parser.option(
             ArgType.String, "proxy",
-            description = "Proxy address to use when doing the requests in OkHttpClient. like <protocol>://<host>:<port>"
+            description = "Proxy address to use when doing the requests. Like <protocol>://<host>:<port>"
         )
 
         val resultsCount by parser.option(
