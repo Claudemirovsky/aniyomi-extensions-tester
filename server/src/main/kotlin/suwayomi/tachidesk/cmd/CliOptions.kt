@@ -87,6 +87,20 @@ object CliOptions {
             description = "Tests to be made(in order), delimited by commas"
         ).default(TestsEnum.getValues())
 
+        val jsonDir by parser.option(
+            ArgType.String,
+            "json-dir",
+            "D",
+            description = "Directory (that exists) in which to put the JSON result files"
+        ).default(".")
+
+        val json by parser.option(
+            ArgType.Boolean,
+            "json-files",
+            "J",
+            description = "Output JSON files with results"
+        ).default(false)
+
         val tmpDir by parser.option(
             ArgType.String,
             "tmp-dir",
@@ -113,7 +127,9 @@ object CliOptions {
             searchStr,
             showAll ?: false,
             stopOnError ?: false,
-            tests
+            tests,
+            json,
+            jsonDir
         )
 
         return OptionsDto(apksPath, configs, debug, proxy, tmpDir, userAgent)
