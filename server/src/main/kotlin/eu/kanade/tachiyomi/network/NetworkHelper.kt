@@ -27,12 +27,16 @@ class NetworkHelper(context: Context) {
             .addInterceptor(UserAgentInterceptor())
         System.getProperty("ANIEXT_TESTER_PROXY")?.let {
             parseProxy(it)?.let {
+                // We usually use proxies to debug https requests, so lets
+                // prevent some headache
                 builder.ignoreAllSSLErrors()
             }
         }
         if (System.getProperty("ANIEXT_TESTER_DEBUG")?.equals("true") ?: false) {
             val loggingInterceptor = HttpLoggingInterceptor(
                 object : HttpLoggingInterceptor.Logger {
+                    // Using mu.Logging makes it almost unreadable, so lets
+                    // just use println instead
                     override fun log(message: String) = println(message)
                 }
             ).apply {
@@ -54,12 +58,18 @@ class NetworkHelper(context: Context) {
             ?: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0"
     }
 
+    /**
+     * Parses a proxy address and uses it if its valid.
+     *
+     * @param proxy The http/https/socks5 proxy address
+     */
     private fun parseProxy(proxy: String): Boolean? {
         if (proxy.isBlank()) return null
         val port = proxy.substringAfterLast(":")
         if (port.any { !it.isDigit() }) return null
         val host = proxy.substringBeforeLast(":").substringAfter("://")
         val type = proxy.substringBefore("://").let {
+            // Adds a dot to every type, except socks[x]
             if ("socks" in it) "socks"
             else it + "."
         }

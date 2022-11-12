@@ -53,7 +53,7 @@ Options:
 - [x] Honor all CLI options
 - [x] Support custom http/https/socks5 proxies
 - [x] Support custom User-Agent
-- [ ] Document some functions, classes and operations
+- [x] Document some functions, classes and operations
 - [ ] Dump tests results as JSON
 
 ## Credits

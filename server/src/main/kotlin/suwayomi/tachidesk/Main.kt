@@ -51,6 +51,7 @@ suspend fun main(args: Array<String>) {
             .toList()
     }
 
+    // Unused variable for now, it will be useful in the future.
     val extensionsInfo = extensions.associate {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }
