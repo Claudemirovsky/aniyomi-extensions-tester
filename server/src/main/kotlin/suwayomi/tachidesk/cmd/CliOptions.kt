@@ -57,6 +57,11 @@ object CliOptions {
             description = "Show JSON data instead of tables"
         )
 
+        val proxy by parser.option(
+            ArgType.String, "proxy",
+            description = "Proxy address to use when doing the requests. Like <protocol>://<host>:<port>"
+        )
+
         val resultsCount by parser.option(
             ArgType.Int, "results-count", "c",
             description = "Amount of items to print from result lists"
@@ -102,6 +107,12 @@ object CliOptions {
             description = "Directory to put temporary data"
         ).default(System.getProperty("java.io.tmpdir"))
 
+        val userAgent by parser.option(
+            ArgType.String,
+            "user-agent", "U",
+            description = "Set and use a specific user agent"
+        )
+
         parser.parse(args)
 
         val configs = ConfigsDto(
@@ -121,6 +132,6 @@ object CliOptions {
             jsonDir
         )
 
-        return OptionsDto(apksPath, tmpDir, debug, configs)
+        return OptionsDto(apksPath, configs, debug, proxy, tmpDir, userAgent)
     }
 }

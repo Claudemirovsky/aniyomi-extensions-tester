@@ -33,7 +33,9 @@ suspend fun main(args: Array<String>) {
 
     val options = parseArgs(args)
 
-    if (options.debugMode) System.setProperty("DEBUG", "true")
+    if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
+    options.userAgent?.let { System.setProperty("http.agent", it) }
+    options.proxy?.let { System.setProperty("ANIEXT_TESTER_PROXY", it) }
 
     val apksPath = options.apksPath
 
@@ -52,6 +54,7 @@ suspend fun main(args: Array<String>) {
             .toList()
     }
 
+    // Unused variable for now, it will be useful in the future.
     val extensionsInfo = extensions.associate {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }

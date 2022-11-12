@@ -15,6 +15,15 @@ const val YELLOW = "\u001B[93;1m"
 const val CYAN = "\u001B[96;1m"
 const val RESET = "\u001B[0m"
 
+/**
+ * Print a line with a key and value.
+ *
+ * @param first The first item (or key).
+ * @param second The secone item (or value), if its null it will not be printed.
+ * @param width The width of the line.
+ * @param subPad Amount of initial padding, useful for sub-items.
+ * @param color A terminal-color string for the value.
+ */
 fun printLine(
     first: String,
     second: String?,
@@ -36,6 +45,12 @@ fun printLine(
     println(paddedResult)
 }
 
+/**
+ * Centers a string between some amount of a character.
+ *
+ * @param width The total width/size of the line.
+ * @param char The character to use in the sides.
+ */
 fun String.center(width: Int, char: Char = '='): String {
     val pads = width - length
     if (pads <= 0) return this
@@ -44,6 +59,12 @@ fun String.center(width: Int, char: Char = '='): String {
     return paddedEnd
 }
 
+/**
+ * Prints a title to each step.
+ *
+ * @param title The title / separator
+ * @param barColor The color for the padding bars
+ */
 fun printTitle(title: String, barColor: String = YELLOW) {
     val newTitle = barColor + " $title ".center(70, '=')
         .replaceFirst(" ", " $RESET")
@@ -51,6 +72,12 @@ fun printTitle(title: String, barColor: String = YELLOW) {
     println(newTitle)
 }
 
+/**
+ * Pretty-prints a SAnime instance.
+ *
+ * @param anime The SAnime / SAnimeImpl object.
+ * @param checkThumb A boolean that enables the printing of thumbnail status.
+ */
 fun printAnime(anime: SAnime, checkThumb: Boolean = false) {
     println()
     printLine("Title", anime.title)
@@ -65,6 +92,12 @@ fun printAnime(anime: SAnime, checkThumb: Boolean = false) {
     printLine("Description", anime.description)
 }
 
+/**
+ * Pretty-prints a SEpisode / SEpisodeImpl object.
+ *
+ * @param episode The SEpisode / SEpisodeImpl instance.
+ * @param formatter The date formatter for the date of upload.
+ */
 fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
     println()
     printLine("Name", episode.name)
@@ -77,6 +110,11 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
         printLine("Date of upload", formatter.format(episode.date_upload))
 }
 
+/**
+ * Pretty-prints a Video object
+ *
+ * @param video The Video instance
+ */
 fun printVideo(video: Video) {
     println()
     printLine("Quality", video.quality)
@@ -101,11 +139,23 @@ fun printVideo(video: Video) {
     }
 }
 
+/**
+ * Prints the status of a boolean.
+ *
+ * @param value The boolean value.
+ * @param title The title before the status.
+ */
 fun printIfWorks(value: Boolean, title: String) {
     if (value) printLine(title, "YES", color = GREEN)
     else printLine(title, "NO", color = RED)
 }
 
+/**
+ * Prints the time spent on a test, using the TestsEnum to get its title.
+ *
+ * @param test The TestsEnum item.
+ * @param testBlock The function / lambda block to run and be timed.
+ */
 @ExperimentalTime
 fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
     val title = when (test) {
@@ -117,6 +167,13 @@ fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
     timeTest(title, YELLOW, testBlock)
 }
 
+/**
+ * Prints the time spent on a function, with a title/separator to give context.
+ *
+ * @param title The title/separator.
+ * @param color The color of the padding bars.
+ * @param testBlock The function/lambda block to be timed.
+ */
 @ExperimentalTime
 fun timeTest(title: String, color: String = YELLOW, testBlock: () -> Unit) {
     println()

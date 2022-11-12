@@ -68,9 +68,9 @@ interface SAnime : Serializable {
             return SAnimeImpl()
         }
 
+        // Useful for pretty-printing
         fun getStatus(status: Int): String {
             return when (status) {
-                0 -> "UNKNOWN"
                 1 -> "ONGOING"
                 2 -> "COMPLETED"
                 3 -> "LICENSED"
