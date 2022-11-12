@@ -32,6 +32,7 @@ suspend fun main(args: Array<String>) {
 
     if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
     options.userAgent?.let { System.setProperty("ANIEXT_TESTER_UA", it) }
+    options.proxy?.let { System.setProperty("ANIEXT_TESTER_PROXY", it) }
 
     val apksPath = options.apksPath
 

@@ -4,6 +4,7 @@ data class OptionsDto(
     val apksPath: String,
     val configs: ConfigsDto,
     val debugMode: Boolean,
+    val proxy: String?,
     val tmpDir: String,
     val userAgent: String?
 )

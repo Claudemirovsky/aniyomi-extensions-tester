@@ -57,6 +57,11 @@ object CliOptions {
             description = "Show JSON data instead of tables"
         )
 
+        val proxy by parser.option(
+            ArgType.String, "proxy",
+            description = "Proxy address to use when doing the requests in OkHttpClient. like <protocol>://<host>:<port>"
+        )
+
         val resultsCount by parser.option(
             ArgType.Int, "results-count", "c",
             description = "Amount of items to print from result lists"
@@ -111,6 +116,6 @@ object CliOptions {
             tests
         )
 
-        return OptionsDto(apksPath, configs, debug, tmpDir, userAgent)
+        return OptionsDto(apksPath, configs, debug, proxy, tmpDir, userAgent)
     }
 }
