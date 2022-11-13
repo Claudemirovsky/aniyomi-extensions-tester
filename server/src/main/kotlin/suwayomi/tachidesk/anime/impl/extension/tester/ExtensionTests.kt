@@ -1,6 +1,5 @@
 package suwayomi.tachidesk.anime.impl.extension.tester
 
-import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
 import eu.kanade.tachiyomi.animesource.model.AnimesPageDto
 import eu.kanade.tachiyomi.animesource.model.SAnime
@@ -121,7 +120,7 @@ class ExtensionTests(
 
     private fun testSearchAnimesPage() {
         printAnimesPage(TestsEnum.SEARCH) { page: Int ->
-            source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
+            source.fetchSearchAnime(page, configs.searchStr, source.getFilterList())
         }
     }
 
