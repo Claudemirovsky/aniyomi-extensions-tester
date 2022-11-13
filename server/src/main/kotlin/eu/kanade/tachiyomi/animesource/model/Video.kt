@@ -40,8 +40,8 @@ open class Video(
     // "url", "language-label-2", "url2", "language-label-2"
     val subtitleTracks: List<Track> = emptyList(),
     val audioTracks: List<Track> = emptyList(),
-    var isWorking: Boolean = false
 ) : ProgressListener {
+    var isWorking: Boolean = false
 
     @Suppress("UNUSED_PARAMETER")
     constructor(
