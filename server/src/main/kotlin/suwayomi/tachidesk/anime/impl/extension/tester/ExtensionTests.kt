@@ -68,7 +68,6 @@ class ExtensionTests(
     private var TEST_RESULT_EPLIST: JsonObject? = null
     private var TEST_RESULT_VIDEOLIST: JsonObject? = null
 
-
     // Comma-separated list of tests to be done
 
     private val tests by lazy {
@@ -115,19 +114,19 @@ class ExtensionTests(
     }
 
     private fun testPopularAnimesPage() {
-        TEST_RESULT_POPULAR = printAnimesPage() { page: Int ->
+        printAnimesPage(TestsEnum.POPULAR) { page: Int ->
             source.fetchPopularAnime(page)
         }
     }
 
     private fun testLatestAnimesPage() {
-        TEST_RESULT_LATEST = printAnimesPage() { page: Int ->
+        printAnimesPage(TestsEnum.LATEST) { page: Int ->
             source.fetchLatestUpdates(page)
         }
     }
 
     private fun testSearchAnimesPage() {
-        TEST_RESULT_SEARCH = printAnimesPage() { page: Int ->
+        printAnimesPage(TestsEnum.SEARCH) { page: Int ->
             source.fetchSearchAnime(page, configs.searchStr, AnimeFilterList())
         }
     }
@@ -143,7 +142,10 @@ class ExtensionTests(
         if (configs.checkThumbnails)
             details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
         printItemOrJson<SAnime>(details)
-        TEST_RESULT_ANIDETAILS = resultObject(json.encodeToJsonElement(details as SAnimeImpl).jsonObject)
+        writeTestSuccess(TestsEnum.ANIDETAILS) {
+            val animeObj = details as SAnimeImpl
+            json.encodeToJsonElement(animeObj).jsonObject
+        }
     }
 
     private fun testEpisodeList() {
@@ -178,8 +180,10 @@ class ExtensionTests(
             episodeList.forEach {
                 printItemOrJson<SEpisode>(it)
             }
-            val sEpisodeImplList = episodeList.map { it as SEpisodeImpl }
-            TEST_RESULT_EPLIST = resultObject(json.encodeToJsonElement(sEpisodeImplList).jsonArray)
+            writeTestSuccess(TestsEnum.EPLIST) {
+                val episodeOBJList = episodeList.map { it as SEpisodeImpl }
+                json.encodeToJsonElement(episodeOBJList).jsonArray
+            }
         }
     }
 
@@ -205,8 +209,11 @@ class ExtensionTests(
             it.isWorking = test
             printItemOrJson<Video>(it)
         }
-        val videoDtoList = videoList.map { VideoDto(it) }
-        TEST_RESULT_VIDEOLIST = resultObject(json.encodeToJsonElement(videoDtoList).jsonArray)
+
+        writeTestSuccess(TestsEnum.VIDEOLIST) {
+            val videoDtoList = videoList.map { VideoDto(it) }
+            json.encodeToJsonElement(videoDtoList).jsonArray
+        }
     }
 
     /**
@@ -275,13 +282,15 @@ class ExtensionTests(
         }
     }
 
-
     /**
      * Prints the anime-page that a lambda block will return.
      *
      * @param block The lambda that receives a page number and returns a `AnimesPage` object.
      */
-    private fun printAnimesPage(block: (page: Int) -> Observable<AnimesPage>): JsonObject {
+    private fun printAnimesPage(
+        test: TestsEnum,
+        block: (page: Int) -> Observable<AnimesPage>
+    ) {
         var page = 0
         val animesPages = mutableListOf<AnimesPageDto>()
         while (true) {
@@ -289,7 +298,8 @@ class ExtensionTests(
             val results = parseObservable<AnimesPage>(
                 block(page)
             )
-            animesPages.add(AnimesPageDto(results))
+            if (configs.completeResults)
+                animesPages.add(AnimesPageDto(results))
             println()
             printLine("Page", "$page")
             printLine("Results", results.animes.size.toString())
@@ -312,7 +322,9 @@ class ExtensionTests(
             if (!configs.increment || !results.hasNextPage || page >= 2) break
             else println("${RED}Incrementing page number$RESET")
         }
-        return resultObject(json.encodeToJsonElement(animesPages).jsonArray)
+        writeTestSuccess(test) {
+            json.encodeToJsonElement(animesPages).jsonArray
+        }
     }
 
     /*
@@ -347,25 +359,35 @@ class ExtensionTests(
     }
 
     private fun writeTestError(test: TestsEnum, e: Exception) {
-        val res = resultObject(null, e, false)
+        val result = resultObject(null, e, false)
+        setTestResult(test, result)
+    }
+
+    private fun writeTestSuccess(test: TestsEnum, resultFetcher: () -> JsonElement) {
+        val res = if (!configs.completeResults) null else resultFetcher()
+        val result = resultObject(res)
+        setTestResult(test, result)
+    }
+
+    private fun setTestResult(test: TestsEnum, result: JsonObject) {
         when (test) {
             TestsEnum.POPULAR -> {
-                TEST_RESULT_POPULAR = res
+                TEST_RESULT_POPULAR = result
             }
             TestsEnum.LATEST -> {
-                TEST_RESULT_LATEST = res
+                TEST_RESULT_LATEST = result
             }
             TestsEnum.SEARCH -> {
-                TEST_RESULT_SEARCH = res
+                TEST_RESULT_SEARCH = result
             }
             TestsEnum.ANIDETAILS -> {
-                TEST_RESULT_ANIDETAILS = res
+                TEST_RESULT_ANIDETAILS = result
             }
             TestsEnum.EPLIST -> {
-                TEST_RESULT_EPLIST = res
+                TEST_RESULT_EPLIST = result
             }
             TestsEnum.VIDEOLIST -> {
-                TEST_RESULT_VIDEOLIST = res
+                TEST_RESULT_VIDEOLIST = result
             }
         }
     }

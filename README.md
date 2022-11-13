@@ -29,20 +29,20 @@ Arguments:
 Options:
     --anime-url, -a -> Target anime url { String }
     --check-thumbnails [false] -> Check if thumbnails are loading
+    --complete-results, -C [false] -> Output JSON files with complete result data
     --date-format, -f [dd/MM/yyyy] -> Format to use when printing episode date { String }
     --debug, -d [false] -> Enable okHttp debug
     --episode-number, -n -> Target episode number { Int }
     --episode-url, -e -> Target episode url { String }
     --increment-pages, -i [false] -> Try using pagination when possible
+    --json-dir, -D -> Directory to put the JSON result files { String }
     --json, -j -> Show JSON data instead of tables
-    --proxy -> Proxy address to use when doing the requests in OkHttpClient. like <protocol>://<host>:<port> { String }
+    --proxy -> Proxy address to use when doing the requests. Like <protocol>://<host>:<port> { String }
     --results-count, -c [2] -> Amount of items to print from result lists { Int }
     --search, -s [world] -> Text to use when testing the search { String }
     --show-all, -A -> Show all items of lists, instead of the first ~2
     --stop-on-error, -X -> Stop the tests on the first error
     --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
-    --json-files, -J [false] -> Output JSON files with results
-    --json-dir, -D [.] -> Directory (that exists) in which to put the JSON result files
     --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
     --user-agent, -U -> Set and use a specific user agent { String }
     --help, -h -> Usage info
@@ -56,7 +56,7 @@ Options:
 - [x] Support custom http/https/socks5 proxies
 - [x] Support custom User-Agent
 - [x] Document some functions, classes and operations
-- [ ] Dump tests results as JSON
+- [X] Dump tests results as JSON
 
 ## Credits
 

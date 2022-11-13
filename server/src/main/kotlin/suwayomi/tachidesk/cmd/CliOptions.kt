@@ -27,6 +27,13 @@ object CliOptions {
             description = "Check if thumbnails are loading"
         ).default(false)
 
+        val completeResults by parser.option(
+            ArgType.Boolean,
+            "complete-results",
+            "C",
+            description = "Output JSON files with complete result data"
+        ).default(false)
+
         val dateFormat by parser.option(
             ArgType.String, "date-format", "f",
             description = "Format to use when printing episode date"
@@ -51,6 +58,13 @@ object CliOptions {
             ArgType.Boolean, "increment-pages", "i",
             description = "Try using pagination when possible"
         ).default(false)
+
+        val jsonDir by parser.option(
+            ArgType.String,
+            "json-dir",
+            "D",
+            description = "Directory to put the JSON result files"
+        )
 
         val printJson by parser.option(
             ArgType.Boolean, "json", "j",
@@ -87,20 +101,6 @@ object CliOptions {
             description = "Tests to be made(in order), delimited by commas"
         ).default(TestsEnum.getValues())
 
-        val jsonDir by parser.option(
-            ArgType.String,
-            "json-dir",
-            "D",
-            description = "Directory (that exists) in which to put the JSON result files"
-        ).default(".")
-
-        val json by parser.option(
-            ArgType.Boolean,
-            "json-files",
-            "J",
-            description = "Output JSON files with results"
-        ).default(false)
-
         val tmpDir by parser.option(
             ArgType.String,
             "tmp-dir",
@@ -118,6 +118,7 @@ object CliOptions {
         val configs = ConfigsDto(
             animeUrl ?: "",
             checkThumbnails,
+            completeResults,
             dateFormat,
             episodeUrl ?: "",
             episodeNumber ?: -1,
@@ -127,11 +128,9 @@ object CliOptions {
             searchStr,
             showAll ?: false,
             stopOnError ?: false,
-            tests,
-            json,
-            jsonDir
+            tests
         )
 
-        return OptionsDto(apksPath, configs, debug, proxy, tmpDir, userAgent)
+        return OptionsDto(apksPath, configs, debug, jsonDir, proxy, tmpDir, userAgent)
     }
 }

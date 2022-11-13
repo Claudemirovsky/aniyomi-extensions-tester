@@ -54,7 +54,6 @@ suspend fun main(args: Array<String>) {
             .toList()
     }
 
-    // Unused variable for now, it will be useful in the future.
     val extensionsInfo = extensions.associate {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }
@@ -73,11 +72,13 @@ suspend fun main(args: Array<String>) {
         }
     }
 
-    if (options.configs.jsonFiles) {
+    if (options.jsonFilesDir?.isNotBlank() ?: false) {
         extensionsInfo.map {
             val pkgName = it.key.substringAfter("eu.kanade.tachiyomi.animeextension.")
             val result = it.value.toString()
-            File("${options.configs.jsonFilesDir}/results-$pkgName.json").writeText(result)
+            File(options.jsonFilesDir).also { it.mkdir() }.also {
+                File(it, "results-$pkgName.json").writeText(result)
+            }
         }
     }
 }
