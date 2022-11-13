@@ -1,3 +1,17 @@
+# [](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.0.1...v) (2022-11-13)
+
+
+
+## [2.0.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.0.0...v2.0.1) (2022-11-13)
+
+
+### Bug Fixes
+
+* Fix NoSuchMethodError on Video class ([6388ae8](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/6388ae86373fe19130c483484f673e46e273b6d2))
+* Prevent crash on runtime errors ([#2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/issues/2)) ([b5540be](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/b5540bef02dddfbc9af553210b2c7944975a3be7))
+
+
+
 # [2.0.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v1.1.0...v2.0.0) (2022-11-13)
 
 
