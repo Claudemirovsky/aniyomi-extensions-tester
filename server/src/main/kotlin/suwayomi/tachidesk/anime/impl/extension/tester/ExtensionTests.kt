@@ -97,7 +97,7 @@ class ExtensionTests(
                 printTitle("${test.name} TEST FAILED", barColor = RED)
                 if (configs.stopOnError)
                     exitProcess(-1)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 writeTestError(test, e)
                 logger.error("Test($test): ", e)
                 if (configs.stopOnError)
@@ -344,7 +344,7 @@ class ExtensionTests(
      * @param test The test that failed.
      * @param e The exception returned by the failed test.
      */
-    private fun writeTestError(test: TestsEnum, e: Exception) {
+    private fun writeTestError(test: TestsEnum, e: Throwable) {
         val result = ResultDto(null, e.toString(), false)
         setTestResult(test, result)
     }
