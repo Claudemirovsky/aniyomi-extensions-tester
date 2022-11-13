@@ -159,15 +159,12 @@ class ExtensionTests(
 
         if (result.size > 0) {
             // Sets the episode url to use in videoList test.
-            if (configs.episodeUrl.isBlank()) {
-                EP_URL = result.first().url
+            if (configs.episodeUrl.isNotBlank()) {
+                EP_URL = configs.episodeUrl
             } else if (configs.episodeNumber > -1) {
-                run loop@{
-                    result.forEach {
-                        if (it.episode_number.toInt() == configs.episodeNumber) {
-                            EP_URL = it.url
-                            return@loop
-                        }
+                runCatching {
+                    EP_OBJ = result.first {
+                        it.episode_number.toInt() == configs.episodeNumber
                     }
                 }
             } else EP_OBJ = result.first()
