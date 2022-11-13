@@ -22,7 +22,7 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v1.1.0.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v2.0.0.jar -h
 Usage: aniyomi-extension-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
