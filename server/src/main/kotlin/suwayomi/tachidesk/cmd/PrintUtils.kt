@@ -3,7 +3,7 @@ package suwayomi.tachidesk.cmd
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
-import suwayomi.tachidesk.anime.impl.extension.tester.TestsEnum
+import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import java.text.SimpleDateFormat
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -175,12 +175,12 @@ fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
  * @param testBlock The function/lambda block to be timed.
  */
 @ExperimentalTime
-fun timeTest(title: String, color: String = YELLOW, testBlock: () -> Unit) {
+inline fun <T> timeTest(title: String, color: String = YELLOW, testBlock: () -> T): T {
     println()
     printTitle("STARTING $title", color)
-    measureTimedValue(testBlock).also {
+    return measureTimedValue(testBlock).also {
         val secs = it.duration.toDouble(DurationUnit.SECONDS)
         println()
         printTitle("COMPLETED $title IN ${String.format("%.2f", secs)}s", color)
-    }
+    }.value
 }

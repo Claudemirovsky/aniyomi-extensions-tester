@@ -8,12 +8,13 @@ package suwayomi.tachidesk
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import suwayomi.tachidesk.anime.impl.extension.AnimeExtension
 import suwayomi.tachidesk.anime.impl.extension.tester.ExtensionTests
+import suwayomi.tachidesk.anime.impl.extension.tester.models.SourceResultsDto
 import suwayomi.tachidesk.cmd.CliOptions.parseArgs
 import suwayomi.tachidesk.cmd.GREEN
 import suwayomi.tachidesk.cmd.timeTest
@@ -28,6 +29,7 @@ import kotlin.time.ExperimentalTime
 private val logger = KotlinLogging.logger {}
 
 @ExperimentalTime
+@ExperimentalSerializationApi
 suspend fun main(args: Array<String>) {
     applicationSetup()
 
@@ -57,25 +59,20 @@ suspend fun main(args: Array<String>) {
     val extensionsInfo = extensions.associate {
         logger.debug("Installing $it")
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { it.toFile() }
-        pkgName to buildJsonArray {
-            sources.map { source ->
-                timeTest("${source.name} TESTS", color = GREEN) {
-                    add(
-                        buildJsonObject {
-                            put("name", source.name)
-                            put("result", ExtensionTests(source, options.configs).runTests())
-                        }
-                    )
-                }
+        pkgName to sources.map { source ->
+            timeTest("${source.name} TESTS", color = GREEN) {
+                val res = ExtensionTests(source, options.configs).runTests()
                 println()
+                SourceResultsDto(source.name, res)
             }
         }
     }
 
+    val json = Json { prettyPrint = false; explicitNulls = false }
     if (options.jsonFilesDir?.isNotBlank() ?: false) {
         extensionsInfo.map {
             val pkgName = it.key.substringAfter("eu.kanade.tachiyomi.animeextension.")
-            val result = it.value.toString()
+            val result = json.encodeToString(it.value)
             File(options.jsonFilesDir).also { it.mkdir() }.also {
                 File(it, "results-$pkgName.json").writeText(result)
             }

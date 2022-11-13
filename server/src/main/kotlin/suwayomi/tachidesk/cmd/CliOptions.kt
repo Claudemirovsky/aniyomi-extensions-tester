@@ -3,7 +3,7 @@ package suwayomi.tachidesk.cmd
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import suwayomi.tachidesk.anime.impl.extension.tester.TestsEnum
+import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import suwayomi.tachidesk.cmd.dto.ConfigsDto
 import suwayomi.tachidesk.cmd.dto.OptionsDto
 
@@ -131,6 +131,16 @@ object CliOptions {
             tests
         )
 
-        return OptionsDto(apksPath, configs, debug, jsonDir, proxy, tmpDir, userAgent)
+        val options = OptionsDto(
+            apksPath,
+            configs,
+            debug,
+            jsonDir,
+            proxy,
+            tmpDir,
+            userAgent
+        )
+
+        return options
     }
 }

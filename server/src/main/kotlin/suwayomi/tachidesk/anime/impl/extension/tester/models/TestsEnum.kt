@@ -1,4 +1,4 @@
-package suwayomi.tachidesk.anime.impl.extension.tester
+package suwayomi.tachidesk.anime.impl.extension.tester.models
 
 enum class TestsEnum {
     POPULAR,
