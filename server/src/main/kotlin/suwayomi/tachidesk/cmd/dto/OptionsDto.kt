@@ -16,6 +16,7 @@ data class OptionsDto(
     val configs: ConfigsDto,
     val debugMode: Boolean,
     val jsonFilesDir: String?,
+    val prettyJson: Boolean = false,
     val proxy: String?,
     val tmpDir: String,
     val userAgent: String?

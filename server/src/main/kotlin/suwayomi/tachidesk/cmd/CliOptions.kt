@@ -66,6 +66,11 @@ object CliOptions {
             description = "Directory to put the JSON result files"
         )
 
+        val prettyJson by parser.option(
+            ArgType.Boolean, "pretty-json", "P",
+            description = "Dumps prettified JSON data to files"
+        ).default(false)
+
         val printJson by parser.option(
             ArgType.Boolean, "json", "j",
             description = "Show JSON data instead of tables"
@@ -136,6 +141,7 @@ object CliOptions {
             configs,
             debug,
             jsonDir,
+            prettyJson,
             proxy,
             tmpDir,
             userAgent

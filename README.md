@@ -36,6 +36,7 @@ Options:
     --episode-url, -e -> Target episode url { String }
     --increment-pages, -i [false] -> Try using pagination when possible
     --json-dir, -D -> Directory to put the JSON result files { String }
+    --pretty-json, -P [false] -> Dumps prettified JSON data to files
     --json, -j -> Show JSON data instead of tables
     --proxy -> Proxy address to use when doing the requests. Like <protocol>://<host>:<port> { String }
     --results-count, -c [2] -> Amount of items to print from result lists { Int }

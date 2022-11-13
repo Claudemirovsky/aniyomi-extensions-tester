@@ -68,7 +68,7 @@ suspend fun main(args: Array<String>) {
         }
     }
 
-    val json = Json { prettyPrint = false; explicitNulls = false }
+    val json = Json { prettyPrint = options.prettyJson; explicitNulls = false }
     if (options.jsonFilesDir?.isNotBlank() ?: false) {
         extensionsInfo.map {
             val pkgName = it.key.substringAfter("eu.kanade.tachiyomi.animeextension.")
