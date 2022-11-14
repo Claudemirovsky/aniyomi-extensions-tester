@@ -1,3 +1,24 @@
+# [](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.1.0...v) (2022-11-14)
+
+
+
+# [2.1.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.0.1...v2.1.0) (2022-11-14)
+
+
+### Bug Fixes
+
+* Prevent false-negatives on sources that doesnt support HEAD requests ([7b111b0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/7b111b0b8c2a963c8febb308a26abbcc061372da))
+* Use source's filter list to prevent errors on search ([2fd362b](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2fd362bf56633d85afc5c1c81af9584d33f72be1))
+
+
+### Features
+
+* **cli:** Show progress ([73855eb](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/73855ebb81f38f0cca6232b366696a99946a339f))
+* Dump tests results on-demand ([a1e8ff7](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a1e8ff709d4cfb8af2f1cb95ccf053166cbe0b06))
+* Reduce default timeout limit ([92dad25](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/92dad25e31d617d34ef2393a6a3bdf6d8e3c1c5a))
+
+
+
 # [](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.0.1...v) (2022-11-13)
 
 
