@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.animesource.model.SEpisodeImpl
 import eu.kanade.tachiyomi.animesource.model.Video
 import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
+import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HEAD
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -197,7 +198,11 @@ class ExtensionTests(
         videoList.forEach {
             // Tests if the video is loading
             // It runs everytime, but its really fast and does not use much bandwith
-            val test = testMediaResult(it.videoUrl ?: it.url, true, it.headers)
+            // .... Unless something went wrong
+            val test = runCatching {
+                testMediaResult(it.videoUrl ?: it.url, true, it.headers)
+            }.getOrDefault(false)
+
             it.isWorking = test
             printItemOrJson<Video>(it)
         }
@@ -241,7 +246,8 @@ class ExtensionTests(
     private fun testMediaResult(
         url: String?,
         isVideo: Boolean = false,
-        headers: Headers? = null
+        headers: Headers? = null,
+        supportsHEAD: Boolean = true
     ): Boolean {
         if (url == null) return false
         // Prevents loading a heavy image or video by requesting only ONE byte.
@@ -251,19 +257,28 @@ class ExtensionTests(
         }.build()
 
         // We use the HEAD request type because we just want the response headers.
-        // Lets pray that the source supports it
+        //
+        // If the source does not support it (= returns UNDEFINED aa content-type),
+        // We use GET instead, at the risk of maybe downloading a entire episode
+        // Or in the best-worst case just downloading a m3u8 playlist.
         val req = try {
-            source.client.newCall(HEAD(url, newHeaders)).execute()
+            val request = if (supportsHEAD) HEAD(url, newHeaders) else GET(url, newHeaders)
+            source.client.newCall(request).execute()
         } catch (e: ProtocolException) {
             // Sometimes OkHttp just forgets that it supports HTTP 206 partial content.
             // So trying again will not hurt.
-            return testMediaResult(url, isVideo, headers)
+            return testMediaResult(url, isVideo, headers, supportsHEAD)
         }
 
         // HTTP codes outside 2xx or 3xx are a bad signal...
         if (!req.isSuccessful) return false
 
         val resType = req.header("content-type", "") ?: ""
+        if (resType == "undefined") {
+            if (!supportsHEAD) return false
+            else return testMediaResult(url, isVideo, headers, false)
+        }
+
         val mimeTypes = listOf("video/", "/x-mpegURL", "/vnd.apple.mpegurl")
         return if (isVideo) mimeTypes.any { it in resType } else "image/" in resType
     }
