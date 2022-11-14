@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.animesource.model.Video
 import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.HEAD
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -40,6 +41,7 @@ class FailedTestException(error: Throwable) : Exception(error) {
     constructor(error: String = "") : this(Exception(error))
 }
 
+@ExperimentalSerializationApi
 class ExtensionTests(
     private val source: AnimeHttpSource,
     private val configs: ConfigsDto
