@@ -12,4 +12,5 @@ import com.typesafe.config.Config
 /**
  * Abstract config module.
  */
+ @Suppress("UNUSED_PARAMETER")
 abstract class ConfigModule(config: Config, moduleName: String = "")

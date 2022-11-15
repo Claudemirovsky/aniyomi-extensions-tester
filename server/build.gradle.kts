@@ -27,7 +27,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("io.reactivex:rxjava:1.3.8")
     implementation("org.jsoup:jsoup:1.15.3")
-    implementation("app.cash.quickjs:quickjs-jvm:0.9.2")
+
+    // Cloudflare interceptor
     implementation("net.sourceforge.htmlunit:htmlunit:2.65.1")
 
     // AndroidCompat

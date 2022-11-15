@@ -11,12 +11,14 @@ import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.content.Context;
 import android.widget.EditText;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class EditTextPreference extends DialogPreference {
     // reference: https://android.googlesource.com/platform/frameworks/support/+/996971f962fcd554339a7cb2859cef9ca89dbcb7/preference/preference/src/main/java/androidx/preference/EditTextPreference.java
 
     private String text;
 
+    @JsonIgnore
     private OnBindEditTextListener onBindEditTextListener;
 
     public EditTextPreference(Context context) {

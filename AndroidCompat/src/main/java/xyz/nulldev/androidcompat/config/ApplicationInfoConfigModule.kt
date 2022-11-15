@@ -1,6 +1,7 @@
 package xyz.nulldev.androidcompat.config
 
 import com.typesafe.config.Config
+import io.github.config4k.getValue
 import xyz.nulldev.ts.config.ConfigModule
 
 /**
@@ -8,11 +9,11 @@ import xyz.nulldev.ts.config.ConfigModule
  */
 
 class ApplicationInfoConfigModule(config: Config) : ConfigModule(config) {
-    val packageName = config.getString("packageName")!!
-    val debug = config.getBoolean("debug")
+    val packageName: String by config
+    val debug: Boolean by config
 
     companion object {
-        fun register(config: Config)
-                = ApplicationInfoConfigModule(config.getConfig("android.app"))
+        fun register(config: Config) =
+            ApplicationInfoConfigModule(config.getConfig("android.app"))
     }
 }

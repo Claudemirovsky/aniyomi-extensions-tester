@@ -27,7 +27,7 @@ class StubbedCookieManager : CookieManager() {
     }
 
     override fun getCookie(url: String?): String {
-        throw NotImplementedError()
+        throw NotImplementedError("No working cookieManager implementation for now :(")
     }
 
     override fun getCookie(url: String?, privateBrowsing: Boolean): String {
