@@ -1,6 +1,16 @@
 package eu.kanade.tachiyomi.network
 
+/*
+ * Copyright (C) Contributors to the Suwayomi project
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -10,6 +20,8 @@ import okhttp3.internal.closeQuietly
 import rx.Observable
 import rx.Producer
 import rx.Subscription
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.fullType
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -125,3 +137,12 @@ fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListene
 }
 
 class HttpException(val code: Int) : IllegalStateException("HTTP error $code")
+
+inline fun <reified T> Response.parseAs(): T {
+    // Avoiding Injekt.get<Json>() due to compiler issues
+    val json = Injekt.getInstance<Json>(fullType<Json>().type)
+    this.use {
+        val responseBody = it.body?.string().orEmpty()
+        return json.decodeFromString(responseBody)
+    }
+}

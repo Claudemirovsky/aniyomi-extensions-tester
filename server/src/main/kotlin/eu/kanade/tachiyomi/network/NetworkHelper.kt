@@ -5,7 +5,8 @@ package eu.kanade.tachiyomi.network
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 
 import android.content.Context
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
 
-    val cookieManager = MemoryCookieJar()
+    val cookieManager = PersistentCookieJar(context)
 
     val client by lazy {
         val builder = OkHttpClient.Builder()
@@ -77,4 +78,7 @@ class NetworkHelper(context: Context) {
         System.setProperty("${type}ProxyPort", port)
         return true
     }
+
+    val cookies: PersistentCookieStore
+        get() = cookieManager.store
 }

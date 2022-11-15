@@ -49,8 +49,10 @@ Options:
     --help, -h -> Usage info
 ```
 ## TODO
-- [x] Implement all main functions from extensions
 - [ ] Support search filters
+- [ ] Support webview-related interceptors
+
+- [x] Implement all main functions from extensions
 - [x] Test and check thumbnail URLs and video URLs
 - [x] Show time spent on every test
 - [x] Honor all CLI options
