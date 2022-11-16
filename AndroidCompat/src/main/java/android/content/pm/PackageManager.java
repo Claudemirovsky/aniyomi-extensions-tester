@@ -3366,6 +3366,7 @@ public abstract class PackageManager {
      * @deprecated
      * @hide
      */
+    @Deprecated
     public abstract int getInstantAppCookieMaxSize();
     /**
      * Gets the instant application cookie for this app. Non

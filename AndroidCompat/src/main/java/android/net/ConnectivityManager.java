@@ -1220,6 +1220,7 @@ public class ConnectivityManager {
      *     to find the network instead.
      * @hide
      */
+    @Deprecated
     public static NetworkCapabilities networkCapabilitiesForType(int type) {
         throw new RuntimeException("Stub!");
     }
@@ -1845,6 +1846,7 @@ public class ConnectivityManager {
      * @deprecated Types are deprecated. Use {@link #reportNetworkConnectivity} instead.
      * {@hide}
      */
+    @Deprecated
     public void reportInetCondition(int networkType, int percentage) {
         throw new RuntimeException("Stub!");
     }

@@ -20,6 +20,5 @@ class AndroidCompatInitializer {
             ApplicationInfoConfigModule.register(GlobalConfigManager.config),
             SystemConfigModule.register(GlobalConfigManager.config)
         )
-
     }
 }

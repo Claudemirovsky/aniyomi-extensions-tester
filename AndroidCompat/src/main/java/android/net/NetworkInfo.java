@@ -421,6 +421,7 @@ public class NetworkInfo implements Parcelable {
      * @deprecated This method does not have a consistent contract that could make it useful
      *             to callers.
      */
+    @Deprecated
     public String getReason() {
         synchronized (this) {
             return mReason;
