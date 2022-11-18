@@ -1,6 +1,7 @@
 package android.webkit
 
 import android.content.Context
+import com.gargoylesoftware.htmlunit.WebClient
 
 interface WebViewFactoryProvider {
     interface Statics {
@@ -15,4 +16,6 @@ interface WebViewFactoryProvider {
     val settings: WebSettings
 
     var webViewClient: WebViewClient
+
+    val webclient: WebClient
 }

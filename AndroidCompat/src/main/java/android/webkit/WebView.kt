@@ -13,9 +13,15 @@ class WebView(private val context: Context) {
 
     fun clearHistory() {}
 
-    fun stopLoading() {}
+    fun stopLoading() {
+        destroy()
+    }
 
-    fun destroy() {}
+    fun destroy() {
+        runCatching {
+            mProvider.webclient.close()
+        }
+    }
 
     fun loadUrl(url: String, additionalHeaders: Map<String, String>) =
         mProvider.loadUrl(url, additionalHeaders)
