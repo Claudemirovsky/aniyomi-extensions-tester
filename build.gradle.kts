@@ -7,7 +7,6 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "3.1.0" apply false
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
     id("com.github.ben-manes.versions") version "0.39.0"
-
 }
 
 allprojects {
@@ -27,9 +26,9 @@ allprojects {
 }
 
 val projects = listOf(
-        project(":AndroidCompat"),
-        project(":AndroidCompat:Config"),
-        project(":server")
+    project(":AndroidCompat"),
+    project(":AndroidCompat:Config"),
+    project(":server")
 )
 
 configure(projects) {

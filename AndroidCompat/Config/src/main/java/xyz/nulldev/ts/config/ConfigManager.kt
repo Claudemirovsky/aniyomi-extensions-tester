@@ -10,7 +10,6 @@ package xyz.nulldev.ts.config
 import ch.qos.logback.classic.Level
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import com.typesafe.config.ConfigRenderOptions
 import mu.KotlinLogging
 
 /**
@@ -20,7 +19,7 @@ open class ConfigManager {
     private val generatedModules = mutableMapOf<Class<out ConfigModule>, ConfigModule>()
     val config by lazy { loadConfigs() }
 
-    //Public read-only view of modules
+    // Public read-only view of modules
     val loadedModules: Map<Class<out ConfigModule>, ConfigModule>
         get() = generatedModules
 
@@ -41,12 +40,12 @@ open class ConfigManager {
      * Load configs
      */
     fun loadConfigs(): Config {
-        //Load reference configs
+        // Load reference configs
         val compatConfig = ConfigFactory.parseResources("compat-reference.conf")
 
         val config = ConfigFactory.empty()
-                .withFallback(compatConfig)
-                .resolve()
+            .withFallback(compatConfig)
+            .resolve()
 
         // set log level early
         setLogLevel(Level.DEBUG)
