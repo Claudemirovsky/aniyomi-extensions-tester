@@ -8,71 +8,35 @@ package eu.kanade.tachiyomi.network
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import android.content.Context
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import xyz.nulldev.androidcompat.androidimpl.StubbedCookieManager
+import java.net.HttpCookie
 import java.net.URI
-import java.util.concurrent.ConcurrentHashMap
 
 // from TachiWeb-Server
-class PersistentCookieStore(context: Context) {
+class PersistentCookieStore {
 
-    private val cookieMap = ConcurrentHashMap<String, List<Cookie>>()
-    private val prefs = context.getSharedPreferences("cookie_store", Context.MODE_PRIVATE)
-
-    init {
-        for ((key, value) in prefs.all) {
-            @Suppress("UNCHECKED_CAST")
-            val cookies = value as? Set<String>
-            if (cookies != null) {
-                try {
-                    val url = "http://$key".toHttpUrlOrNull() ?: continue
-                    val nonExpiredCookies = cookies.mapNotNull { Cookie.parse(url, it) }
-                        .filter { !it.hasExpired() }
-                    cookieMap.put(key, nonExpiredCookies)
-                } catch (e: Exception) {
-                    // Ignore
-                }
-            }
-        }
-    }
+    private val cookieManager = StubbedCookieManager()
 
     @Synchronized
     fun addAll(url: HttpUrl, cookies: List<Cookie>) {
-        val key = url.toUri().host
-
-        // Append or replace the cookies for this domain.
-        val cookiesForDomain = cookieMap[key].orEmpty().toMutableList()
-        for (cookie in cookies) {
-            // Find a cookie with the same name. Replace it if found, otherwise add a new one.
-            val pos = cookiesForDomain.indexOfFirst { it.name == cookie.name }
-            if (pos == -1) {
-                cookiesForDomain.add(cookie)
-            } else {
-                cookiesForDomain[pos] = cookie
-            }
+        val key = url.toUri()
+        cookies.forEach {
+            val cookie = it.toHttpCookie().toString()
+            cookieManager.setCookie(key, cookie)
         }
-        cookieMap.put(key, cookiesForDomain)
-
-        // Get cookies to be stored in disk
-        val newValues = cookiesForDomain.asSequence()
-            .filter { it.persistent && !it.hasExpired() }
-            .map(Cookie::toString)
-            .toSet()
-
-        prefs.edit().putStringSet(key, newValues).apply()
     }
 
     @Synchronized
     fun removeAll() {
-        prefs.edit().clear().apply()
-        cookieMap.clear()
+        cookieManager.removeAllCookie()
     }
 
     fun remove(uri: URI) {
-        prefs.edit().remove(uri.host).apply()
-        cookieMap.remove(uri.host)
+        cookieManager.prefs.edit().remove(uri.host).apply()
+        cookieManager.cookieMap.remove(uri.host)
     }
 
     fun get(url: HttpUrl) = get(url.toUri().host)
@@ -80,8 +44,11 @@ class PersistentCookieStore(context: Context) {
     fun get(uri: URI) = get(uri.host)
 
     private fun get(url: String): List<Cookie> {
-        return cookieMap[url].orEmpty().filter { !it.hasExpired() }
+        val newUrl = url.toHttpUrlOrNull() ?: return emptyList<Cookie>()
+        return cookieManager.getCookie(url).split(";").mapNotNull {
+            Cookie.parse(newUrl, it)
+        }
     }
 
-    private fun Cookie.hasExpired() = System.currentTimeMillis() >= expiresAt
+    private fun Cookie.toHttpCookie() = HttpCookie(name, value)
 }

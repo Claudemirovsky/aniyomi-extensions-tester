@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
 
-    val cookieManager = PersistentCookieJar(context)
+    val cookieManager = PersistentCookieJar()
 
     val client by lazy {
         val builder = OkHttpClient.Builder()

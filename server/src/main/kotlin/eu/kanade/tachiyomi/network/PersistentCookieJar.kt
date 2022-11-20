@@ -8,15 +8,14 @@ package eu.kanade.tachiyomi.network
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import android.content.Context
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
 // from TachiWeb-Server
-class PersistentCookieJar(context: Context) : CookieJar {
+class PersistentCookieJar : CookieJar {
 
-    val store = PersistentCookieStore(context)
+    val store = PersistentCookieStore()
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         store.addAll(url, cookies)
