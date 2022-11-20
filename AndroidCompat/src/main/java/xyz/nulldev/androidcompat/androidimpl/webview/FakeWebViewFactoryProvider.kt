@@ -1,4 +1,4 @@
-package xyz.nulldev.androidcompat.androidimpl
+package xyz.nulldev.androidcompat.androidimpl.webview
 
 import android.content.Context
 import android.webkit.WebViewClient
@@ -14,12 +14,13 @@ class FakeWebViewFactoryProvider(private val ctx: Context) : WebViewFactoryProvi
 
     override val webclient by lazy {
         WebClient(BrowserVersion.BEST_SUPPORTED).apply {
+            cookieManager = HtmlUnitCookieManager()
             options.apply {
                 isThrowExceptionOnFailingStatusCode = false
                 isPrintContentOnFailingStatusCode = false
                 isThrowExceptionOnScriptError = false
                 isJavaScriptEnabled = true
-                isCssEnabled = false
+                isCssEnabled = true
                 setUseInsecureSSL(true)
             }
         }

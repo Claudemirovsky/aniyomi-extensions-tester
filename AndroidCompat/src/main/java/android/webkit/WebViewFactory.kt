@@ -2,7 +2,7 @@ package android.webkit
 
 import android.annotation.SystemApi
 import android.content.Context
-import xyz.nulldev.androidcompat.androidimpl.FakeWebViewFactoryProvider
+import xyz.nulldev.androidcompat.androidimpl.webview.FakeWebViewFactoryProvider
 
 @SystemApi
 class WebViewFactory {

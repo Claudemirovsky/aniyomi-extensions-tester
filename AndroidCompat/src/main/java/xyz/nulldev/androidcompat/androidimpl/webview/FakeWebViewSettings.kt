@@ -1,4 +1,4 @@
-package xyz.nulldev.androidcompat.androidimpl
+package xyz.nulldev.androidcompat.androidimpl.webview
 
 import android.webkit.WebSettings
 import com.gargoylesoftware.htmlunit.BrowserVersion

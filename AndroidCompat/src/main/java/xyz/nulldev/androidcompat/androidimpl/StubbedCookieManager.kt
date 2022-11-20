@@ -62,7 +62,7 @@ class StubbedCookieManager : CookieManager() {
     }
     @Synchronized
     fun setCookie(uri: URI, value: String) {
-        val key = uri.host!!
+        val key = uri.host ?: return
         val cookie = HttpCookie.parse(value).first()
         val allCookies = addOrUpdate(key, cookie)
         // Get cookies to be stored in disk

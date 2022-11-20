@@ -19,6 +19,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
+import xyz.nulldev.androidcompat.androidimpl.webview.HtmlUnitCookieManager
 import java.io.IOException
 
 // from TachiWeb-Server
@@ -59,8 +60,14 @@ class CloudflareInterceptor : Interceptor {
             .setUserAgent(response.request.header("User-Agent") ?: BrowserVersion.BEST_SUPPORTED.userAgent)
             .build()
         val convertedCookies = WebClient(browserVersion).use { webClient ->
-            webClient.options.isThrowExceptionOnFailingStatusCode = false
-            webClient.options.isThrowExceptionOnScriptError = false
+            webClient.cookieManager = HtmlUnitCookieManager()
+            webClient.options.apply {
+                isThrowExceptionOnFailingStatusCode = false
+                isThrowExceptionOnScriptError = false
+                isJavaScriptEnabled = true
+                isCssEnabled = true
+                setUseInsecureSSL(true)
+            }
             webClient.getPage<HtmlPage>(response.request.url.toString())
             webClient.waitForBackgroundJavaScript(10000)
             // Challenge solved, process cookies
