@@ -193,7 +193,7 @@ class ExtensionTests(
 
         printLine("Videos", videoList.size.toString())
         if (videoList.size == 0)
-            throw FailedTestException()
+            throw FailedTestException("Empty video list")
 
         videoList.forEach {
             // Tests if the video is loading
