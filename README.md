@@ -9,12 +9,8 @@ This is a fork of [tachiyomi-extensions-inspector](https://github.com/tachiyomio
 - Has enough options to meet most of your needs.
 
 ## Compiling
-First, run the `getAndroid` script, to generate the needed android.jar file (only once)
-```bash
-$ ./AndroidCompat/getAndroid.sh
-```
 
-Then compile the project:
+Just run:
 ```bash
 $ ./gradlew :server:shadowJar
 ```
@@ -51,6 +47,7 @@ Options:
 ## TODO
 - [ ] Support search filters
 - [ ] Support webview-related interceptors
+> - [ ] Implement a proper and functional Cloudflare interceptor
 
 - [x] Implement all main functions from extensions
 - [x] Test and check thumbnail URLs and video URLs
