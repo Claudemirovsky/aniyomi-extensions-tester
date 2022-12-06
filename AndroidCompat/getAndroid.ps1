@@ -50,6 +50,10 @@ function Remove-Files-Zip($zipfile, $paths)
     $stream.Dispose()
 }
 
+Write-Output "Removing useless resources..."
+Remove-Files-Zip $android_jar 'res/*'
+Remove-Files-Zip $android_jar 'resources.arsc'
+
 Write-Output "Removing org.json..."
 Remove-Files-Zip $android_jar 'org/json/*'
 
