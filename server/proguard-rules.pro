@@ -63,14 +63,15 @@
 -keep,allowoptimization class okio.** { public protected *; }
 -keep,allowoptimization class rx.** { public protected *; }
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
--keep,allowoptimization class org.jsoup.Jsoup { *; }
 -keep class app.cash.quickjs.** { public protected *; }
 -keep class eu.kanade.tachiyomi.** { *; }
 -keep class kotlin.** { public protected *; }
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
--keeppackagenames org.jsoup.nodes
+-keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
+-keep,allowoptimization class org.jsoup.select.** { public protected *; }
+-keep class org.jsoup.** { *; }
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
