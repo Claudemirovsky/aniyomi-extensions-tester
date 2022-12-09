@@ -120,7 +120,8 @@
 # HtmlUnit
 
 -keep class com.gargoylesoftware.htmlunit.** { *; }
--keep class net.sourceforge.htmlunit.corejs.javascript.** { *; }
+-keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
+-keep,allowoptimization class org.mozilla.** { *; }
 
 # Other
 #-keep,allowoptimization class org.eclipse.jetty.** { *; }

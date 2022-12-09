@@ -19,7 +19,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.12.4")
 
     // substitute for duktape-android
-    implementation("net.sourceforge.htmlunit:htmlunit-core-js:2.67.0") // same as rhino
+    implementation("org.mozilla:rhino-runtime:1.7.14") // slimmer version of 'org.mozilla:rhino'
     implementation("org.mozilla:rhino-engine:1.7.14") // provides the same interface as 'javax.script' a.k.a Nashorn
 
     // Kotlin wrapper around Java Preferences, makes certain things easier

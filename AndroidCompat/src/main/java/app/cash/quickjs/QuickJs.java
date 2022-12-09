@@ -1,7 +1,7 @@
 package app.cash.quickjs;
 
-import net.sourceforge.htmlunit.corejs.javascript.ConsString;
-import net.sourceforge.htmlunit.corejs.javascript.NativeArray;
+import org.mozilla.javascript.ConsString;
+import org.mozilla.javascript.NativeArray;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
