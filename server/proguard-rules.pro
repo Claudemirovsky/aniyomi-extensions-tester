@@ -105,7 +105,7 @@
 
 # Logback
 -keep class ch.qos.logback.** { *; }
--keep,allowoptimization org.apache.commons.logging.**
+-keep,allowoptimization class org.apache.commons.logging.**
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
