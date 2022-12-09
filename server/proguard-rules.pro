@@ -124,8 +124,8 @@
 -keep class org.mozilla.** { *; }
 
 # Other
--keep class org.eclipse.jetty.** { *; }
--keep class com.sun.jna.** { *; }
+#-keep class org.eclipse.jetty.** { *; }
+#-keep class com.sun.jna.** { *; }
 -dontwarn edu.umd.cs.findbugs.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.eclipse.jetty.**
