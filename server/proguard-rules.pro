@@ -118,9 +118,8 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public protected *; }
--keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
--keep class com.gargoylesoftware.htmlunit.WebClient { *; }
+
+-keep class com.gargoylesoftware.htmlunit.** { *; }
 
 # Other
 #-keep,allowoptimization class org.eclipse.jetty.** { *; }
