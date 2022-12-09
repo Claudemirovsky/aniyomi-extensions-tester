@@ -8,18 +8,6 @@
     public static ** valueOf(java.lang.String);
 }
 
--keepnames class * implements java.io.Serializable
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    !static !transient <fields>;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
-
 ##---------------Begin: proguard configuration for kotlinx.serialization  --------
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt # core serialization annotations
@@ -105,7 +93,9 @@
 
 # Logback
 -keep class ch.qos.logback.** { *; }
--keep,allowoptimization class org.apache.commons.logging.**
+-keep class org.apache.commons.logging.**
+-keep class org.slf4j.MDC
+-keep class org.slf4j.MarkerFactory
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
@@ -128,9 +118,9 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
+-keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public protected *; }
 -keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
 -keep class com.gargoylesoftware.htmlunit.WebClient { *; }
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public protected *; }
 
 # Other
 #-keep,allowoptimization class org.eclipse.jetty.** { *; }

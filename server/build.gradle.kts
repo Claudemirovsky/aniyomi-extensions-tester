@@ -86,6 +86,9 @@ buildConfig {
 
 tasks {
     shadowJar {
+        dependencies {
+            exclude("com/ibm/icu/impl/data/icudt72b/*/*")
+        }
         manifest {
             attributes(
                 mapOf(
@@ -101,6 +104,7 @@ tasks {
         archiveVersion.set(inspectorVersion)
         archiveClassifier.set(inspectorRevision)
     }
+
 
     withType<KotlinCompile> {
         kotlinOptions {
