@@ -8,6 +8,17 @@
     public static ** valueOf(java.lang.String);
 }
 
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
 
 ##---------------Begin: proguard configuration for kotlinx.serialization  --------
 -keepattributes *Annotation*, InnerClasses
@@ -52,13 +63,14 @@
 -keep,allowoptimization class okio.** { public protected *; }
 -keep,allowoptimization class rx.** { public protected *; }
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
+-keep,allowoptimization class org.jsoup.Jsoup { *; }
+-keep,allowoptimization class org.jsoup.nodes.** { *; }
 -keep class app.cash.quickjs.** { public protected *; }
 -keep class eu.kanade.tachiyomi.** { *; }
 -keep class kotlin.** { public protected *; }
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
--keeppackagenames org.jsoup.nodes
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
@@ -68,7 +80,7 @@
 -dontwarn okhttp3.internal.platform.**
 
 # Xml
--keep class org.apache.xerces.** { *; }
+-keep,allowoptimization class org.apache.xerces.** { *; }
 -dontwarn javax.xml.**
 -dontwarn org.xml.sax.**
 -dontwarn com.sun.org.apache.**
@@ -92,6 +104,7 @@
 
 # Logback
 -keep class ch.qos.logback.** { *; }
+
 -dontwarn ch.qos.logback.**
 -dontwarn org.apache.commons.logging.**
 -dontwarn org.slf4j.MDC
@@ -114,11 +127,11 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
+-keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public *; }
 
 # Other
-#-keep class org.eclipse.jetty.** { *; }
-#-keep class com.sun.jna.** { *; }
+-keep,allowoptimization class org.eclipse.jetty.** { *; }
+-keep class com.sun.jna.** { *; }
 -dontwarn edu.umd.cs.findbugs.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.eclipse.jetty.**
