@@ -64,13 +64,13 @@
 -keep,allowoptimization class rx.** { public protected *; }
 -keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 -keep,allowoptimization class org.jsoup.Jsoup { *; }
--keep,allowoptimization class org.jsoup.nodes.** { *; }
 -keep class app.cash.quickjs.** { public protected *; }
 -keep class eu.kanade.tachiyomi.** { *; }
 -keep class kotlin.** { public protected *; }
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
+-keeppackagenames org.jsoup.nodes
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
@@ -80,7 +80,7 @@
 -dontwarn okhttp3.internal.platform.**
 
 # Xml
--keep,allowoptimization class org.apache.xerces.** { *; }
+-keep class org.apache.xerces.** { public *; }
 -dontwarn javax.xml.**
 -dontwarn org.xml.sax.**
 -dontwarn com.sun.org.apache.**
