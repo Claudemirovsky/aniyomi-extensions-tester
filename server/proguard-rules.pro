@@ -105,9 +105,9 @@
 
 # Logback
 -keep class ch.qos.logback.** { *; }
-
--dontwarn ch.qos.logback.**
+-keep,allowoptimization org.apache.commons.logging.**
 -dontwarn org.apache.commons.logging.**
+-dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
 -dontwarn org.slf4j.MarkerFactory
 
@@ -128,11 +128,13 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public *; }
+-keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
+-keep class com.gargoylesoftware.htmlunit.WebClient { *; }
+-keep,allowoptimization class com.gargoylesoftware.htmlunit.** { public protected *; }
 
 # Other
--keep,allowoptimization class org.eclipse.jetty.** { *; }
--keep class com.sun.jna.** { *; }
+#-keep,allowoptimization class org.eclipse.jetty.** { *; }
+#-keep class com.sun.jna.** { *; }
 -dontwarn edu.umd.cs.findbugs.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.eclipse.jetty.**
