@@ -120,12 +120,12 @@
 # HtmlUnit
 
 -keep class com.gargoylesoftware.htmlunit.** { *; }
--keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
--keep,allowoptimization class org.mozilla.** { *; }
+-keep class net.sourceforge.htmlunit.corejs.** { *; }
+-keep class org.mozilla.** { *; }
 
 # Other
-#-keep,allowoptimization class org.eclipse.jetty.** { *; }
-#-keep class com.sun.jna.** { *; }
+-keep class org.eclipse.jetty.** { *; }
+-keep class com.sun.jna.** { *; }
 -dontwarn edu.umd.cs.findbugs.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.eclipse.jetty.**
