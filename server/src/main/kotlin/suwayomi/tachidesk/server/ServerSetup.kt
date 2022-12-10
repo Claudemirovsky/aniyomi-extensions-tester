@@ -19,13 +19,14 @@ import java.util.logging.Logger
 val androidCompat by lazy { AndroidCompat() }
 
 fun applicationSetup() {
-    // Disable HtmlUnit logs
-    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF)
     // Load config API
     DI.global.addImport(ConfigKodeinModule().create())
     // Load Android compatibility dependencies
     AndroidCompatInitializer().init()
     // start app
     androidCompat.startApp(App())
+
+    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+    Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF)
+
 }

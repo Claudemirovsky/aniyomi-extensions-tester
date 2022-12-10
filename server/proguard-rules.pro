@@ -93,8 +93,9 @@
 -dontwarn androidx.annotation.*
 
 # Logback
--keep class ch.qos.logback.** { *; }
+-keep,allowptimization class ch.qos.logback.** { *; }
 -keep class org.apache.commons.logging.** { *; }
+-keep org.slf4j.** { *; }
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
