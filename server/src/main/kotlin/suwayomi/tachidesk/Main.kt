@@ -34,7 +34,6 @@ private val logger = KotlinLogging.logger {}
 @ExperimentalSerializationApi
 suspend fun main(args: Array<String>) {
     applicationSetup()
-
     val options = parseArgs(args)
 
     if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
