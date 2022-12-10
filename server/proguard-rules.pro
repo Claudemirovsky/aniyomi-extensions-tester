@@ -57,9 +57,12 @@
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
--keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
--keep,allowoptimization class org.jsoup.select.** { public protected *; }
--keep class org.jsoup.** { *; }
+#-keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
+#-keep,allowoptimization class org.jsoup.select.** { public protected *; }
+#-keep class org.jsoup.** { *; }
+-keep,allowoptimization class org.jsoup.** { public protected *; }
+-keep class org.jsoup.Jsoup { *; }
+-keep class org.jsoup.Connection { *; }
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
@@ -87,12 +90,13 @@
 -keep class android.os.Looper { *; }
 -keep class android.os.Handler { *; }
 -keep class android.util.Base64 { public protected *; }
--keep class android.webkit.CookieManager  { public protected *; }
+-keep class android.webkit.CookieManager { public protected *; }
+-keep class android.webkit.WebView { public *; }
 -dontwarn android.**
 -dontwarn androidx.annotation.*
 
 # Logback
--keep,allowoptimization class ch.qos.logback.** { public *; }
+-keep class ch.qos.logback.** { public *; }
 -keep,allowoptimization class org.apache.commons.logging.** { public *; }
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
