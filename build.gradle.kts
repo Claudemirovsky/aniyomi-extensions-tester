@@ -91,7 +91,9 @@ configure(projects) {
         implementation("net.harawata:appdirs:1.2.1")
 
         // Cloudflare interceptor and webview
-        implementation("net.sourceforge.htmlunit:htmlunit:2.67.0")
+        implementation("net.sourceforge.htmlunit:htmlunit:2.67.0") {
+            exclude("commons-logging")
+        }
 
         // dex2jar
         val dex2jarVersion = "v57"

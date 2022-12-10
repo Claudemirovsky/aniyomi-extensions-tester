@@ -92,10 +92,10 @@
 -dontwarn androidx.annotation.*
 
 # Logback
--keep class ch.qos.logback.** { *; }
--keep class org.apache.commons.logging.**
--keep class org.slf4j.MDC
--keep class org.slf4j.MarkerFactory
+-keep,allowoptimization class ch.qos.logback.** { public *; }
+-keep,allowoptimization class org.apache.commons.logging.** { public *; }
+#-keep class org.slf4j.MDC { public protected * }
+#-keep class org.slf4j.MarkerFactory
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
@@ -118,9 +118,9 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep class com.gargoylesoftware.htmlunit.** { *; }
--keep class net.sourceforge.htmlunit.corejs.** { *; }
--keep class org.apache.commons.io.FilenameUtils { *; }
+-keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
+-keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
+-keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 -keep class org.mozilla.** { *; }
 
 # Other
