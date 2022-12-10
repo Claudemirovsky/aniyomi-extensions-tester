@@ -116,7 +116,7 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
+-keep class com.gargoylesoftware.htmlunit.** { *; }
 -keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 -keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
 -keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
