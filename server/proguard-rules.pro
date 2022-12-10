@@ -57,12 +57,9 @@
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
-#-keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
-#-keep,allowoptimization class org.jsoup.select.** { public protected *; }
-#-keep class org.jsoup.** { *; }
--keep,allowoptimization class org.jsoup.** { public protected *; }
--keep class org.jsoup.Jsoup { *; }
--keep class org.jsoup.Connection { *; }
+-keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
+-keep,allowoptimization class org.jsoup.select.** { public protected *; }
+-keep class org.jsoup.** { *; }
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
