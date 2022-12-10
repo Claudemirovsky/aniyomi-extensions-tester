@@ -8,9 +8,7 @@ package suwayomi.tachidesk.server
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import eu.kanade.tachiyomi.App
-import java.util.logging.Logger
-import java.util.logging.LogFactory
-import java.util.logging.Level
+import org.apache.commons.logging.LogFactory
 import org.kodein.di.DI
 import org.kodein.di.conf.global
 import xyz.nulldev.androidcompat.AndroidCompat
