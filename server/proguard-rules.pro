@@ -121,6 +121,7 @@
 -keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 -keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
 -keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
+-keep org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
 
 # Other
