@@ -94,8 +94,6 @@
 # Logback
 -keep,allowoptimization class ch.qos.logback.** { public *; }
 -keep,allowoptimization class org.apache.commons.logging.** { public *; }
-#-keep class org.slf4j.MDC { public protected * }
-#-keep class org.slf4j.MarkerFactory
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
@@ -119,8 +117,9 @@
 
 # HtmlUnit
 -keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
--keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
 -keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
+-keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
+-keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
 -keep class org.mozilla.** { *; }
 
 # Other
