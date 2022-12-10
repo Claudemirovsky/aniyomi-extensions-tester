@@ -8,23 +8,20 @@ package suwayomi.tachidesk.server
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import eu.kanade.tachiyomi.App
-import org.apache.commons.logging.LogFactory
 import org.kodein.di.DI
 import org.kodein.di.conf.global
 import xyz.nulldev.androidcompat.AndroidCompat
 import xyz.nulldev.androidcompat.AndroidCompatInitializer
 import xyz.nulldev.ts.config.ConfigKodeinModule
+import java.util.logging.Level
+import java.util.logging.Logger
 
 val androidCompat by lazy { AndroidCompat() }
 
 fun applicationSetup() {
     // Disable HtmlUnit logs
-    LogFactory
-        .getFactory()
-        .setAttribute(
-            "org.apache.commons.logging.Log",
-            "org.apache.commons.logging.impl.NoOpLog"
-        )
+    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+    Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF)
     // Load config API
     DI.global.addImport(ConfigKodeinModule().create())
     // Load Android compatibility dependencies
