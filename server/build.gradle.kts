@@ -85,14 +85,17 @@ buildConfig {
 
 tasks {
     shadowJar {
+        dependencies {
+            exclude("com/ibm/icu/impl/data/icudt72b/*/*")
+        }
         manifest {
             attributes(
                 mapOf(
-                        "Main-Class" to MainClass,
-                        "Implementation-Title" to rootProject.name,
-                        "Implementation-Vendor" to "The Tachiyomi Open Source Project",
-                        "Specification-Version" to inspectorVersion,
-                        "Implementation-Version" to inspectorRevision
+                    "Main-Class" to MainClass,
+                    "Implementation-Title" to rootProject.name,
+                    "Implementation-Vendor" to "The Tachiyomi Open Source Project",
+                    "Specification-Version" to inspectorVersion,
+                    "Implementation-Version" to inspectorRevision
                 )
             )
         }
