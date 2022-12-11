@@ -73,7 +73,7 @@ configure(projects) {
         implementation("org.kodein.di:kodein-di-conf-jvm:7.15.0")
 
         // Logging
-        implementation("org.slf4j:jcl-over-slf4j:1.7.5")
+        //implementation("org.slf4j:jcl-over-slf4j:1.7.5")
         implementation("org.slf4j:slf4j-api:1.7.36")
         implementation("ch.qos.logback:logback-classic:1.2.11")
         implementation("io.github.microutils:kotlin-logging:2.1.21")
@@ -92,9 +92,9 @@ configure(projects) {
         implementation("net.harawata:appdirs:1.2.1")
 
         // Cloudflare interceptor and webview
-        implementation("net.sourceforge.htmlunit:htmlunit:2.67.0") {
+        implementation("net.sourceforge.htmlunit:htmlunit:2.67.0") /*{
             exclude("commons-logging")
-        }
+        }*/
 
         // dex2jar
         val dex2jarVersion = "v57"

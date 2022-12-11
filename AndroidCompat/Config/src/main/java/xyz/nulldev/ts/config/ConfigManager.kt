@@ -48,7 +48,7 @@ open class ConfigManager {
             .resolve()
 
         // set log level early
-        setLogLevel(Level.ERROR)
+        setLogLevel(Level.DEBUG)
 
         return config
     }
