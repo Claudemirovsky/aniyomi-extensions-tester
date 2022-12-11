@@ -13,8 +13,6 @@ import org.kodein.di.conf.global
 import xyz.nulldev.androidcompat.AndroidCompat
 import xyz.nulldev.androidcompat.AndroidCompatInitializer
 import xyz.nulldev.ts.config.ConfigKodeinModule
-import java.util.logging.Level
-import java.util.logging.Logger
 
 val androidCompat by lazy { AndroidCompat() }
 
@@ -25,8 +23,4 @@ fun applicationSetup() {
     AndroidCompatInitializer().init()
     // start app
     androidCompat.startApp(App())
-
-    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF)
-
 }
