@@ -34,21 +34,22 @@ jobs:
           mkdir -p ~/.gradle
           cp .github/runner-files/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Generate android.jar
-        run: |
-          ./AndroidCompat/getAndroid.sh
-
       - name: Build project
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: :server:shadowJar
+          arguments: :server:optimizeShadowJar
+
+      - name: Move files
+        run: |
+          mv server/build/aniyomi-extensions-tester-v*.jar anitester.jar
+          mv server/build/min/aniyomi-extensions-tester-v*.jar anitester-min.jar
 
       - name: Upload Release
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "server/build/*.jar"
+          file: "anitester.jar;anitester-min.jar"
           tags: true
           draft: true
           verbose: true

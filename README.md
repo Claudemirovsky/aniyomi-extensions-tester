@@ -18,7 +18,7 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v2.1.0.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v2.2.0.jar -h
 Usage: aniyomi-extension-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
@@ -46,7 +46,7 @@ Options:
 ```
 ## TODO
 - [ ] Support search filters
-- [ ] Support webview-related interceptors
+- [x] Support webview-related interceptors
 > - [ ] Implement a proper and functional Cloudflare interceptor
 
 - [x] Implement all main functions from extensions
