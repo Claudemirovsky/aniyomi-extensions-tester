@@ -93,8 +93,8 @@
 -dontwarn androidx.annotation.*
 
 # Logback
--keep,allowoptimization class ch.qos.logback.** { public protected *; }
--keep class org.apache.commons.logging.** { public *; }
+-keep class ch.qos.logback.** { *; }
+-keep class org.apache.commons.logging.** { *; }
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
@@ -118,9 +118,9 @@
 
 # HtmlUnit
 -keep class com.gargoylesoftware.htmlunit.** { *; }
--keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
--keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
--keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
+-keep class net.sourceforge.htmlunit.corejs.** { *; }
+#-keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
+#-keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
 -keep class org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
 
