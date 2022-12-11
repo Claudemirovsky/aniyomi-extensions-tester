@@ -99,8 +99,8 @@
 -dontwarn org.slf4j.MarkerFactory
 -keep class ch.qos.logback.** { *; }
 -keep class mu.** { *; }
--keep,allowoptimization class org.apache.commons.logging.** { *; }
--keep,allowoptimization class org.slf4j.** { *; }
+-keep class org.apache.commons.logging.** { *; }
+-keep class org.slf4j.** { *; }
 
 # Java
 -dontwarn java.util.prefs.**
