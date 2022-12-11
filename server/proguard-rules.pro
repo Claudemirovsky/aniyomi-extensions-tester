@@ -1,5 +1,4 @@
 -dontobfuscate
--verbose
 -dontnote **
 -keepattributes Signature,LineNumberTable
 
@@ -48,19 +47,19 @@
 -keepdirectories META-INF/**
 
 # Keep extensions dependencies
--keep,allowoptimization class androidx.preference.** { public protected *; }
--keep,allowoptimization class okio.** { public protected *; }
--keep,allowoptimization class rx.** { public protected *; }
--keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 -keep class app.cash.quickjs.** { public protected *; }
 -keep class eu.kanade.tachiyomi.** { *; }
 -keep class kotlin.** { public protected *; }
 -keep class kotlinx.coroutines.** { public protected *; }
 -keep class kotlinx.serialization.** { public protected *; }
 -keep class okhttp3.** { public protected *; }
+-keep class org.jsoup.** { *; }
+-keep,allowoptimization class androidx.preference.** { public protected *; }
+-keep,allowoptimization class okio.** { public protected *; }
 -keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
 -keep,allowoptimization class org.jsoup.select.** { public protected *; }
--keep class org.jsoup.** { *; }
+-keep,allowoptimization class rx.** { public protected *; }
+-keep,allowoptimization class uy.kohesive.injekt.** { public protected *; }
 
 # Coroutines
 -dontwarn kotlinx.coroutines.**
@@ -70,64 +69,65 @@
 -dontwarn okhttp3.internal.platform.**
 
 # Xml
--keep class org.apache.xerces.** { public *; }
--dontwarn javax.xml.**
--dontwarn org.xml.sax.**
 -dontwarn com.sun.org.apache.**
+-dontwarn javax.xml.**
 -dontwarn org.apache.xerces.**
+-dontwarn org.xml.sax.**
+-keep class org.apache.xerces.** { public *; }
 
 # org.json
--dontwarn org.json.XMLTokener
 -dontwarn org.json.JSONWriter
+-dontwarn org.json.XMLTokener
 -keep class org.json.JSONObject { *; }
 
 # Android
+-dontwarn android.**
+-dontwarn androidx.annotation.*
 -dontwarn com.android.**
--keep,allowoptimization class android.** { public protected *; }
 -keep class android.net.Uri { public protected *; }
--keep class android.os.Looper { *; }
 -keep class android.os.Handler { *; }
+-keep class android.os.Looper { *; }
 -keep class android.util.Base64 { public protected *; }
 -keep class android.webkit.CookieManager { public protected *; }
 -keep class android.webkit.WebView { public *; }
--dontwarn android.**
--dontwarn androidx.annotation.*
+-keep,allowoptimization class android.** { public protected *; }
 
-# Logback
--keep class ch.qos.logback.** { *; }
--keep class org.apache.commons.logging.** { *; }
--keep class org.slf4j.** { *; }
--keep class mu.** { *; }
--dontwarn org.apache.commons.logging.**
+# Logging
 -dontwarn ch.qos.logback.**
+-dontwarn org.apache.commons.logging.**
 -dontwarn org.slf4j.MDC
 -dontwarn org.slf4j.MarkerFactory
+-keep class ch.qos.logback.** { *; }
+-keep class mu.** { *; }
+-keep,allowoptimization class org.apache.commons.logging.** { *; }
+-keep,allowoptimization class org.slf4j.** { *; }
 
 # Java
--dontwarn javax.imageio.**
--dontwarn javax.swing.**
 -dontwarn java.util.prefs.**
 -dontwarn javax.annotation.**
+-dontwarn javax.imageio.**
+-dontwarn javax.swing.**
 
 # GraalVM
--dontwarn org.graalvm.nativeimage.**
 -dontwarn com.oracle.svm.core.configure.ResourcesRegistry
+-dontwarn org.graalvm.nativeimage.**
 
 # BouncyCastle
 -dontwarn org.bouncycastle.cert.**
 -dontwarn org.bouncycastle.cms.**
--dontwarn org.bouncycastle.util.Store
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
+-dontwarn org.bouncycastle.util.Store
 
 # HtmlUnit
 -keep class com.gargoylesoftware.htmlunit.** { *; }
--keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 -keep class org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
+-keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 
 # Other
--dontwarn edu.umd.cs.findbugs.**
 -dontwarn com.oracle.svm.core.annotate.**
--dontwarn org.eclipse.jetty.**
--dontwarn org.antlr.runtime.tree.DOTTreeGenerator
 -dontwarn com.sun.rowset.internal.*
+-dontwarn edu.umd.cs.findbugs.**
+-dontwarn org.antlr.runtime.tree.DOTTreeGenerator
+-dontwarn org.eclipse.jetty.**
+
