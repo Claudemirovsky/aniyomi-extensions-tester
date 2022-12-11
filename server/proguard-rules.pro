@@ -94,7 +94,7 @@
 
 # Logback
 -keep class ch.qos.logback.** { *; }
--keep class org.apache.commons.logging.** { *; }
+-keep,allowoptimization class org.apache.commons.logging.** { *; }
 -dontwarn org.apache.commons.logging.**
 -dontwarn ch.qos.logback.**
 -dontwarn org.slf4j.MDC
@@ -117,11 +117,9 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep class com.gargoylesoftware.htmlunit.** { *; }
--keep class net.sourceforge.htmlunit.corejs.** { *; }
-#-keep class com.gargoylesoftware.htmlunit.BrowserVersion { *; }
-#-keep class com.gargoylesoftware.htmlunit.DefaultPageCreator { *; }
--keep class org.apache.http.impl.client.** { *; }
+-keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
+-keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
+-keep,allowoptimization class org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
 
 # Other

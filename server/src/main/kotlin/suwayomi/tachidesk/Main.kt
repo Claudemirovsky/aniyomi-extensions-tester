@@ -27,8 +27,6 @@ import java.nio.file.Paths
 import kotlin.io.path.extension
 import kotlin.streams.asSequence
 import kotlin.time.ExperimentalTime
-import java.util.logging.Logger
-import java.util.logging.Level
 
 private val logger = KotlinLogging.logger {}
 
@@ -36,12 +34,6 @@ private val logger = KotlinLogging.logger {}
 @ExperimentalSerializationApi
 suspend fun main(args: Array<String>) {
     applicationSetup()
-    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    System.setProperty(
-        "org.apache.commons.logging.Log",
-        "org.apache.commons.logging.impl.NoOpLog"
-    )
-    System.setProperty("log4j.logger.com.gargoylesoftware", "error")
     val options = parseArgs(args)
 
     if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
