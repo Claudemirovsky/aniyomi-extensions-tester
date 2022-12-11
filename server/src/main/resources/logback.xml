@@ -10,7 +10,9 @@
 
     <logger name="Exposed" level="ERROR"/>
 
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
+    <logger name="com.gargoylesoftware" level="ERROR"/>
+
 </configuration>

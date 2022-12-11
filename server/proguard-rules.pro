@@ -1,4 +1,5 @@
 -dontobfuscate
+-verbose
 -dontnote **
 -keepattributes Signature,LineNumberTable
 
@@ -117,9 +118,9 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 
 # HtmlUnit
--keep,allowoptimization class com.gargoylesoftware.htmlunit.** { *; }
+-keep class com.gargoylesoftware.htmlunit.** { *; }
 -keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
--keep,allowoptimization class org.apache.http.impl.client.** { *; }
+-keep class org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
 
 # Other
