@@ -9,6 +9,14 @@ plugins {
     id("com.github.ben-manes.versions") version "0.39.0"
 }
 
+buildscript {
+    dependencies {
+        classpath("com.guardsquare:proguard-gradle:7.3.0") {
+            exclude("com.android.tools.build")
+        }
+    }
+}
+
 allprojects {
     group = "suwayomi"
 
@@ -82,8 +90,8 @@ configure(projects) {
         // dependency of :AndroidCompat to get application content root
         implementation("net.harawata:appdirs:1.2.1")
 
-        // Cloudflare interceptor and webview
-        implementation("net.sourceforge.htmlunit:htmlunit:2.65.1")
+        //Fake webview implementation
+        implementation("net.sourceforge.htmlunit:htmlunit:2.67.0")
 
         // dex2jar
         val dex2jarVersion = "v57"

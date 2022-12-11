@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import java.io.BufferedReader
+import proguard.gradle.ProGuardTask
 
 plugins {
     application
@@ -104,13 +105,14 @@ tasks {
         archiveClassifier.set(inspectorRevision)
     }
 
+
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf(
-                    "-Xopt-in=kotlin.RequiresOptIn",
-                    "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "-Xopt-in=kotlinx.coroutines.InternalCoroutinesApi",
-                    "-Xopt-in=kotlin.io.path.ExperimentalPathApi",
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xopt-in=kotlinx.coroutines.InternalCoroutinesApi",
+                "-Xopt-in=kotlin.io.path.ExperimentalPathApi",
             )
         }
     }
@@ -138,5 +140,21 @@ tasks {
 
     withType<ProcessResources> {
         duplicatesStrategy = DuplicatesStrategy.WARN
+    }
+
+    register<ProGuardTask>("optimizeShadowJar") {
+        group = "shadow"
+        val shadowJar = getByName("shadowJar")
+        dependsOn(shadowJar)
+        val shadowJars = shadowJar.outputs.files
+        injars(shadowJars)
+        outjars(
+            shadowJars.map { file ->
+                File(file.parentFile, "min/" + file.name)
+            }
+        )
+        val javaHome = System.getProperty("java.home")
+        libraryjars("$javaHome/jmods")
+        configuration("proguard-rules.pro")
     }
 }
