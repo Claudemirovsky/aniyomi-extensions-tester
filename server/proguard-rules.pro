@@ -73,7 +73,7 @@
 -dontwarn javax.xml.**
 -dontwarn org.apache.xerces.**
 -dontwarn org.xml.sax.**
-#-keep class org.apache.xerces.** { public *; }
+-keep class org.apache.xerces.** { public *; }
 
 # org.json
 -dontwarn org.json.JSONWriter
