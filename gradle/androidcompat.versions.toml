@@ -1,0 +1,32 @@
+[versions]
+multiplatform_settings_version = "1.0.0-RC"
+rhino_version = "1.7.14"
+
+[libraries]
+typesafe-config = "com.typesafe:config:1.4.2"
+config4k = "io.github.config4k:config4k:0.5.0"
+
+android-annotations = "androidx.annotation:annotation:1.5.0"
+android-jar = "com.github.Claudemirovsky:android-jar:2.0.0"
+
+apksig = "com.android.tools.build:apksig:7.2.1"
+
+appdirs = "net.harawata:appdirs:1.2.1"
+
+icu4j = "com.ibm.icu:icu4j:72.1"
+
+jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
+
+rhino-engine = { module = "org.mozilla:rhino-engine", version.ref = "rhino_version" }
+rhino-runtime = { module = "org.mozilla:rhino-runtime", version.ref = "rhino_version" }
+
+settings-jvm = { module = "com.russhwolf:multiplatform-settings-jvm", version.ref = "multiplatform-settings-version" }
+settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization-jvm", version.ref = "multiplatform-settings-version" }
+
+xmlpull = "xmlpull:xmlpull:1.1.3.4a"
+
+[bundles]
+config = ["config4k", "typesafe-config"]
+rhino = ["rhino-engine", "rhino-runtime"]
+settings = ["settings-jvm", "settings-serialization"]
+
