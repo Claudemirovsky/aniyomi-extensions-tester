@@ -27,6 +27,11 @@ dependencies {
     implementation(project(":AndroidCompat"))
     implementation(project(":AndroidCompat:Config"))
 
+    // Cloudflare interceptor
+    implementation(libs.playwright)
+    // To decompress the downloaded .tar.gz of nodejs... IF needed.
+    implementation(libs.commons.compress)
+
     // Testing
     testImplementation(kotlin("test-junit5"))
 }
@@ -78,7 +83,14 @@ buildConfig {
 tasks {
     shadowJar {
         dependencies {
-            exclude("com/ibm/icu/impl/data/icudt72b/*/*")
+            exclude(
+                // Useless icu-related files
+                "com/ibm/icu/impl/data/icudt72b/*/*",
+                // Useless and heavy files from playwright-bundle
+                "driver/*/node*",
+                "driver/linux*/",
+                "driver/win32_x64/package/"
+            )
         }
         manifest {
             attributes(
