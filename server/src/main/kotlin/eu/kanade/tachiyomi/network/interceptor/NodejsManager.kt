@@ -16,7 +16,7 @@ import java.nio.file.Path
 
 class NodejsManager {
     companion object {
-        private const val NODEJS_VERSION = "v18.12.1"
+        private const val NODEJS_VERSION = "v16.18.0"
         private const val NODEJS_URL = "https://nodejs.org/dist/$NODEJS_VERSION"
     }
 
