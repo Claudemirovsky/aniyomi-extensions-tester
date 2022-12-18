@@ -113,7 +113,7 @@ class NodejsManager {
     private fun extractNode(targetPath: Path, outputBinary: Path) {
         // if its a .zip, then it is a windows file
         if (targetPath.toString().endsWith(".zip")) {
-            FileSystems.newFileSystem(targetPath, emptyMap<String, String>()).use {
+            FileSystems.newFileSystem(targetPath.toUri(), emptyMap<String, String>()).use {
                 val dirName = targetPath.toString()
                     .substringBefore(".zip")
                     .substringAfterLast("/")
