@@ -75,7 +75,7 @@ class CloudflareInterceptor : Interceptor {
 object CFClearance {
     private val logger = KotlinLogging.logger {}
     private val network: NetworkHelper by injectLazy()
-    private lateinit var defaultLaunchOptions: LaunchOptions
+    private var defaultLaunchOptions: LaunchOptions
 
     init {
         // Our custom driver will only download the needed browser(chromium)
@@ -151,7 +151,7 @@ object CFClearance {
     fun getWebViewUserAgent(): String {
         Playwright.create().use { playwright ->
             playwright.chromium().launch(
-                defaultLaunchOptions.setHeadless(true)
+                defaultLaunchOptions
             ).use { browser ->
                 browser.newPage().use { page ->
                     val userAgent = page.evaluate("() => {return navigator.userAgent}") as String
@@ -205,7 +205,13 @@ object CFClearance {
             "/cloudflare-js/navigator.webdriver.js",
             "/cloudflare-js/chrome.runtime.js",
             "/cloudflare-js/chrome.plugin.js"
-        ).map { javaClass.getResource(it)!!.readText() }
+        ).map {
+            println("Treco -> $it")
+            val resource = javaClass.getResource(it)
+                /* ?: this::class.java.classLoader(it)
+                ?: object {}.javaClass.getResource(it)*/
+            resource!!.readText()
+        }
     }
 
     // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L76

@@ -83,7 +83,7 @@ class CustomDriver : Driver() {
     }
 
     private fun extractDriverToTempDir() {
-        val classloader = javaClass
+        val classloader = this::class.java.classLoader
         val originalUri = classloader.getResource(
             "driver/" + platformDir()
         ).toURI()
