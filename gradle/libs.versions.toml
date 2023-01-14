@@ -32,7 +32,9 @@ sfl4j-api = "org.slf4j:slf4j-api:1.7.36"
 logback = "ch.qos.logback:logback-classic:1.2.11"
 ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
 
+# Webview-based interceptors
 htmlunit = "net.sourceforge.htmlunit:htmlunit:2.67.0"
+playwright = "com.microsoft.playwright:playwright:1.28.1"
 
 d2j-translator = { module = "com.github.ThexXTURBOXx.dex2jar:dex-translator", version.ref = "dex2jar_version" }
 d2j-tools = { module = "com.github.ThexXTURBOXx.dex2jar:dex-tools", version.ref = "dex2jar_version" }

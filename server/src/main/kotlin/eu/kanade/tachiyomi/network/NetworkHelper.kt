@@ -9,6 +9,7 @@ package eu.kanade.tachiyomi.network
  */
 
 import android.content.Context
+import eu.kanade.tachiyomi.network.interceptor.CFClearance.getWebViewUserAgent
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
@@ -56,7 +57,7 @@ class NetworkHelper(context: Context) {
 
     val defaultUserAgent by lazy {
         System.getProperty("http.agent")
-            ?: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0"
+            ?: getWebViewUserAgent()
     }
 
     /**
