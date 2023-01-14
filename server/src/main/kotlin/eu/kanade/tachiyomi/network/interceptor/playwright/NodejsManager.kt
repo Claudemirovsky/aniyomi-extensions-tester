@@ -98,9 +98,9 @@ object NodejsManager {
             val tarinput = TarArchiveInputStream(
                 GzipCompressorInputStream(
                     BufferedInputStream(
-                        Files.newInputStream(targetPath),
-                    ),
-                ),
+                        Files.newInputStream(targetPath)
+                    )
+                )
             )
             var archive: ArchiveEntry?
             while (tarinput.getNextEntry().also { archive = it } != null) {

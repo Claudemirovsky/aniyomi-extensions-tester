@@ -72,8 +72,11 @@ class NetworkHelper(context: Context) {
         val host = proxy.substringBeforeLast(":").substringAfter("://")
         val type = proxy.substringBefore("://").let {
             // Adds a dot to every type, except socks[x]
-            if ("socks" in it) "socks"
-            else it + "."
+            if ("socks" in it) {
+                "socks"
+            } else {
+                it + "."
+            }
         }
         System.setProperty("${type}ProxyHost", host)
         System.setProperty("${type}ProxyPort", port)

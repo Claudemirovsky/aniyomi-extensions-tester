@@ -39,8 +39,11 @@ fun printLine(
         .replaceFirst("->", "$RESET->$color") + RESET
 
     val paddedResult =
-        if (subPad <= 1) result
-        else String.format("%${subPad}s%s", "", result)
+        if (subPad <= 1) {
+            result
+        } else {
+            String.format("%${subPad}s%s", "", result)
+        }
 
     println(paddedResult)
 }
@@ -83,8 +86,9 @@ fun printAnime(anime: SAnime, checkThumb: Boolean = false) {
     printLine("Title", anime.title)
     printLine("Anime URL", anime.url)
     printLine("Thumbnail URL", anime.thumbnail_url)
-    if (checkThumb)
+    if (checkThumb) {
         printIfWorks(anime.is_thumbnail_loading, "Thumbnail loads?")
+    }
     printLine("Status", SAnime.getStatus(anime.status))
     printLine("Artist", anime.artist)
     printLine("Author", anime.author)
@@ -106,8 +110,9 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
         episode.episode_number.toString().trimEnd { it == '0' }.trimEnd { it == '.' }
     )
     printLine("Episode URL", episode.url)
-    if (episode.date_upload > 0)
+    if (episode.date_upload > 0) {
         printLine("Date of upload", formatter.format(episode.date_upload))
+    }
 }
 
 /**
@@ -120,8 +125,9 @@ fun printVideo(video: Video) {
     printLine("Quality", video.quality)
     printIfWorks(video.isWorking, "Is playing?")
     printLine("Video URL", video.videoUrl)
-    if (video.url != video.videoUrl)
+    if (video.url != video.videoUrl) {
         printLine("URL", video.url)
+    }
 
     video.headers
         ?.also {
@@ -146,8 +152,11 @@ fun printVideo(video: Video) {
  * @param title The title before the status.
  */
 fun printIfWorks(value: Boolean, title: String) {
-    if (value) printLine(title, "YES", color = GREEN)
-    else printLine(title, "NO", color = RED)
+    if (value) {
+        printLine(title, "YES", color = GREEN)
+    } else {
+        printLine(title, "NO", color = RED)
+    }
 }
 
 /**

@@ -39,7 +39,7 @@ open class Video(
     val headers: Headers? = null,
     // "url", "language-label-2", "url2", "language-label-2"
     val subtitleTracks: List<Track> = emptyList(),
-    val audioTracks: List<Track> = emptyList(),
+    val audioTracks: List<Track> = emptyList()
 ) : ProgressListener {
     var isWorking: Boolean = false
 
@@ -49,7 +49,7 @@ open class Video(
         quality: String,
         videoUrl: String?,
         uri: Uri? = null,
-        headers: Headers? = null,
+        headers: Headers? = null
     ) : this(url, quality, videoUrl, headers)
 
     @Transient

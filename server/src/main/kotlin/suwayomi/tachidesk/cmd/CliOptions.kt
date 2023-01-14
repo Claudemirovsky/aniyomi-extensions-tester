@@ -18,12 +18,15 @@ object CliOptions {
         )
 
         val animeUrl by parser.option(
-            ArgType.String, "anime-url", "a",
+            ArgType.String,
+            "anime-url",
+            "a",
             description = "Target anime url"
         )
 
         val checkThumbnails by parser.option(
-            ArgType.Boolean, "check-thumbnails",
+            ArgType.Boolean,
+            "check-thumbnails",
             description = "Check if thumbnails are loading"
         ).default(false)
 
@@ -35,27 +38,37 @@ object CliOptions {
         ).default(false)
 
         val dateFormat by parser.option(
-            ArgType.String, "date-format", "f",
+            ArgType.String,
+            "date-format",
+            "f",
             description = "Format to use when printing episode date"
         ).default("dd/MM/yyyy")
 
         val debug by parser.option(
-            ArgType.Boolean, "debug", "d",
+            ArgType.Boolean,
+            "debug",
+            "d",
             description = "Enable okHttp debug"
         ).default(false)
 
         val episodeNumber by parser.option(
-            ArgType.Int, "episode-number", "n",
+            ArgType.Int,
+            "episode-number",
+            "n",
             description = "Target episode number"
         )
 
         val episodeUrl by parser.option(
-            ArgType.String, "episode-url", "e",
+            ArgType.String,
+            "episode-url",
+            "e",
             description = "Target episode url"
         )
 
         val increment by parser.option(
-            ArgType.Boolean, "increment-pages", "i",
+            ArgType.Boolean,
+            "increment-pages",
+            "i",
             description = "Try using pagination when possible"
         ).default(false)
 
@@ -67,42 +80,57 @@ object CliOptions {
         )
 
         val prettyJson by parser.option(
-            ArgType.Boolean, "pretty-json", "P",
+            ArgType.Boolean,
+            "pretty-json",
+            "P",
             description = "Dumps prettified JSON data to files"
         ).default(false)
 
         val printJson by parser.option(
-            ArgType.Boolean, "json", "j",
+            ArgType.Boolean,
+            "json",
+            "j",
             description = "Show JSON data instead of tables"
         )
 
         val proxy by parser.option(
-            ArgType.String, "proxy",
+            ArgType.String,
+            "proxy",
             description = "Proxy address to use when doing the requests. Like <protocol>://<host>:<port>"
         )
 
         val resultsCount by parser.option(
-            ArgType.Int, "results-count", "c",
+            ArgType.Int,
+            "results-count",
+            "c",
             description = "Amount of items to print from result lists"
         ).default(2)
 
         val searchStr by parser.option(
-            ArgType.String, "search", "s",
+            ArgType.String,
+            "search",
+            "s",
             description = "Text to use when testing the search"
         ).default("world")
 
         val showAll by parser.option(
-            ArgType.Boolean, "show-all", "A",
+            ArgType.Boolean,
+            "show-all",
+            "A",
             description = "Show all items of lists, instead of the first ~2"
         )
 
         val stopOnError by parser.option(
-            ArgType.Boolean, "stop-on-error", "X",
+            ArgType.Boolean,
+            "stop-on-error",
+            "X",
             description = "Stop the tests on the first error"
         )
 
         val tests by parser.option(
-            ArgType.String, "tests", "t",
+            ArgType.String,
+            "tests",
+            "t",
             description = "Tests to be made(in order), delimited by commas"
         ).default(TestsEnum.getValues())
 
@@ -114,7 +142,8 @@ object CliOptions {
 
         val userAgent by parser.option(
             ArgType.String,
-            "user-agent", "U",
+            "user-agent",
+            "U",
             description = "Set and use a specific user agent"
         )
 

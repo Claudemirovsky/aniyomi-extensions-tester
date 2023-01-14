@@ -13,7 +13,7 @@ data class TestsResultsDto(
     var search: ResultDto? = null,
     var details: ResultDto? = null,
     var episodes: ResultDto? = null,
-    var videos: ResultDto? = null,
+    var videos: ResultDto? = null
 )
 
 @ExperimentalSerializationApi

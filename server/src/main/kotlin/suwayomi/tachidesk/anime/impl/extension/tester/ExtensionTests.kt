@@ -91,19 +91,24 @@ class ExtensionTests(
 
                 // Prevents running LATEST test if the source doesnt support it.
                 if (test == TestsEnum.LATEST) {
-                    if (source.supportsLatest)
+                    if (source.supportsLatest) {
                         timeTestFromEnum(test) { testFunction() }
-                } else timeTestFromEnum(test) { testFunction() }
+                    }
+                } else {
+                    timeTestFromEnum(test) { testFunction() }
+                }
             } catch (e: FailedTestException) {
                 writeTestError(test, e)
                 printTitle("${test.name} TEST FAILED", barColor = RED)
-                if (configs.stopOnError)
+                if (configs.stopOnError) {
                     exitProcess(-1)
+                }
             } catch (e: Throwable) {
                 writeTestError(test, e)
                 logger.error("Test($test): ", e)
-                if (configs.stopOnError)
+                if (configs.stopOnError) {
                     exitProcess(-1)
+                }
             }
         }
         return TESTS_RESULTS_DTO
@@ -135,8 +140,9 @@ class ExtensionTests(
         )
 
         details.url.ifEmpty { details.url = anime.url }
-        if (configs.checkThumbnails)
+        if (configs.checkThumbnails) {
             details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
+        }
         printItemOrJson<SAnime>(details)
         writeTestSuccess(TestsEnum.ANIDETAILS) {
             val animeObj = details as SAnimeImpl
@@ -163,12 +169,16 @@ class ExtensionTests(
                         it.episode_number.toInt() == configs.episodeNumber
                     }
                 }
-            } else EP_OBJ = result.first()
+            } else {
+                EP_OBJ = result.first()
+            }
 
             // Cut the results list if `configs.showAll` isnt enabled.
             val episodeList = if (!configs.showAll) {
                 result.take(configs.resultsCount)
-            } else result
+            } else {
+                result
+            }
 
             episodeList.forEach {
                 printItemOrJson<SEpisode>(it)
@@ -192,8 +202,9 @@ class ExtensionTests(
         )
 
         printLine("Videos", videoList.size.toString())
-        if (videoList.size == 0)
+        if (videoList.size == 0) {
             throw FailedTestException("Empty video list")
+        }
 
         videoList.forEach {
             // Tests if the video is loading
@@ -228,10 +239,12 @@ class ExtensionTests(
                 else -> null
             }
             jsonStr?.let(::println)
-        } else when (item) {
-            is SAnime -> printAnime(item, configs.checkThumbnails)
-            is SEpisode -> printEpisode(item, DATE_FORMATTER)
-            is Video -> printVideo(item)
+        } else {
+            when (item) {
+                is SAnime -> printAnime(item, configs.checkThumbnails)
+                is SEpisode -> printEpisode(item, DATE_FORMATTER)
+                is Video -> printVideo(item)
+            }
         }
     }
 
@@ -275,8 +288,11 @@ class ExtensionTests(
 
         val resType = req.header("content-type", "") ?: ""
         if (resType == "undefined") {
-            if (!supportsHEAD) return false
-            else return testMediaResult(url, isVideo, headers, false)
+            if (!supportsHEAD) {
+                return false
+            } else {
+                return testMediaResult(url, isVideo, headers, false)
+            }
         }
 
         val mimeTypes = listOf("video/", "/x-mpegURL", "/vnd.apple.mpegurl")
@@ -305,29 +321,37 @@ class ExtensionTests(
             val results = parseObservable<AnimesPage>(
                 block(page)
             )
-            if (configs.completeResults)
+            if (configs.completeResults) {
                 animesPages.add(AnimesPageDto(results))
+            }
             println()
             printLine("Page", "$page")
             printLine("Results", results.animes.size.toString())
             printLine("Has next page", results.hasNextPage.toString())
             val animes = results.animes.let {
-                if (!configs.showAll)
+                if (!configs.showAll) {
                     it.take(configs.resultsCount)
-                else it
+                } else {
+                    it
+                }
             }
 
             animes.forEach {
                 // Sets the ANIME_OBJ for the anidetails test if needed.
-                if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null)
+                if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null) {
                     ANIME_OBJ = it
-                if (configs.checkThumbnails)
+                }
+                if (configs.checkThumbnails) {
                     it.is_thumbnail_loading = testMediaResult(it.thumbnail_url)
+                }
                 printItemOrJson<SAnime>(it)
             }
 
-            if (!configs.increment || !results.hasNextPage || page >= 2) break
-            else println("${RED}Incrementing page number$RESET")
+            if (!configs.increment || !results.hasNextPage || page >= 2) {
+                break
+            } else {
+                println("${RED}Incrementing page number$RESET")
+            }
         }
         writeTestSuccess(test) {
             json.encodeToJsonElement(animesPages).jsonArray
