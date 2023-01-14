@@ -103,11 +103,11 @@ object CFClearance {
         }
 
         // Copy cookies to cookie store
-        cookies.groupBy { it.domain }.forEach { (domain, cookies) ->
+        cookies.map {
             network.cookies.addAll(
                 url = HttpUrl.Builder()
                     .scheme("http")
-                    .host(domain)
+                    .host(it.domain)
                     .build(),
                 cookies = cookies
             )
