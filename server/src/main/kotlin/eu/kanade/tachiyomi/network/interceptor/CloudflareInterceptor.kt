@@ -190,17 +190,17 @@ object CFClearance {
     // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L18
     private val stealthInitScripts by lazy {
         arrayOf(
-            javaClass.getResource("/cloudflare-js/canvas.fingerprinting.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/chrome.global.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/emulate.touch.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/navigator.permissions.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/navigator.webdriver.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/chrome.runtime.js")!!.readText(),
-            javaClass.getResource("/cloudflare-js/chrome.plugin.js")!!.readText()
-        )
+            "/cloudflare-js/canvas.fingerprinting.js",
+            "/cloudflare-js/chrome.global.js",
+            "/cloudflare-js/emulate.touch.js",
+            "/cloudflare-js/navigator.permissions.js",
+            "/cloudflare-js/navigator.webdriver.js",
+            "/cloudflare-js/chrome.runtime.js",
+            "/cloudflare-js/chrome.plugin.js"
+        ).map { javaClass.getResource(it)!!.readText() }
     }
 
-    // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L76
+// ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L76
     private fun applyStealthInitScripts(page: Page) {
         for (script in stealthInitScripts) {
             page.addInitScript(script)
