@@ -15,6 +15,8 @@ import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.PlaywrightException
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
+import eu.kanade.tachiyomi.network.interceptor.playwright.CustomDriver
+import eu.kanade.tachiyomi.network.interceptor.playwright.findBinary
 import mu.KotlinLogging
 import okhttp3.Cookie
 import okhttp3.HttpUrl
@@ -23,6 +25,7 @@ import okhttp3.Request
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
+import java.nio.file.Paths
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
@@ -74,11 +77,21 @@ class CloudflareInterceptor : Interceptor {
 object CFClearance {
     private val logger = KotlinLogging.logger {}
     private val network: NetworkHelper by injectLazy()
+    private val defaultOptions by lazy { LaunchOptions().setHeadless(false) }
 
     init {
-        // Fix the default DriverJar issue by providing our own implementation
+        // Fix the default DriverJar issue by using Tachidesk's implementation
         // ref: https://github.com/microsoft/playwright-java/issues/1138
-        System.setProperty("playwright.driver.impl", "eu.kanade.tachiyomi.network.interceptor.CustomDriver")
+        System.setProperty(
+            "playwright.driver.impl",
+            "eu.kanade.tachiyomi.network.interceptor.playwright.CustomDriver"
+        )
+
+        val preinstalledChromium = findBinary("chromium", "chromium.exe", "chromium-browser")
+        if (preinstalledChromium != null) {
+            defaultOptions.setExecutablePath(Paths.get(preinstalledChromium))
+            System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
+        }
     }
 
     fun resolveWithWebView(originalRequest: Request): Request {
@@ -87,10 +100,7 @@ object CFClearance {
         logger.debug { "resolveWithWebView($url)" }
 
         val cookies = Playwright.create().use { playwright ->
-            playwright.chromium().launch(
-                LaunchOptions()
-                    .setHeadless(false)
-            ).use { browser ->
+            playwright.chromium().launch(defaultOptions).use { browser ->
                 val userAgent = originalRequest.header("User-Agent")
                 if (userAgent != null) {
                     browser.newContext(Browser.NewContextOptions().setUserAgent(userAgent)).use { browserContext ->
@@ -139,10 +149,7 @@ object CFClearance {
     fun getWebViewUserAgent(): String {
         return try {
             Playwright.create().use { playwright ->
-                playwright.chromium().launch(
-                    LaunchOptions()
-                        .setHeadless(true)
-                ).use { browser ->
+                playwright.chromium().launch(defaultOptions).use { browser ->
                     browser.newPage().use { page ->
                         val userAgent = page.evaluate("() => {return navigator.userAgent}") as String
                         logger.debug { "WebView User-Agent is $userAgent" }
