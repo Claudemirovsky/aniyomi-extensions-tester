@@ -1,8 +1,8 @@
 [versions]
 coroutines_version = "1.6.4"
 dex2jar_version = "v57"
-kotlin_version = "1.7.20"
-okhttp_version = "5.0.0-alpha.10"
+kotlin_version = "1.7.21"
+okhttp_version = "5.0.0-alpha.11"
 serialization_version = "1.4.0"
 
 [libraries]
@@ -21,10 +21,10 @@ gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.2.0"
+okio = "com.squareup.okio:okio:3.3.0"
 
 # Serialization
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.4.0" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
 
 # Logging
@@ -33,7 +33,7 @@ logback = "ch.qos.logback:logback-classic:1.2.11"
 ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
 
 # Webview-based interceptors
-htmlunit = "net.sourceforge.htmlunit:htmlunit:2.67.0"
+htmlunit = "net.sourceforge.htmlunit:htmlunit:2.69.0"
 playwright = "com.microsoft.playwright:playwright:1.28.1"
 
 # NodejsManager
@@ -58,7 +58,7 @@ serialization = ["serialization-json", "serialization-protobuf"]
 
 [plugins]
 buildconfig = { id = "com.github.gmazzo.buildconfig", version = "3.1.0" }
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.9.0" }
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.13.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
 versions = { id = "com.github.ben-manes.versions", version = "0.39.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
