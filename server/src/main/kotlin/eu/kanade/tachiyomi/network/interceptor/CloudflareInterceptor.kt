@@ -153,12 +153,14 @@ object CFClearance {
                     browser.newPage().use { page ->
                         val userAgent = page.evaluate("() => {return navigator.userAgent}") as String
                         logger.debug { "WebView User-Agent is $userAgent" }
+                        // prevents opening chromium again just to get the user-agent.
+                        System.setProperty("http.agent", userAgent)
                         return userAgent
                     }
                 }
             }
         } catch (e: PlaywrightException) {
-            // Playwright might fail on headless environments like docker
+            // Playwright might fail on headless environments like docker/github CI
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
         }
     }
@@ -223,7 +225,7 @@ object CFClearance {
             val success = try {
                 page.querySelector("#challenge-form") == null
             } catch (e: Exception) {
-                logger.debug(e) { "query Error" }
+                logger.debug { "query Error" }
                 false
             }
             if (success) return true
