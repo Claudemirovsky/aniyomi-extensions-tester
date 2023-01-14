@@ -119,7 +119,6 @@ class CustomDriver : Driver() {
         }
 
         val winDriverURI = classloader.getResource("driver/win32_x64").toURI()
-        println("URI -> $winDriverURI")
         initFileSystem(maybeExtractNestedJar(winDriverURI))?.use {
             val target = it.getPath("driver/win32_x64/playwright.cmd")
             val output = driverTempDir.resolve("playwright.cmd")
