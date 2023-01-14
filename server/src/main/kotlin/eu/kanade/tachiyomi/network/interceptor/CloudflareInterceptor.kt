@@ -13,6 +13,7 @@ import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.PlaywrightException
+import com.microsoft.playwright.options.WaitForSelectorState
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
 import eu.kanade.tachiyomi.network.interceptor.playwright.CustomDriver
@@ -219,18 +220,17 @@ object CFClearance {
     // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/retry.py#L21
     private fun waitForChallengeResolve(page: Page): Boolean {
         // sometimes the user has to solve the captcha challenge manually, potentially wait a long time
-        val timeoutSeconds = 120
-        repeat(timeoutSeconds) {
-            page.waitForTimeout(1.seconds.toDouble(DurationUnit.MILLISECONDS))
-            val success = try {
-                page.querySelector("#challenge-form") == null
-            } catch (e: Exception) {
-                logger.debug { "query Error" }
-                false
-            }
-            if (success) return true
-        }
-        return false
+        val timeoutSeconds = 120.seconds.toDouble(DurationUnit.MILLISECONDS)
+        return runCatching {
+            page.waitForSelector(
+                "#challenge-form",
+                Page.WaitForSelectorOptions().apply {
+                    timeout = timeoutSeconds
+                    state = WaitForSelectorState.DETACHED
+                }
+            )
+            true
+        }.getOrDefault(false)
     }
 
     private class CloudflareBypassException : Exception()
