@@ -36,6 +36,9 @@ ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
 htmlunit = "net.sourceforge.htmlunit:htmlunit:2.67.0"
 playwright = "com.microsoft.playwright:playwright:1.28.1"
 
+# NodejsManager
+commons-compress = "org.apache.commons:commons-compress:1.22"
+
 d2j-translator = { module = "com.github.ThexXTURBOXx.dex2jar:dex-translator", version.ref = "dex2jar_version" }
 d2j-tools = { module = "com.github.ThexXTURBOXx.dex2jar:dex-tools", version.ref = "dex2jar_version" }
 

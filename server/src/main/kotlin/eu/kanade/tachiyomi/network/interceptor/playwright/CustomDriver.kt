@@ -15,26 +15,13 @@ class CustomDriver : Driver() {
     companion object {
         const val PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD"
         const val PLAYWRIGHT_NODEJS_PATH = "PLAYWRIGHT_NODEJS_PATH"
+        const val PLAYWRIGHT_PROP_NODEJS_PATH = "playwright.nodejs.path"
+        const val PLAYWRIGHT_NODEJS_FOUND = "PLAYWRIGHT_NODEJS_FOUND"
+        const val PLAYWRIGHT_BROWSERS_PATH = "PLAYWRIGHT_BROWSERS_PATH"
         const val SELENIUM_REMOTE_URL = "SELENIUM_REMOTE_URL"
 
-        const val PLAYWRIGHT_PROP_NODEJS_PATH = "playwright.nodejs.path"
-
         @JvmStatic
-        private fun platformDir(): String {
-            val name = System.getProperty("os.name").lowercase()
-            val arch = System.getProperty("os.arch").lowercase()
-            return when {
-                name.contains("windows") -> "win32_x64"
-                name.contains("linux") -> {
-                    when (arch) {
-                        "aarch64" -> "linux-arm64"
-                        else -> "linux"
-                    }
-                }
-                name.contains("mac os x") -> "mac"
-                else -> throw RuntimeException("Unexpected os.name value: $name")
-            }
-        }
+        private fun platformDir() = "mac"
 
         @JvmStatic
         private fun isExecutable(filePath: Path): Boolean {
@@ -53,10 +40,24 @@ class CustomDriver : Driver() {
         }.also { it.toFile().deleteOnExit() }
     }
 
-    private var preinstalledNodePath: Path? = null
+    private lateinit var preinstalledNodePath: Path
 
     init {
-        val nodePath = System.getProperty(PLAYWRIGHT_PROP_NODEJS_PATH)
+        getCacheDir().let {
+            // Prevent unsupported platform error
+            env.set(PLAYWRIGHT_BROWSERS_PATH, it.toString())
+        }
+        val nodePath = if (System.getProperty(PLAYWRIGHT_NODEJS_FOUND) != null) {
+            System.getProperty(PLAYWRIGHT_PROP_NODEJS_PATH)!!
+        } else {
+            val newPath = NodejsManager.getNodejsPath(env)
+            newPath?.let {
+                System.setProperty(PLAYWRIGHT_NODEJS_FOUND, "true")
+                System.setProperty(PLAYWRIGHT_PROP_NODEJS_PATH, it)
+            }
+            newPath
+        }
+
         nodePath?.let {
             preinstalledNodePath = Paths.get(it)
             if (!Files.exists(preinstalledNodePath)) {
@@ -66,17 +67,7 @@ class CustomDriver : Driver() {
         }
     }
 
-    @Throws(Exception::class)
     protected override fun initialize(installBrowsers: Boolean) {
-        if (preinstalledNodePath == null && env.containsKey(PLAYWRIGHT_NODEJS_PATH)) {
-            preinstalledNodePath = Paths.get(env.get(PLAYWRIGHT_NODEJS_PATH))
-            if (!Files.exists(preinstalledNodePath)) {
-                throw RuntimeException("Invalid Node.js path specified: " + preinstalledNodePath)
-            }
-        } else if (preinstalledNodePath != null) {
-            // Pass the env variable to the driver process.
-            env.put(PLAYWRIGHT_NODEJS_PATH, preinstalledNodePath.toString())
-        }
         extractDriverToTempDir()
         logMessage("extracted driver from jar to " + driverPath())
         if (installBrowsers) installBrowser(env)
@@ -92,7 +83,6 @@ class CustomDriver : Driver() {
 
     private fun extractDriverToTempDir() {
         val classloader = this::class.java.classLoader
-        println("driver/${platformDir()}")
         val originalUri = classloader.getResource(
             "driver/" + platformDir(),
         ).toURI()
@@ -106,31 +96,35 @@ class CustomDriver : Driver() {
             // have predictable results.
             // See https://github.com/microsoft/playwright-java/issues/306
             val srcRootDefaultFs = Paths.get(srcRoot.toString())
-            for (fromPath in Files.walk(srcRoot)) {
-                if (preinstalledNodePath != null) {
-                    val fileName = fromPath.getFileName().toString()
-                    if ("node.exe".equals(fileName) || "node".equals(fileName)) {
-                        continue
-                    }
-                }
+            Files.walk(srcRoot).forEach { fromPath ->
                 val relative = srcRootDefaultFs.relativize(
                     Paths.get(fromPath.toString()),
                 )
                 val toPath = driverTempDir.resolve(relative.toString())
                 try {
+                    val file = toPath.toFile()
                     if (Files.isDirectory(fromPath)) {
                         Files.createDirectories(toPath)
                     } else {
                         Files.copy(fromPath, toPath)
                         if (isExecutable(toPath)) {
-                            toPath.toFile().setExecutable(true, true)
+                            file.setExecutable(true, true)
                         }
                     }
-                    toPath.toFile().deleteOnExit()
+                    file.deleteOnExit()
                 } catch (e: IOException) {
                     throw RuntimeException("Failed to extract driver from $uri, full uri: $originalUri", e)
                 }
             }
+        }
+
+        val winDriverURI = classloader.getResource("driver/win32_x64").toURI()
+        println("URI -> $winDriverURI")
+        initFileSystem(maybeExtractNestedJar(winDriverURI))?.use {
+            val target = it.getPath("driver/win32_x64/playwright.cmd")
+            val output = driverTempDir.resolve("playwright.cmd")
+            output.toFile().deleteOnExit()
+            Files.copy(target, output)
         }
     }
 
@@ -171,10 +165,6 @@ class CustomDriver : Driver() {
             return
         }
 
-        if (env.get(SELENIUM_REMOTE_URL) != null || System.getenv(SELENIUM_REMOTE_URL) != null) {
-            logMessage("Skipping browsers download because `SELENIUM_REMOTE_URL` env variable is set")
-            return
-        }
         val driver = driverPath()
         if (!Files.exists(driver)) {
             throw RuntimeException("Failed to find driver: $driver")
@@ -182,8 +172,10 @@ class CustomDriver : Driver() {
 
         val pb = createProcessBuilder()
         pb.command().add("install")
+        pb.command().add("chromium")
         pb.redirectError(ProcessBuilder.Redirect.INHERIT)
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+        pb.environment().putAll(env)
 
         val process = pb.start()
         val result = process.waitFor(10, TimeUnit.MINUTES)
@@ -196,5 +188,5 @@ class CustomDriver : Driver() {
         }
     }
 
-    protected override fun driverDir() = driverTempDir
+    override fun driverDir() = driverTempDir
 }
