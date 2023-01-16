@@ -1,4 +1,5 @@
 -dontobfuscate
+-optimizations !library/gson
 -dontnote **
 -keepattributes Signature,LineNumberTable
 
@@ -45,6 +46,8 @@
 }
 -keepdirectories suwayomi/tachidesk/**
 -keepdirectories META-INF/**
+-keepdirectories driver/**
+-keepdirectories cloudflare-js/**
 
 # Keep extensions dependencies
 -keep class app.cash.quickjs.** { public protected *; }
@@ -123,6 +126,12 @@
 -keep class org.apache.http.impl.client.** { *; }
 -keep class org.mozilla.** { *; }
 -keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
+
+# commons-compress
+-dontwarn org.apache.commons.compress.**
+-keep class com.microsoft.playwright.** { *; }
+-keep class com.google.gson.JsonElement { *; }
+-keep class com.google.gson.JsonObject { *; }
 
 # Other
 -dontwarn com.oracle.svm.core.annotate.**
