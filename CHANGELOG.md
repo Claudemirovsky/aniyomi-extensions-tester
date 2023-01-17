@@ -1,4 +1,31 @@
-# [](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.1.0...v) (2022-11-14)
+# [2.2.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.1.0...v2.2.0) (2023-01-17)
+
+
+### Bug Fixes
+
+* **AndroidCompat:** Solve build problems ([71386e4](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/71386e45390079968169470a0cbec53d8ae3645f))
+* **CloudflareInterceptor:** Add cf_clearance cookie to all domains ([7174d1e](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/7174d1ee133fa52be3cc8a041e0ee283416ba7c0))
+* **network:** Get CloudflareInterceptor from tachidesk/tachiweb ([fd1d766](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/fd1d766d10a92e80f82a4b1b742dc75a67759924))
+* Prevent memory errors while building ([a823163](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a823163f29d22e9caca4cb9decdba923c015205a))
+* Update proguard rules ([27081c6](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/27081c6f5297a91928ce16fc4cc782a77cb657e1))
+
+
+### Features
+
+* [WIP] Simulate android webview ([123d5df](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/123d5dfc8ec52d65d1ef0d1f55d089b8ff6c0c7d))
+* Add task to create a proguard-optimized jar ([79cf4cf](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/79cf4cf259f9fbd6d55796e7dfa981f9772077ee))
+* **AndroidCompat:** Reduce android.jar size ([a6411ec](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a6411ecb81b88b32516080803599c6d4cb916e29))
+* **AndroidCompat:** Simulate android.os.Handler with coroutines ([40af430](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/40af43085f69ec7fa086e02c1d6de932ec6b5fa5))
+* **AndroidCompat:** Some tweaks on webview ([85a20fa](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/85a20fac0dbadf2d07a31ef91f9653ee0a8e0114))
+* **CloudflareInterceptor:** Prevent opening the browser unnecessarily ([52a84b0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/52a84b016650d8783098ee19bc0d6543238d1f36))
+* Download nodejs binaries instead of bundling them ([89ded79](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/89ded79b07a24a8ad539cae84cd3152a5466ab7e))
+* Implement a working CookieManager ([6366c77](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/6366c77e50939e714589e29bad9f6b427b700f6c))
+* Remove unused icu4j files ([0d69bf2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/0d69bf27f41c8045f65e6218d52cadf05dbb6f7f))
+* Show error reason when video list is empty ([375d6f1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/375d6f1dcd5dc504ccd46845cbced3fc5dac74b3))
+* Stole(again) CloudflareInterceptor from TachiDesk ([f5b9840](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/f5b9840703acbdbd00c8b6b04fd5728c95bfecc8))
+* Use a custom CookieManager on WebClient instances ([682fb71](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/682fb71daf04223ebf3e2990a84b00236eefd7f3))
+* Use preinstalled chromium if possible ([ff92003](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/ff92003bc31086c3995b34bea025b21b8db9481b))
+* Use the new android-jar lib ([dc71b46](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/dc71b46078d703bf1948c9f5a83c153835cc9cb3))
 
 
 
@@ -16,10 +43,6 @@
 * **cli:** Show progress ([73855eb](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/73855ebb81f38f0cca6232b366696a99946a339f))
 * Dump tests results on-demand ([a1e8ff7](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a1e8ff709d4cfb8af2f1cb95ccf053166cbe0b06))
 * Reduce default timeout limit ([92dad25](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/92dad25e31d617d34ef2393a6a3bdf6d8e3c1c5a))
-
-
-
-# [](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.0.1...v) (2022-11-13)
 
 
 
