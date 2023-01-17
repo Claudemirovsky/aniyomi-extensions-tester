@@ -113,10 +113,10 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf(
-                "-Xopt-in=kotlin.RequiresOptIn",
-                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-Xopt-in=kotlinx.coroutines.InternalCoroutinesApi",
-                "-Xopt-in=kotlin.io.path.ExperimentalPathApi",
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+                "-opt-in=kotlin.io.path.ExperimentalPathApi",
             )
         }
     }
@@ -135,15 +135,17 @@ tasks {
     }
 
     withType<LintTask> {
+        exclude("**/BuildConfig.kt")
         source(files("src/kotlin"))
     }
-
+    
     withType<FormatTask> {
+        exclude("**/BuildConfig.kt")
         source(files("src/kotlin"))
     }
 
     withType<ProcessResources> {
-        duplicatesStrategy = DuplicatesStrategy.WARN
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
     register<ProGuardTask>("optimizeShadowJar") {
