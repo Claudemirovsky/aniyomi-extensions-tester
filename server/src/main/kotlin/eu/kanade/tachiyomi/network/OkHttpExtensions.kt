@@ -44,7 +44,7 @@ suspend fun Call.await(): Response {
                     }
 
                     continuation.resume(response) {
-                        response.body?.closeQuietly()
+                        response.body.closeQuietly()
                     }
                 }
 
@@ -129,6 +129,7 @@ fun OkHttpClient.Builder.ignoreAllSSLErrors(): OkHttpClient.Builder {
     return this
 }
 
+@Suppress("UNUSED_PARAMETER")
 fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListener): Call {
     val progressClient = newBuilder()
         .build()
@@ -142,7 +143,7 @@ inline fun <reified T> Response.parseAs(): T {
     // Avoiding Injekt.get<Json>() due to compiler issues
     val json = Injekt.getInstance<Json>(fullType<Json>().type)
     this.use {
-        val responseBody = it.body?.string().orEmpty()
+        val responseBody = it.body.string()
         return json.decodeFromString(responseBody)
     }
 }

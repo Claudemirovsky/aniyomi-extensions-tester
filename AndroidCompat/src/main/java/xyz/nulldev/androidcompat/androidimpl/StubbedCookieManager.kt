@@ -9,6 +9,7 @@ import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 import java.util.prefs.Preferences
 
+@Suppress("DEPRECATION")
 class StubbedCookieManager : CookieManager() {
     private val COOKIE_KEY = "cookie_store"
 
