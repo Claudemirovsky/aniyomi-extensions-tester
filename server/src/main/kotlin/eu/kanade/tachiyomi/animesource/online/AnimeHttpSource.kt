@@ -369,6 +369,28 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
     }
 
     /**
+     * Returns the url of the provided anime
+     *
+     * @since extensions-lib 14
+     * @param anime the anime
+     * @return url of the anime
+     */
+    open fun getAnimeUrl(anime: SAnime): String {
+        return animeDetailsRequest(anime).url.toString()
+    }
+
+    /**
+     * Returns the url of the provided episode
+     *
+     * @since extensions-lib 14
+     * @param episode the episode
+     * @return url of the episode
+     */
+    open fun getEpisodeUrl(episode: SEpisode): String {
+        return episode.url.toString()
+    }
+
+    /**
      * Called before inserting a new episode into database. Use it if you need to override episode
      * fields, like the title or the episode number. Do not change anything to [anime].
      *

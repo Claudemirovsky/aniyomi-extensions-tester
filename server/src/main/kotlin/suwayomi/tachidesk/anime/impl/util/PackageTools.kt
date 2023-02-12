@@ -33,7 +33,7 @@ object PackageTools {
     const val EXTENSION_FEATURE = "tachiyomi.animeextension"
     const val METADATA_SOURCE_CLASS = "tachiyomi.animeextension.class"
     const val LIB_VERSION_MIN = 12
-    const val LIB_VERSION_MAX = 13
+    const val LIB_VERSION_MAX = 14
 
     /**
      * Convert dex to jar, a wrapper for the dex2jar library

@@ -60,6 +60,5 @@ serialization = ["serialization-json", "serialization-protobuf"]
 buildconfig = { id = "com.github.gmazzo.buildconfig", version = "3.1.0" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.13.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
-versions = { id = "com.github.ben-manes.versions", version = "0.39.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }

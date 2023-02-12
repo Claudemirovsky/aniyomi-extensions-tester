@@ -20,6 +20,8 @@ interface SAnime : Serializable {
 
     var thumbnail_url: String?
 
+    var update_strategy: UpdateStrategy
+
     var is_thumbnail_loading: Boolean
 
     var initialized: Boolean
