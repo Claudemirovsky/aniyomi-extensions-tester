@@ -1,7 +1,7 @@
 [versions]
 coroutines_version = "1.6.4"
-dex2jar_version = "v57"
-kotlin_version = "1.7.21"
+dex2jar_version = "v59"
+kotlin_version = "1.8.0"
 okhttp_version = "5.0.0-alpha.11"
 serialization_version = "1.4.0"
 
@@ -33,8 +33,8 @@ logback = "ch.qos.logback:logback-classic:1.2.11"
 ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
 
 # Webview-based interceptors
-htmlunit = "net.sourceforge.htmlunit:htmlunit:2.69.0"
-playwright = "com.microsoft.playwright:playwright:1.28.1"
+htmlunit = "net.sourceforge.htmlunit:htmlunit:2.70.0"
+playwright = "com.microsoft.playwright:playwright:1.30.0"
 
 # NodejsManager
 commons-compress = "org.apache.commons:commons-compress:1.22"
@@ -46,7 +46,7 @@ apkparser = "net.dongliu:apk-parser:2.6.10"
 
 kotlinx-cli = "org.jetbrains.kotlinx:kotlinx-cli:0.3.5"
 
-proguard = "com.guardsquare:proguard-gradle:7.3.0"
+proguard = "com.guardsquare:proguard-gradle:7.3.1"
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-jdk"]
