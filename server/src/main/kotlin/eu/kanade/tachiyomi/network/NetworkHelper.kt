@@ -23,9 +23,10 @@ class NetworkHelper(context: Context) {
     val client by lazy {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieManager)
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(2, TimeUnit.MINUTES)
             .addInterceptor(UserAgentInterceptor())
         System.getProperty("ANIEXT_TESTER_PROXY")?.let {
             parseProxy(it)?.let {
