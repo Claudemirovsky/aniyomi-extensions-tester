@@ -28,13 +28,15 @@ class NetworkHelper(context: Context) {
             .writeTimeout(30, TimeUnit.SECONDS)
             .callTimeout(2, TimeUnit.MINUTES)
             .addInterceptor(UserAgentInterceptor())
-        System.getProperty("ANIEXT_TESTER_PROXY")?.let {
-            parseProxy(it)?.let {
+
+        System.getProperty("ANIEXT_TESTER_PROXY")
+            ?.let(::parseProxy)
+            ?.let {
                 // We usually use proxies to debug https requests, so lets
                 // prevent some headache
                 builder.ignoreAllSSLErrors()
             }
-        }
+
         if (System.getProperty("ANIEXT_TESTER_DEBUG")?.equals("true") ?: false) {
             val loggingInterceptor = HttpLoggingInterceptor(
                 object : HttpLoggingInterceptor.Logger {

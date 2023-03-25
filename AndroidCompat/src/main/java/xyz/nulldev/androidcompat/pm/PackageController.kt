@@ -57,9 +57,7 @@ class PackageController {
     fun listInstalled(): List<InstalledPackage> {
         return androidFiles.packagesDir.listFiles().orEmpty().filter {
             it.isDirectory
-        }.map {
-            InstalledPackage(it)
-        }
+        }.map(::InstalledPackage)
     }
 
     fun deletePackage(pack: InstalledPackage) {

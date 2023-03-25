@@ -151,7 +151,7 @@ abstract class ParsedAnimeHttpSource : AnimeHttpSource() {
      */
     override fun episodeListParse(response: Response): List<SEpisode> {
         val document = response.asJsoup()
-        return document.select(episodeListSelector()).map { episodeFromElement(it) }
+        return document.select(episodeListSelector()).map(::episodeFromElement)
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class ParsedAnimeHttpSource : AnimeHttpSource() {
      */
     override fun videoListParse(response: Response): List<Video> {
         val document = response.asJsoup()
-        return document.select(videoListSelector()).map { videoFromElement(it) }
+        return document.select(videoListSelector()).map(::videoFromElement)
     }
 
     /**

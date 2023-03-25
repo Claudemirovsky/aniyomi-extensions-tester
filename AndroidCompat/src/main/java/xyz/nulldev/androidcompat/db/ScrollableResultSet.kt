@@ -29,9 +29,9 @@ class ScrollableResultSet(val parent: ResultSet) : ResultSet by parent {
 
     val parentMetadata = parent.metaData
     val columnCount = parentMetadata.columnCount
-    val columnLabels = (1..columnCount).map {
-        parentMetadata.getColumnLabel(it)
-    }.toTypedArray()
+    val columnLabels = (1..columnCount)
+        .map(parentMetadata::getColumnLabel)
+        .toTypedArray()
 
     init {
         val columnCount = columnCount

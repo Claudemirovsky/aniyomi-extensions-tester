@@ -44,11 +44,11 @@ fun getCacheDir(): File {
     // Based on playwright-core/src/server/registry/index.ts
     val cachePath = when (SystemType.currentSystem) {
         SystemType.LINUX -> System.getenv("XDG_CACHE_HOME")
-            ?.let { File(it) }
+            ?.let(::File)
             ?: File(home, ".cache")
         SystemType.WINDOWS ->
             System.getenv("LOCALAPPDATA")
-                ?.let { File(it) }
+                ?.let(::File)
                 ?: File(File(home, "AppData"), "Local")
         SystemType.MAC -> File(File(home, "Library"), "Caches")
     }

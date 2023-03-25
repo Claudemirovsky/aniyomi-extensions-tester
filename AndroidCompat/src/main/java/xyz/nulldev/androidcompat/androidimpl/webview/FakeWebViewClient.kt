@@ -37,7 +37,7 @@ class FakeWebViewClient(
                         localWebView,
                         FakeWebResourceRequest(request)
                     )
-                        ?.let { FakeWebResponse(it) }
+                        ?.let(::FakeWebResponse)
                         ?: super.getResponse(request)
                 }
             }

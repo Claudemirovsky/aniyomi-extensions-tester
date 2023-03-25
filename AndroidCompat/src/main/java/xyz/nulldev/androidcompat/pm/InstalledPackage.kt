@@ -24,9 +24,7 @@ data class InstalledPackage(val root: File) {
             val parsed = ApkFile(apk)
             val dbFactory = DocumentBuilderFactory.newInstance()
             val dBuilder = dbFactory.newDocumentBuilder()
-            val doc = parsed.manifestXml.byteInputStream().use {
-                dBuilder.parse(it)
-            }
+            val doc = parsed.manifestXml.byteInputStream().use(dBuilder::parse)
 
             it.applicationInfo.metaData = Bundle().apply {
                 val appTag = doc.getElementsByTagName("application").item(0)
@@ -65,9 +63,7 @@ data class InstalledPackage(val root: File) {
             val icons = ApkFile(apk).allIcons
 
             val read = icons.filter { it.isFile }.map {
-                it.data.inputStream().use {
-                    ImageIO.read(it)
-                }
+                it.data.inputStream().use(ImageIO::read)
             }.sortedByDescending { it.width * it.height }.firstOrNull() ?: return
 
             ImageIO.write(read, "png", icon)

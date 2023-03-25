@@ -29,7 +29,7 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
 
     // TODO: 2021-05-29 Need to find a way to get this working with all pref types
     override fun getAll(): MutableMap<String, *> {
-        return preferences.keys.associateWith { preferences.getStringOrNull(it) }.toMutableMap()
+        return preferences.keys.associateWith(preferences::getStringOrNull).toMutableMap()
     }
 
     override fun getString(key: String, defValue: String?): String? {

@@ -281,7 +281,7 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
     open fun fetchVideoUrl(video: Video): Observable<String> {
         return client.newCall(videoUrlRequest(video))
             .asObservableSuccess()
-            .map { videoUrlParse(it) }
+            .map(::videoUrlParse)
     }
 
     /**

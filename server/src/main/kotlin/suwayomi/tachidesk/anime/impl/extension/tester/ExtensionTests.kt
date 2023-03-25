@@ -81,22 +81,19 @@ class ExtensionTests(
             try {
                 // Returns the related function to each test inside a block
                 val testFunction: () -> Unit = when (test) {
-                    TestsEnum.POPULAR -> { { testPopularAnimesPage() } }
-                    TestsEnum.LATEST -> { { testLatestAnimesPage() } }
-                    TestsEnum.SEARCH -> { { testSearchAnimesPage() } }
-                    TestsEnum.ANIDETAILS -> { { testAnimeDetails() } }
-                    TestsEnum.EPLIST -> { { testEpisodeList() } }
-                    TestsEnum.VIDEOLIST -> { { testVideoList() } }
+                    TestsEnum.POPULAR -> ::testPopularAnimesPage
+                    TestsEnum.LATEST -> ::testLatestAnimesPage
+                    TestsEnum.SEARCH -> ::testSearchAnimesPage
+                    TestsEnum.ANIDETAILS -> ::testAnimeDetails
+                    TestsEnum.EPLIST -> ::testEpisodeList
+                    TestsEnum.VIDEOLIST -> ::testVideoList
                 }
 
                 // Prevents running LATEST test if the source doesnt support it.
-                if (test == TestsEnum.LATEST) {
-                    if (source.supportsLatest) {
-                        timeTestFromEnum(test) { testFunction() }
-                    }
-                } else {
-                    timeTestFromEnum(test) { testFunction() }
+                if (test == TestsEnum.LATEST && !source.supportsLatest) {
+                    return@forEach
                 }
+                timeTestFromEnum(test, testFunction)
             } catch (e: FailedTestException) {
                 writeTestError(test, e)
                 printTitle("${test.name} TEST FAILED", barColor = RED)
@@ -180,9 +177,8 @@ class ExtensionTests(
                 result
             }
 
-            episodeList.forEach {
-                printItemOrJson<SEpisode>(it)
-            }
+            episodeList.forEach(::printItemOrJson)
+
             writeTestSuccess(TestsEnum.EPLIST) {
                 val episodeOBJList = episodeList.map { it as SEpisodeImpl }
                 json.encodeToJsonElement(episodeOBJList).jsonArray
@@ -219,7 +215,7 @@ class ExtensionTests(
         }
 
         writeTestSuccess(TestsEnum.VIDEOLIST) {
-            val videoDtoList = videoList.map { VideoDto(it) }
+            val videoDtoList = videoList.map(::VideoDto)
             json.encodeToJsonElement(videoDtoList).jsonArray
         }
     }

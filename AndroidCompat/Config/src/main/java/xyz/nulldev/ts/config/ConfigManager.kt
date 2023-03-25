@@ -58,9 +58,7 @@ open class ConfigManager {
     }
 
     fun registerModules(vararg modules: ConfigModule) {
-        modules.forEach {
-            registerModule(it)
-        }
+        modules.forEach(::registerModule)
     }
 }
 

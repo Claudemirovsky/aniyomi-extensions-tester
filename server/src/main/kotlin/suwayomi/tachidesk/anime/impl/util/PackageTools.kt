@@ -79,9 +79,7 @@ object PackageTools {
             val parsed = ApkFile(apk)
             val dbFactory = DocumentBuilderFactory.newInstance()
             val dBuilder = dbFactory.newDocumentBuilder()
-            val doc = parsed.manifestXml.byteInputStream().use {
-                dBuilder.parse(it)
-            }
+            val doc = parsed.manifestXml.byteInputStream().use(dBuilder::parse)
 
             logger.trace(parsed.manifestXml)
 

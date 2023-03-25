@@ -21,5 +21,5 @@ fun AnimeHttpSource.fetchUrlFromVideo(video: Video): Observable<Video> {
 fun AnimeHttpSource.fetchRemainingVideoUrlsFromVideoList(video: Video): Observable<Video> {
     return Observable.just(video)
         .filter { it.videoUrl.isNullOrEmpty() }
-        .concatMap { getVideoUrl(it) }
+        .concatMap(::getVideoUrl)
 }

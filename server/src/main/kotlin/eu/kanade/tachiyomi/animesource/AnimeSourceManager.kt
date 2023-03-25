@@ -14,7 +14,7 @@ open class AnimeSourceManager(private val context: Context) {
     private val stubSourcesMap = mutableMapOf<Long, StubSource>()
 
     init {
-        createInternalSources().forEach { registerSource(it) }
+        createInternalSources().forEach(::registerSource)
     }
 
     open fun get(sourceKey: Long): AnimeSource? {
