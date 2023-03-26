@@ -79,8 +79,7 @@ class ExtensionTests(
     fun runTests(): TestsResultsDto {
         tests.forEach { test ->
             try {
-                // Returns the related function to each test inside a block
-                val testFunction: () -> Unit = when (test) {
+                val testFunction = when (test) {
                     TestsEnum.POPULAR -> ::testPopularAnimesPage
                     TestsEnum.LATEST -> ::testLatestAnimesPage
                     TestsEnum.SEARCH -> ::testSearchAnimesPage
@@ -140,10 +139,11 @@ class ExtensionTests(
         if (configs.checkThumbnails) {
             details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
         }
-        printItemOrJson<SAnime>(details)
+        printItemOrJson(details)
         writeTestSuccess(TestsEnum.ANIDETAILS) {
-            val animeObj = details as SAnimeImpl
-            json.encodeToJsonElement(animeObj).jsonObject
+            (details as SAnimeImpl)
+                .let(json::encodeToJsonElement)
+                .jsonObject
         }
     }
 
@@ -156,7 +156,7 @@ class ExtensionTests(
 
         printLine("Episodes", result.size.toString())
 
-        if (result.size > 0) {
+        if (result.isNotEmpty()) {
             // Sets the episode url to use in videoList test.
             if (configs.episodeUrl.isNotBlank()) {
                 EP_URL = configs.episodeUrl
@@ -180,8 +180,9 @@ class ExtensionTests(
             episodeList.forEach(::printItemOrJson)
 
             writeTestSuccess(TestsEnum.EPLIST) {
-                val episodeOBJList = episodeList.map { it as SEpisodeImpl }
-                json.encodeToJsonElement(episodeOBJList).jsonArray
+                episodeList.map { it as SEpisodeImpl }
+                    .let(json::encodeToJsonElement)
+                    .jsonArray
             }
         }
     }
@@ -198,25 +199,25 @@ class ExtensionTests(
         )
 
         printLine("Videos", videoList.size.toString())
-        if (videoList.size == 0) {
+        if (videoList.isEmpty()) {
             throw FailedTestException("Empty video list")
         }
 
-        videoList.forEach {
+        videoList.forEach { video ->
             // Tests if the video is loading
             // It runs everytime, but its really fast and does not use much bandwith
             // .... Unless something went wrong
-            val test = runCatching {
-                testMediaResult(it.videoUrl ?: it.url, true, it.headers)
+            video.isWorking = runCatching {
+                testMediaResult(video.videoUrl ?: video.url, true, video.headers)
             }.getOrDefault(false)
 
-            it.isWorking = test
-            printItemOrJson<Video>(it)
+            printItemOrJson(video)
         }
 
         writeTestSuccess(TestsEnum.VIDEOLIST) {
-            val videoDtoList = videoList.map(::VideoDto)
-            json.encodeToJsonElement(videoDtoList).jsonArray
+            videoList.map(::VideoDto)
+                .let(json::encodeToJsonElement)
+                .jsonArray
         }
     }
 
@@ -322,8 +323,8 @@ class ExtensionTests(
             }
             println()
             printLine("Page", "$page")
-            printLine("Results", results.animes.size.toString())
-            printLine("Has next page", results.hasNextPage.toString())
+            printLine("Results", "${results.animes.size}")
+            printLine("Has next page", "${results.hasNextPage}")
             val animes = results.animes.let {
                 if (!configs.showAll) {
                     it.take(configs.resultsCount)
@@ -340,7 +341,7 @@ class ExtensionTests(
                 if (configs.checkThumbnails) {
                     it.is_thumbnail_loading = testMediaResult(it.thumbnail_url)
                 }
-                printItemOrJson<SAnime>(it)
+                printItemOrJson(it)
             }
 
             if (!configs.increment || !results.hasNextPage || page >= 2) {
@@ -404,24 +405,14 @@ class ExtensionTests(
      * @param result The result from the test.
      */
     private fun setTestResult(test: TestsEnum, result: ResultDto) {
-        when (test) {
-            TestsEnum.POPULAR -> {
-                TESTS_RESULTS_DTO.popular = result
-            }
-            TestsEnum.LATEST -> {
-                TESTS_RESULTS_DTO.latest = result
-            }
-            TestsEnum.SEARCH -> {
-                TESTS_RESULTS_DTO.search = result
-            }
-            TestsEnum.ANIDETAILS -> {
-                TESTS_RESULTS_DTO.details = result
-            }
-            TestsEnum.EPLIST -> {
-                TESTS_RESULTS_DTO.episodes = result
-            }
-            TestsEnum.VIDEOLIST -> {
-                TESTS_RESULTS_DTO.videos = result
+        TESTS_RESULTS_DTO.apply {
+            when (test) {
+                TestsEnum.POPULAR -> popular = result
+                TestsEnum.LATEST -> latest = result
+                TestsEnum.SEARCH -> search = result
+                TestsEnum.ANIDETAILS -> details = result
+                TestsEnum.EPLIST -> episodes = result
+                TestsEnum.VIDEOLIST -> videos = result
             }
         }
     }

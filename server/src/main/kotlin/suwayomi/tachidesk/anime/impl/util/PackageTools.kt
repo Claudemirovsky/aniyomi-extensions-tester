@@ -89,13 +89,10 @@ object PackageTools {
                 appTag?.childNodes?.toList()
                     .orEmpty()
                     .asSequence()
-                    .filter {
-                        it.nodeType == Node.ELEMENT_NODE
-                    }.map {
-                        it as Element
-                    }.filter {
-                        it.tagName == "meta-data"
-                    }.forEach {
+                    .filter { it.nodeType == Node.ELEMENT_NODE }
+                    .map { it as Element }
+                    .filter { it.tagName == "meta-data" }
+                    .forEach {
                         putString(
                             it.attributes.getNamedItem("android:name").nodeValue,
                             it.attributes.getNamedItem("android:value").nodeValue

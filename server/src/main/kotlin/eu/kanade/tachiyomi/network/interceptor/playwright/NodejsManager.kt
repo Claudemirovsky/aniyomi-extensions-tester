@@ -24,7 +24,7 @@ object NodejsManager {
             ?: System.getenv(CustomDriver.PLAYWRIGHT_NODEJS_PATH)
             ?: System.getProperty(CustomDriver.PLAYWRIGHT_PROP_NODEJS_PATH)
 
-        if (customNodePath != null) return customNodePath
+        customNodePath?.let { return it }
 
         // Let's try to find nodejs in PATH environment variable
         // ... or PATHEXT
@@ -37,8 +37,17 @@ object NodejsManager {
 
     fun installNodejs(): String? {
         val cacheDir = getNodeCacheDir()
+
         if (!Files.isDirectory(cacheDir.toPath())) {
             cacheDir.mkdirs()
+        }
+
+        val nodebin = if (system == SystemType.WINDOWS) "node.exe" else "node"
+
+        // if its already installed, then just return the installed binary path
+        val installedBinary = File(cacheDir, nodebin).toPath()
+        if (Files.isRegularFile(installedBinary)) {
+            return installedBinary.toString()
         }
 
         // "normalized" == "something that exists on nodejs.org"
@@ -55,17 +64,8 @@ object NodejsManager {
             SystemType.WINDOWS -> "win-$normalizedArch.zip"
         }
 
-        val nodebin = if (system == SystemType.WINDOWS) "node.exe" else "node"
-
-        // if its already installed, then just return the installed binary path
-        val installedBinary = File(cacheDir, nodebin).toPath()
-        if (Files.isRegularFile(installedBinary)) {
-            return installedBinary.toString()
-        }
-
         // Lets download it!
-        val downloadedFile = File(cacheDir, filename)
-        downloadedFile.deleteOnExit()
+        val downloadedFile = File(cacheDir, filename).also { it.deleteOnExit() }
         // If for some reason the downloaded file was not deleted
         // OR someone downloaded it externally, then dont try downloading again
         var fileExists = Files.isRegularFile(downloadedFile.toPath())

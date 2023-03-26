@@ -24,12 +24,12 @@ fun findBinary(vararg binaries: String): String? {
 
     val binaryFilter = object : FilenameFilter {
         override fun accept(dir: File, name: String): Boolean =
-            binaries.any { it.equals(name) }
+            binaries.any(name::equals)
     }
 
     envPath.split(pathSeparator).forEach {
         val results = File(it).list(binaryFilter)
-        if (results != null && results.size > 0) {
+        if (results != null && results.isNotEmpty()) {
             return "$it/${results.first()}"
         }
     }
@@ -43,9 +43,10 @@ fun getCacheDir(): File {
 
     // Based on playwright-core/src/server/registry/index.ts
     val cachePath = when (SystemType.currentSystem) {
-        SystemType.LINUX -> System.getenv("XDG_CACHE_HOME")
-            ?.let(::File)
-            ?: File(home, ".cache")
+        SystemType.LINUX ->
+            System.getenv("XDG_CACHE_HOME")
+                ?.let(::File)
+                ?: File(home, ".cache")
         SystemType.WINDOWS ->
             System.getenv("LOCALAPPDATA")
                 ?.let(::File)

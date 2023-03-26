@@ -136,7 +136,7 @@ fun printVideo(video: Video) {
         ?.forEach { (first, second) ->
             printLine(first, second, width = 25, subPad = 6)
         }
-    if (video.subtitleTracks.size > 0) {
+    if (video.subtitleTracks.isNotEmpty()) {
         printLine("Subs", "")
         video.subtitleTracks.forEach {
             printLine("Sub Lang", it.lang, subPad = 6)

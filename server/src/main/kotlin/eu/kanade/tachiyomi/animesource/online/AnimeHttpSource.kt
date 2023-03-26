@@ -84,9 +84,7 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
     override fun fetchPopularAnime(page: Int): Observable<AnimesPage> {
         return client.newCall(popularAnimeRequest(page))
             .asObservableSuccess()
-            .map { response ->
-                popularAnimeParse(response)
-            }
+            .map(::popularAnimeParse)
     }
 
     /**
@@ -120,10 +118,7 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
                 // if an old extension using non-existent classes is still around
                 throw RuntimeException(e)
             }
-        }
-            .map { response ->
-                searchAnimeParse(response)
-            }
+        }.map(::searchAnimeParse)
     }
 
     /**
@@ -150,9 +145,7 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
     override fun fetchLatestUpdates(page: Int): Observable<AnimesPage> {
         return client.newCall(latestUpdatesRequest(page))
             .asObservableSuccess()
-            .map { response ->
-                latestUpdatesParse(response)
-            }
+            .map(::latestUpdatesParse)
     }
 
     /**
@@ -210,9 +203,7 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
         return if (anime.status != SAnime.LICENSED) {
             client.newCall(episodeListRequest(anime))
                 .asObservableSuccess()
-                .map { response ->
-                    episodeListParse(response)
-                }
+                .map(::episodeListParse)
         } else {
             Observable.error(Exception("Licensed - No episodes to show"))
         }

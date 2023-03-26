@@ -22,13 +22,11 @@ abstract class ParsedAnimeHttpSource : AnimeHttpSource() {
     override fun popularAnimeParse(response: Response): AnimesPage {
         val document = response.asJsoup()
 
-        val animes = document.select(popularAnimeSelector()).map { element ->
-            popularAnimeFromElement(element)
-        }
+        val animes = document.select(popularAnimeSelector())
+            .map(::popularAnimeFromElement)
 
-        val hasNextPage = popularAnimeNextPageSelector()?.let { selector ->
-            document.select(selector).first()
-        } != null
+        val hasNextPage = popularAnimeNextPageSelector()
+            ?.let(document::selectFirst) != null
 
         return AnimesPage(animes, hasNextPage)
     }
@@ -60,13 +58,11 @@ abstract class ParsedAnimeHttpSource : AnimeHttpSource() {
     override fun searchAnimeParse(response: Response): AnimesPage {
         val document = response.asJsoup()
 
-        val animes = document.select(searchAnimeSelector()).map { element ->
-            searchAnimeFromElement(element)
-        }
+        val animes = document.select(searchAnimeSelector())
+            .map(::searchAnimeFromElement)
 
-        val hasNextPage = searchAnimeNextPageSelector()?.let { selector ->
-            document.select(selector).first()
-        } != null
+        val hasNextPage = searchAnimeNextPageSelector()
+            ?.let(document::selectFirst) != null
 
         return AnimesPage(animes, hasNextPage)
     }
@@ -98,13 +94,11 @@ abstract class ParsedAnimeHttpSource : AnimeHttpSource() {
     override fun latestUpdatesParse(response: Response): AnimesPage {
         val document = response.asJsoup()
 
-        val animes = document.select(latestUpdatesSelector()).map { element ->
-            latestUpdatesFromElement(element)
-        }
+        val animes = document.select(latestUpdatesSelector())
+            .map(::latestUpdatesFromElement)
 
-        val hasNextPage = latestUpdatesNextPageSelector()?.let { selector ->
-            document.select(selector).first()
-        } != null
+        val hasNextPage = latestUpdatesNextPageSelector()
+            ?.let(document::selectFirst) != null
 
         return AnimesPage(animes, hasNextPage)
     }

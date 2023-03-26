@@ -73,12 +73,12 @@ interface SAnime : Serializable {
         // Useful for pretty-printing
         fun getStatus(status: Int): String {
             return when (status) {
-                1 -> "ONGOING"
-                2 -> "COMPLETED"
-                3 -> "LICENSED"
-                4 -> "PUBLISHING_FINISHED"
-                5 -> "CANCELLED"
-                6 -> "ON_HIATUS"
+                ONGOING -> "ONGOING"
+                COMPLETED -> "COMPLETED"
+                LICENSED -> "LICENSED"
+                PUBLISHING_FINISHED -> "PUBLISHING_FINISHED"
+                CANCELLED -> "CANCELLED"
+                ON_HIATUS -> "ON_HIATUS"
                 else -> "UNKNOWN"
             }
         }

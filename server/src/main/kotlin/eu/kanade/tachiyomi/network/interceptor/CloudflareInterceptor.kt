@@ -210,11 +210,9 @@ object CFClearance {
         ).map { javaClass.getResource(it)!!.readText() }
     }
 
-// ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L76
+    // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/stealth.py#L76
     private fun applyStealthInitScripts(page: Page) {
-        for (script in stealthInitScripts) {
-            page.addInitScript(script)
-        }
+        stealthInitScripts.forEach(page::addInitScript)
     }
 
     // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/retry.py#L21
