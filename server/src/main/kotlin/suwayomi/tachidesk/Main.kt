@@ -18,6 +18,8 @@ import suwayomi.tachidesk.anime.impl.extension.tester.models.SourceResultsDto
 import suwayomi.tachidesk.cmd.CYAN
 import suwayomi.tachidesk.cmd.CliOptions.parseArgs
 import suwayomi.tachidesk.cmd.GREEN
+import suwayomi.tachidesk.cmd.RED
+import suwayomi.tachidesk.cmd.RESET
 import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.timeTest
 import suwayomi.tachidesk.server.applicationSetup
@@ -25,6 +27,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.extension
+import kotlin.io.path.notExists
 import kotlin.streams.asSequence
 import kotlin.time.ExperimentalTime
 
@@ -41,22 +44,31 @@ suspend fun main(args: Array<String>) {
     options.userAgent?.let { System.setProperty("http.agent", it) }
     options.proxy?.let { System.setProperty("ANIEXT_TESTER_PROXY", it) }
 
-    val apksPath = options.apksPath
+    val apksPath = Paths.get(options.apksPath)
+    if (apksPath.notExists()) {
+        println("${RED}ERROR: Path \"$apksPath\" does not exist. $RESET")
+        return
+    }
 
-    val tmpDir = File(options.tmpDir, "aniyomi-extension-tester").also { it.mkdir() }
+    val tmpDir = File(options.tmpDir, "aniyomi-extension-tester").also(File::mkdir)
 
-    val extensions = if (apksPath.endsWith(".apk")) {
-        listOf(Paths.get(apksPath))
+    val extensions = if (apksPath.extension == "apk") {
+        listOf(apksPath)
     } else {
         Files.find(
-            Paths.get(apksPath),
+            apksPath,
             2,
             { _, fileAttributes -> fileAttributes.isRegularFile }
         )
             .asSequence()
             .filter { it.extension == "apk" }
             .toList()
+            .ifEmpty {
+                println("${RED}ERROR: No .apk file was found inside \"$apksPath\" path.$RESET")
+                return
+            }
     }
+
     val json = Json { prettyPrint = options.prettyJson; explicitNulls = false }
 
     extensions.forEachIndexed { index, ext ->
@@ -77,7 +89,7 @@ suspend fun main(args: Array<String>) {
             val name = pkgName.substringAfter("eu.kanade.tachiyomi.animeextension.")
             val result = json.encodeToString(results)
 
-            File(options.jsonFilesDir).also { it.mkdir() }.also {
+            File(options.jsonFilesDir).also(File::mkdir).also {
                 File(it, "results-$name.json").writeText(result)
             }
         }
