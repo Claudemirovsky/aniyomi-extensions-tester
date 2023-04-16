@@ -3,6 +3,7 @@ package suwayomi.tachidesk.cmd
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
+import suwayomi.server.BuildConfig
 import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import suwayomi.tachidesk.cmd.dto.ConfigsDto
 import suwayomi.tachidesk.cmd.dto.OptionsDto
@@ -10,7 +11,7 @@ import suwayomi.tachidesk.cmd.dto.OptionsDto
 object CliOptions {
 
     fun parseArgs(args: Array<String>): OptionsDto {
-        val parser = ArgParser("aniyomi-extension-tester")
+        val parser = ArgParser(BuildConfig.NAME)
 
         val apksPath by parser.argument(
             ArgType.String,
@@ -27,7 +28,15 @@ object CliOptions {
         val checkThumbnails by parser.option(
             ArgType.Boolean,
             "check-thumbnails",
+            "T",
             description = "Check if thumbnails are loading"
+        ).default(false)
+
+        val checkVideos by parser.option(
+            ArgType.Boolean,
+            "check-videos",
+            "V",
+            description = "Check if videos are playing"
         ).default(false)
 
         val completeResults by parser.option(
@@ -152,6 +161,7 @@ object CliOptions {
         val configs = ConfigsDto(
             animeUrl ?: "",
             checkThumbnails,
+            checkVideos,
             completeResults,
             dateFormat,
             episodeUrl ?: "",

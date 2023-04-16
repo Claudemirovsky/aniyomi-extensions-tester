@@ -203,12 +203,16 @@ class ExtensionTests(
             throw FailedTestException("Empty video list")
         }
 
-        videoList.parallelMap { video ->
-            // Tests if the video is loading
-            video.isWorking = runCatching {
-                testMediaResult(video.videoUrl ?: video.url, true, video.headers)
-            }.getOrDefault(false)
-            video
+        videoList.let {
+            if (configs.checkVideos) {
+                it.parallelMap { video ->
+                    // Tests if the video is loading
+                    video.isWorking = runCatching {
+                        testMediaResult(video.videoUrl ?: video.url, true, video.headers)
+                    }.getOrDefault(false)
+                    video
+                }
+            } else { it }
         }.forEach(::printItemOrJson)
 
         writeTestSuccess(TestsEnum.VIDEOLIST) {
@@ -237,7 +241,7 @@ class ExtensionTests(
             when (item) {
                 is SAnime -> printAnime(item, configs.checkThumbnails)
                 is SEpisode -> printEpisode(item, DATE_FORMATTER)
-                is Video -> printVideo(item)
+                is Video -> printVideo(item, configs.checkVideos)
             }
         }
     }

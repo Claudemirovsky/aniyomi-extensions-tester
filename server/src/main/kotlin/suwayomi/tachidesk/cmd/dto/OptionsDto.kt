@@ -27,6 +27,7 @@ data class OptionsDto(
  *
  * @param animeUrl An specific anime-url to be used in AnimeDetails and EpList tests.
  * @param checkThumbnails An switch to enable checking if thumbnails are loading.
+ * @param checkVideos An switch to enable checking if videos are playing.
  * @param completeResults An switch to enable dumping ALL data that comes from each test.
  * @param dateFormat The format to use when printing the date of upload of a episode.
  * @param episodeUrl An specific episode url to be used in videoList test. Has priority over episodeNumber param.
@@ -41,6 +42,7 @@ data class OptionsDto(
 data class ConfigsDto(
     val animeUrl: String = "",
     val checkThumbnails: Boolean = false,
+    val checkVideos: Boolean = false,
     val completeResults: Boolean = false,
     val dateFormat: String = "",
     val episodeUrl: String = "",
