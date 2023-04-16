@@ -285,7 +285,7 @@ class ExtensionTests(
         if (!req.isSuccessful) return false
 
         val resType = req.header("content-type", "") ?: ""
-        if (resType == "undefined") {
+        if (resType == "undefined" || resType.isBlank()) {
             if (!supportsHEAD) {
                 return false
             } else {
@@ -333,17 +333,20 @@ class ExtensionTests(
                     it
                 }
             }
-
-            animes.forEach {
-                // Sets the ANIME_OBJ for the anidetails test if needed.
-                if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null) {
-                    ANIME_OBJ = it
-                }
-                if (configs.checkThumbnails) {
-                    it.is_thumbnail_loading = testMediaResult(it.thumbnail_url)
-                }
-                printItemOrJson(it)
+            // Sets the ANIME_OBJ for the anidetails test if needed.
+            if (ANIDETAILS_URL.isBlank() && ANIME_OBJ == null) {
+                ANIME_OBJ = animes.first()
             }
+
+            animes.let {
+                if (configs.checkThumbnails) {
+                    it.parallelMap { anime ->
+                        val url = anime.thumbnail_url
+                        anime.is_thumbnail_loading = testMediaResult(url)
+                        anime
+                    }
+                } else { it }
+            }.forEach(::printItemOrJson)
 
             if (!configs.increment || !results.hasNextPage || page >= 2) {
                 break
