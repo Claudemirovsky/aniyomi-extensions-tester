@@ -11,6 +11,10 @@ import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HEAD
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -111,15 +115,11 @@ class ExtensionTests(
     }
 
     private fun testPopularAnimesPage() {
-        printAnimesPage(TestsEnum.POPULAR) { page: Int ->
-            source.fetchPopularAnime(page)
-        }
+        printAnimesPage(TestsEnum.POPULAR, source::fetchPopularAnime)
     }
 
     private fun testLatestAnimesPage() {
-        printAnimesPage(TestsEnum.LATEST) { page: Int ->
-            source.fetchLatestUpdates(page)
-        }
+        printAnimesPage(TestsEnum.LATEST, source::fetchLatestUpdates)
     }
 
     private fun testSearchAnimesPage() {
@@ -203,16 +203,13 @@ class ExtensionTests(
             throw FailedTestException("Empty video list")
         }
 
-        videoList.forEach { video ->
+        videoList.parallelMap { video ->
             // Tests if the video is loading
-            // It runs everytime, but its really fast and does not use much bandwith
-            // .... Unless something went wrong
             video.isWorking = runCatching {
                 testMediaResult(video.videoUrl ?: video.url, true, video.headers)
             }.getOrDefault(false)
-
-            printItemOrJson(video)
-        }
+            video
+        }.forEach(::printItemOrJson)
 
         writeTestSuccess(TestsEnum.VIDEOLIST) {
             videoList.map(::VideoDto)
@@ -416,4 +413,9 @@ class ExtensionTests(
             }
         }
     }
+
+    private inline fun <A, B> Iterable<A>.parallelMap(crossinline f: suspend (A) -> B): List<B> =
+        runBlocking {
+            map { async(Dispatchers.Default) { f(it) } }.awaitAll()
+        }
 }
