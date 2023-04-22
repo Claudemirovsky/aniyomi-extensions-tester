@@ -18,13 +18,14 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v2.2.0.jar -h
-Usage: aniyomi-extension-tester options_list
+$ java -jar server/build/aniyomi-extensions-tester-v2.3.0-unreleased.jar -h
+Usage: aniyomi-extensions-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
 Options:
     --anime-url, -a -> Target anime url { String }
-    --check-thumbnails [false] -> Check if thumbnails are loading
+    --check-thumbnails, -T [false] -> Check if thumbnails are loading
+    --check-videos, -V [false] -> Check if videos are playing
     --complete-results, -C [false] -> Output JSON files with complete result data
     --date-format, -f [dd/MM/yyyy] -> Format to use when printing episode date { String }
     --debug, -d [false] -> Enable okHttp debug
@@ -44,19 +45,23 @@ Options:
     --user-agent, -U -> Set and use a specific user agent { String }
     --help, -h -> Usage info
 ```
-## TODO
-- [ ] Support search filters
-- [x] Support webview-related interceptors
-> - [ ] Implement a proper and functional Cloudflare interceptor
 
-- [x] Implement all main functions from extensions
-- [x] Test and check thumbnail URLs and video URLs
+## TODOs
+- [ ] Read configs/arguments from a file
+- [ ] Support custom preferences
+- [ ] Support search filters
+- [ ] Support webview-related interceptors
+> - [ ] Implement a proper and functional Cloudflare bypasser/interceptor
+
+- [x] Implement all main functions from extensions-lib
+- [x] Add options to test and check thumbnail/video URLs
+> - [ ] Fix false-negatives on video checks due to the server being unable to accept HEAD requests
 - [x] Show time spent on every test
 - [x] Honor all CLI options
 - [x] Support custom http/https/socks5 proxies
 - [x] Support custom User-Agent
 - [x] Document some functions, classes and operations
-- [X] Dump tests results as JSON
+- [x] Dump tests results as JSON
 
 ## Credits
 
