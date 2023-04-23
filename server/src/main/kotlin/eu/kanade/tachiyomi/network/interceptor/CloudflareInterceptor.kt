@@ -78,7 +78,23 @@ class CloudflareInterceptor : Interceptor {
 object CFClearance {
     private val logger = KotlinLogging.logger {}
     private val network: NetworkHelper by injectLazy()
-    private val defaultOptions by lazy { LaunchOptions().setHeadless(false) }
+
+    private val defaultOptions by lazy {
+        LaunchOptions()
+            .setHeadless(false)
+            .setChromiumSandbox(false)
+            .setArgs(
+                listOf(
+                    "--disable-gpu",
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--no-first-run",
+                    "--no-service-autorun",
+                    "--no-default-browser-check",
+                    "--password-store=basic"
+                )
+            )
+    }
 
     init {
         // Fix the default DriverJar issue by using Tachidesk's implementation
@@ -150,9 +166,11 @@ object CFClearance {
     fun getWebViewUserAgent(): String {
         return try {
             Playwright.create().use { playwright ->
-                playwright.chromium().launch(defaultOptions).use { browser ->
+                playwright.chromium().launch(defaultOptions.setHeadless(true)).use { browser ->
+                    defaultOptions.setHeadless(false)
                     browser.newPage().use { page ->
-                        val userAgent = page.evaluate("() => {return navigator.userAgent}") as String
+                        val userAgent = (page.evaluate("() => {return navigator.userAgent}") as String)
+                            .replace("Headless", "")
                         logger.debug { "WebView User-Agent is $userAgent" }
                         // prevents opening chromium again just to get the user-agent.
                         System.setProperty("http.agent", userAgent)
@@ -161,8 +179,7 @@ object CFClearance {
                 }
             }
         } catch (e: PlaywrightException) {
-            // Playwright might fail on headless environments like docker/github CI
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
     }
 
@@ -218,17 +235,36 @@ object CFClearance {
     // ref: https://github.com/vvanglro/cf-clearance/blob/44124a8f06d8d0ecf2bf558a027082ff88dab435/cf_clearance/retry.py#L21
     private fun waitForChallengeResolve(page: Page): Boolean {
         // sometimes the user has to solve the captcha challenge manually, potentially wait a long time
-        val timeoutSeconds = 120.seconds.toDouble(DurationUnit.MILLISECONDS)
-        return runCatching {
-            page.waitForSelector(
-                "#challenge-form",
-                Page.WaitForSelectorOptions().apply {
-                    timeout = timeoutSeconds
-                    state = WaitForSelectorState.DETACHED
-                }
-            )
-            true
-        }.getOrDefault(false)
+        val waitOptions = Page.WaitForSelectorOptions().apply {
+            timeout = 5.seconds.toDouble(DurationUnit.MILLISECONDS)
+            state = WaitForSelectorState.DETACHED
+        }
+
+        val query = "#challenge-form"
+        var success = false
+
+        for (attempt in 1..10) {
+            success = runCatching {
+                page.querySelector(query)?.let { false }
+            }.getOrNull() ?: true
+            if (success) break
+            runCatching {
+                // Simple challenge
+                page.querySelector("#challenge-stage > div > input[type='button']")
+                    ?.click()
+
+                // Turnstile challenge
+                page.querySelector("div.hcaptcha-box > iframe")
+                    ?.contentFrame()
+                    ?.querySelector("input[type='checkbox']")
+                    ?.click()
+
+                page.waitForSelector(query, waitOptions)
+                success = true
+            }
+        }
+
+        return success
     }
 
     private class CloudflareBypassException : Exception()

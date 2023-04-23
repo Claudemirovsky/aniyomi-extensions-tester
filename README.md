@@ -51,7 +51,7 @@ Options:
 - [ ] Support custom preferences
 - [ ] Support search filters
 - [ ] Support webview-related interceptors
-> - [ ] Implement a proper and functional Cloudflare bypasser/interceptor
+> - [x] Implement a proper and functional Cloudflare bypasser/interceptor (Needs a GUI, and doesnt work on CI well)
 
 - [x] Implement all main functions from extensions-lib
 - [x] Add options to test and check thumbnail/video URLs
