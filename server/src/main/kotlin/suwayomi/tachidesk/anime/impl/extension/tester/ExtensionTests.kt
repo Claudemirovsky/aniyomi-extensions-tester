@@ -12,8 +12,10 @@ import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HEAD
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -39,6 +41,8 @@ import suwayomi.tachidesk.cmd.printVideo
 import suwayomi.tachidesk.cmd.timeTestFromEnum
 import java.net.ProtocolException
 import java.text.SimpleDateFormat
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 import kotlin.time.ExperimentalTime
 
@@ -80,7 +84,7 @@ class ExtensionTests(
     }
 
     @ExperimentalTime
-    fun runTests(): TestsResultsDto {
+    suspend fun runTests(): TestsResultsDto {
         tests.forEach { test ->
             try {
                 val testFunction = when (test) {
@@ -96,7 +100,22 @@ class ExtensionTests(
                 if (test == TestsEnum.LATEST && !source.supportsLatest) {
                     return@forEach
                 }
-                timeTestFromEnum(test, testFunction)
+
+                val latch = CountDownLatch(1)
+                var exception: Throwable? = null
+                val coro = GlobalScope.launch {
+                    runCatching {
+                        timeTestFromEnum(test, testFunction)
+                    }.onFailure { exception = it }
+                    latch.countDown()
+                }
+
+                // TODO: Add CLI option to configure the timeout
+                latch.await(5, TimeUnit.MINUTES).let {
+                    coro.cancel()
+                    exception?.let { throw FailedTestException(it) }
+                    if (!it) throw FailedTestException("Timeout!")
+                }
             } catch (e: FailedTestException) {
                 writeTestError(test, e)
                 printTitle("${test.name} TEST FAILED", barColor = RED)
