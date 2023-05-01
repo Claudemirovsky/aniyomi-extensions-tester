@@ -5,13 +5,37 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
+  changelog:
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v2
+        id: git-cliff
+        with:
+          config: .github/workflows/cliff.toml
+          args: -vv --latest 
+        env:
+          OUTPUT: CHANGELOG.md
+
   build:
     name: Build artifacts and create draft release
+    needs: changelog
     runs-on: ubuntu-latest
 
     steps:
@@ -44,12 +68,15 @@ jobs:
           mv server/build/aniyomi-extensions-tester-v*.jar anitester.jar
           mv server/build/min/aniyomi-extensions-tester-v*.jar anitester-min.jar
 
-      - name: Upload Release
-        uses: xresloader/upload-to-github-release@v1
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Aniyomi-extensions-tester ${{ github.ref_name }}
+          body: ${{ needs.changelog.outputs.release_body }}
+          files: |
+              anitester.jar
+              anitester-min.jar
+          draft: true
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: "anitester.jar;anitester-min.jar"
-          tags: true
-          draft: true
-          verbose: true
