@@ -5,19 +5,18 @@ on:
     tags:
       - 'v*'
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build artifacts and create draft release
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          access_token: ${{ github.token }}
-
       - name: Checkout ${{ github.ref }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
 
@@ -25,9 +24,10 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
+          distribution: adopt
 
       - name: Copy CI gradle.properties
         run: |
