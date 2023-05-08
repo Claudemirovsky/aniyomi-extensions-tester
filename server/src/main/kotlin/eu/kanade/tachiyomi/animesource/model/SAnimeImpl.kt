@@ -18,6 +18,8 @@ data class SAnimeImpl(
 
     override var status: Int = 0,
 
+    override var status_name: String = "",
+
     override var thumbnail_url: String? = null,
 
     override var update_strategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,

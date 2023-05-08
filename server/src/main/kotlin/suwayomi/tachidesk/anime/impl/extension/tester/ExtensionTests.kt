@@ -158,6 +158,7 @@ class ExtensionTests(
         if (configs.checkThumbnails) {
             details.is_thumbnail_loading = testMediaResult(details.thumbnail_url)
         }
+        details.status_name = SAnime.getStatus(details.status)
         printItemOrJson(details)
         writeTestSuccess(TestsEnum.ANIDETAILS) {
             (details as SAnimeImpl)

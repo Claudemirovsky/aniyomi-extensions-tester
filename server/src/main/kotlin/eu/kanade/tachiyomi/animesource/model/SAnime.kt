@@ -18,6 +18,8 @@ interface SAnime : Serializable {
 
     var status: Int
 
+    var status_name: String
+
     var thumbnail_url: String?
 
     var update_strategy: UpdateStrategy

@@ -89,7 +89,7 @@ fun printAnime(anime: SAnime, checkThumb: Boolean = false) {
     if (checkThumb) {
         printIfWorks(anime.is_thumbnail_loading, "Thumbnail loads?")
     }
-    printLine("Status", SAnime.getStatus(anime.status))
+    printLine("Status", anime.status_name)
     printLine("Artist", anime.artist)
     printLine("Author", anime.author)
     printLine("Genres", anime.genre)
