@@ -18,7 +18,8 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v2.3.0-unreleased.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v2.3.1-unreleased.jar -h
+
 Usage: aniyomi-extensions-tester options_list
 Arguments:
     apksPath -> Apk file or directory with apks { String }
@@ -41,7 +42,8 @@ Options:
     --show-all, -A -> Show all items of lists, instead of the first ~2
     --stop-on-error, -X -> Stop the tests on the first error
     --tests, -t [popular,latest,search,anidetails,eplist,videolist] -> Tests to be made(in order), delimited by commas { String }
-    --tmp-dir [/data/data/com.termux/files/usr/tmp/] -> Directory to put temporary data { String }
+    --timeout [90] -> Maximum amount of time(in seconds) spent in each test { Int }
+    --tmp-dir [/tmp] -> Directory to put temporary data { String }
     --user-agent, -U -> Set and use a specific user agent { String }
     --help, -h -> Usage info
 ```
