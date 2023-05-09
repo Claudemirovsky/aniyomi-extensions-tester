@@ -110,8 +110,7 @@ class ExtensionTests(
                     latch.countDown()
                 }
 
-                // TODO: Add CLI option to configure the timeout
-                latch.await(5, TimeUnit.MINUTES).let {
+                latch.await(configs.timeoutSeconds, TimeUnit.SECONDS).let {
                     coro.cancel()
                     exception?.let { throw FailedTestException(it) }
                     if (!it) throw FailedTestException("Timeout!")

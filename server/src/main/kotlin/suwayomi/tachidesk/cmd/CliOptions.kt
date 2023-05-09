@@ -143,6 +143,12 @@ object CliOptions {
             description = "Tests to be made(in order), delimited by commas"
         ).default(TestsEnum.getValues())
 
+        val timeoutSeconds by parser.option(
+            ArgType.Int,
+            "timeout",
+            description = "Maximum amount of time(in seconds) spent in each test"
+        ).default(90)
+
         val tmpDir by parser.option(
             ArgType.String,
             "tmp-dir",
@@ -172,7 +178,8 @@ object CliOptions {
             searchStr,
             showAll ?: false,
             stopOnError ?: false,
-            tests
+            tests,
+            timeoutSeconds.toLong()
         )
 
         val options = OptionsDto(

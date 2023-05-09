@@ -18,7 +18,7 @@ data class SAnimeImpl(
 
     override var status: Int = 0,
 
-    override var status_name: String = "",
+    override var status_name: String = "UNKNOWN",
 
     override var thumbnail_url: String? = null,
 

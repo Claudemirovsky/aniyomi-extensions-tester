@@ -37,7 +37,8 @@ data class OptionsDto(
  * @param resultsCount The amount of results from animes pages to be printed, limiting the spam.
  * @param searchStr An specific word or phrase to be used in search test.
  * @param stopOnError Stop ALL tests on the first error.
- * @param tests An comma-separated list of tests to be done in order, like "popular,anidetails"
+ * @param tests An comma-separated list of tests to be done in order, like "popular,anidetails".
+ * @param timeoutSeconds Maximum amount of seconds spent per test.
  */
 data class ConfigsDto(
     val animeUrl: String = "",
@@ -53,5 +54,6 @@ data class ConfigsDto(
     val searchStr: String = "",
     val showAll: Boolean = false,
     val stopOnError: Boolean = false,
-    val tests: String = ""
+    val tests: String = "",
+    val timeoutSeconds: Long = 90L
 )
