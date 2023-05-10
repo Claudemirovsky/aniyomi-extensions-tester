@@ -72,11 +72,12 @@ suspend fun main(args: Array<String>) {
     val json = Json { prettyPrint = options.prettyJson; explicitNulls = false }
 
     extensions.forEachIndexed { index, ext ->
-        logger.debug("Installing $ext")
+        logger.debug { "Installing $ext" }
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { ext.toFile() }
+        val shouldDumpJson = !options.jsonFilesDir.isNullOrBlank()
         val results = sources.map { source ->
             timeTest("${source.name} TESTS", color = GREEN) {
-                val res = ExtensionTests(source, options.configs).runTests()
+                val res = ExtensionTests(source, options.configs, shouldDumpJson).runTests()
                 println()
                 SourceResultsDto(source.name, res)
             }
@@ -85,7 +86,7 @@ suspend fun main(args: Array<String>) {
         printTitle("${index + 1}/${extensions.size} EXTENSIONS DONE.", CYAN)
         println()
 
-        if (options.jsonFilesDir?.isNotBlank() ?: false) {
+        if (shouldDumpJson) {
             val name = pkgName.substringAfter("eu.kanade.tachiyomi.animeextension.")
             val result = json.encodeToString(results)
 
