@@ -1,3 +1,23 @@
+# [v2.3.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.3.0...v2.3.1) - (2023-05-10)
+
+### Bug Fixes
+
+- Show errors correctly ([5f36bdb](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/5f36bdbf4e730ad52d169af2354fd3dc9c422e20))
+
+### Features
+
+- Add status_name attribute to dumped json ([fa1889b](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/fa1889b0a599927173f38837ee0dc7456c321b83))
+- Add timeout option ([9e0d70c](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/9e0d70cf441c4e21382c1cd6ef338cedfcd72d86))
+- Only deserialize results when needed ([309f5a5](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/309f5a5ec52ad2e0d999048999b56595f8628825))
+
+### Miscellaneous Tasks
+
+- Update README ([4f15fc8](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/4f15fc8f0eba9d20abf0f9221dc78dfb22b495b5))
+
+### Refactor
+
+- Explicitly set a dispatcher to timeout coroutine ([96c53c0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/96c53c0bf8321d72d14c756d5e47e7c75cf9a34d))
+
 # [v2.3.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.2.0...v2.3.0) - (2023-05-01)
 
 ### Bug Fixes
@@ -22,6 +42,7 @@
 - (**README**) Update usage arguments and TODO's ([f5b3ec9](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/f5b3ec9617df74f9c539294e1c31423b88918c45))
 - (**CI**) Update workflows ([c01e5e4](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/c01e5e4a4fa566e2294afa176edfb1f6f2d0d8bb))
 - (**CI**) Add changelog-generators ([d5ccef5](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/d5ccef548a3a6390f5f984faaf6aefdc3106e307))
+- (**CI**) Temporarily disable optimized builds ([094d44e](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/094d44e05556985e58fd3ce23fb5790b83228f68))
 
 ### Refactor
 
