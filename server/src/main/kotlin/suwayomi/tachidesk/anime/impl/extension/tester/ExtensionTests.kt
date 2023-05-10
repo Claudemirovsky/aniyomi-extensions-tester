@@ -17,6 +17,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -103,11 +104,14 @@ class ExtensionTests(
 
                 val latch = CountDownLatch(1)
                 var exception: Throwable? = null
-                val coro = GlobalScope.launch {
-                    runCatching {
-                        timeTestFromEnum(test, testFunction)
-                    }.onFailure { exception = it }
-                    latch.countDown()
+
+                val coro = GlobalScope.launch(Dispatchers.Default) {
+                    withContext(Dispatchers.IO) {
+                        runCatching {
+                            timeTestFromEnum(test, testFunction)
+                        }.onFailure { exception = it }
+                        latch.countDown()
+                    }
                 }
 
                 latch.await(configs.timeoutSeconds, TimeUnit.SECONDS).let {
