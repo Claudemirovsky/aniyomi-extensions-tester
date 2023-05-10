@@ -112,24 +112,28 @@ class ExtensionTests(
 
                 latch.await(configs.timeoutSeconds, TimeUnit.SECONDS).let {
                     coro.cancel()
-                    exception?.let { throw FailedTestException(it) }
+                    exception?.let { throw it }
                     if (!it) throw FailedTestException("Timeout!")
                 }
             } catch (e: FailedTestException) {
-                writeTestError(test, e)
-                printTitle("${test.name} TEST FAILED", barColor = RED)
-                if (configs.stopOnError) {
-                    exitProcess(-1)
-                }
+                treatTestException(test, e)
             } catch (e: Throwable) {
-                writeTestError(test, e)
-                logger.error("Test($test): ", e)
-                if (configs.stopOnError) {
-                    exitProcess(-1)
-                }
+                treatTestException(test, e, showStackTrace = true)
             }
         }
         return TESTS_RESULTS_DTO
+    }
+
+    private fun treatTestException(test: TestsEnum, e: Throwable, showStackTrace: Boolean = false) {
+        writeTestError(test, e)
+        when {
+            showStackTrace -> logger.error(e) { "Test($test): " }
+            else -> logger.error { "Test($test): $e" }
+        }
+        printTitle("${test.name} TEST FAILED", barColor = RED)
+        if (configs.stopOnError) {
+            exitProcess(-1)
+        }
     }
 
     private fun testPopularAnimesPage() {
@@ -392,10 +396,9 @@ class ExtensionTests(
                 { it -> data = it },
                 { e: Throwable ->
                     error = e
-                    logger.error("ERROR: ", e)
                 }
             )
-        return data ?: throw FailedTestException(error)
+        return data ?: throw error
     }
 
     /**
