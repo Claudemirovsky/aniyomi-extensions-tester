@@ -21,10 +21,14 @@ import org.w3c.dom.Node
 import xyz.nulldev.androidcompat.pm.InstalledPackage.Companion.toList
 import xyz.nulldev.androidcompat.pm.toPackageInfo
 import java.io.File
+import java.net.URI
 import java.net.URL
 import java.net.URLClassLoader
+import java.nio.file.FileSystem
+import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import javax.xml.parsers.DocumentBuilderFactory
 
 object PackageTools {
@@ -56,6 +60,7 @@ object PackageTools {
             .noCode(false)
             .skipExceptions(false)
             .to(jarFilePath)
+
         if (handler.hasException()) {
             val errorFile: Path = jarFilePath.parent.resolve("${dexFile.nameWithoutExtension}-error.txt")
             logger.error(
@@ -69,7 +74,32 @@ object PackageTools {
                 """.trimIndent()
             )
             handler.dump(errorFile, emptyArray<String>())
+        } else {
+            // Copy assets to the output jar
+            val APK = dexFile.toURI().let { URI("jar:$it!/") }
+
+            initFileSystem(APK)?.use { apkfs ->
+                val assets = apkfs.getPath("assets")
+                if (Files.exists(assets)) {
+                    val JAR = jarFile.toURI().let { URI("jar:$it!/") }
+                    initFileSystem(JAR)?.use { zipfs ->
+                        val jarRoot = zipfs.getPath("/")
+                        Files.walk(assets).forEach { assetFile ->
+                            val dest = jarRoot.resolve(assetFile)
+                            runCatching {
+                                Files.copy(assetFile, dest, StandardCopyOption.REPLACE_EXISTING)
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    private fun initFileSystem(uri: URI): FileSystem? {
+        return runCatching {
+            FileSystems.newFileSystem(uri, emptyMap<String, String>())
+        }.getOrNull()
     }
 
     /** A modified version of `xyz.nulldev.androidcompat.pm.InstalledPackage.info` */
