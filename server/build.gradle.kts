@@ -87,6 +87,7 @@ tasks {
                 // Useless and heavy files from playwright-bundle
                 "driver/*/node*",
                 "driver/linux*/",
+                "driver/mac-arm64/",
                 "driver/win32_x64/package/"
             )
         }

@@ -28,15 +28,15 @@ serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-jso
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
 
 # Logging
-sfl4j-api = "org.slf4j:slf4j-api:1.7.36"
-logback = "ch.qos.logback:logback-classic:1.2.11"
-ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
+sfl4j-api = "org.slf4j:slf4j-api:2.0.3"
+logback = "ch.qos.logback:logback-classic:1.4.7"
+ktlogging = "io.github.microutils:kotlin-logging:3.0.5"
 
 # Webview-based interceptors
-playwright = "com.microsoft.playwright:playwright:1.32.0"
+playwright = "com.microsoft.playwright:playwright:1.33.0"
 
 # NodejsManager
-commons-compress = "org.apache.commons:commons-compress:1.22"
+commons-compress = "org.apache.commons:commons-compress:1.23.0"
 
 d2j-translator = { module = "com.github.ThexXTURBOXx.dex2jar:dex-translator", version.ref = "dex2jar_version" }
 d2j-tools = { module = "com.github.ThexXTURBOXx.dex2jar:dex-tools", version.ref = "dex2jar_version" }
@@ -45,7 +45,7 @@ apkparser = "net.dongliu:apk-parser:2.6.10"
 
 kotlinx-cli = "org.jetbrains.kotlinx:kotlinx-cli:0.3.5"
 
-proguard = "com.guardsquare:proguard-gradle:7.3.1"
+proguard = "com.guardsquare:proguard-gradle:7.3.2"
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-jdk"]
@@ -56,7 +56,7 @@ okhttp = ["okhttp-core", "okhttp-dnsoverhttps", "okhttp-logging", "okio"]
 serialization = ["serialization-json", "serialization-protobuf"]
 
 [plugins]
-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "3.1.0" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version = "4.0.4" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.13.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
