@@ -1,50 +1,138 @@
 package xyz.nulldev.androidcompat.androidimpl.webview
 
-import android.content.Context
+import android.net.Uri
+import android.webkit.ValueCallback
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.WebViewFactoryProvider
-import android.webkit.WebViewFactoryProvider.Statics
-import com.gargoylesoftware.htmlunit.BrowserVersion
-import com.gargoylesoftware.htmlunit.WebClient
-import com.gargoylesoftware.htmlunit.WebRequest
-import com.gargoylesoftware.htmlunit.html.HtmlPage
-import java.net.URL
+import com.microsoft.playwright.Browser.NewPageOptions
+import com.microsoft.playwright.Request
+import com.microsoft.playwright.Route
+import com.microsoft.playwright.options.ServiceWorkerPolicy
+import playwright.utils.PlaywrightStatics
+import kotlin.reflect.full.declaredMemberFunctions
 
-class FakeWebViewFactoryProvider(private val ctx: Context) : WebViewFactoryProvider {
+class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProvider {
 
-    override val webclient by lazy {
-        WebClient(BrowserVersion.BEST_SUPPORTED).apply {
-            cookieManager = HtmlUnitCookieManager()
-            options.apply {
-                isThrowExceptionOnFailingStatusCode = false
-                isPrintContentOnFailingStatusCode = false
-                isThrowExceptionOnScriptError = false
-                isJavaScriptEnabled = true
-                isCssEnabled = true
-                setUseInsecureSSL(true)
+    override var webViewClient = WebViewClient()
+
+    override fun loadUrl(url: String, additionalHeaders: Map<String, String>) {
+        page.setExtraHTTPHeaders(additionalHeaders)
+        loadUrl(url)
+    }
+
+    override fun loadUrl(url: String) { page.navigate(url) }
+
+    override fun loadData(data: String, mimeType: String?, encoding: String?) {
+        page.setContent(data)
+    }
+
+    override fun loadDataWithBaseURL(
+        baseUrl: String?,
+        data: String,
+        mimeType: String?,
+        encoding: String?,
+        historyUrl: String?,
+    ) {
+        baseUrl?.let(pageOptions::setBaseURL)
+        loadData(data, mimeType, encoding)
+    }
+
+    private val functionsMap by lazy { mutableMapOf<String, String>() }
+
+    override fun addJavascriptInterface(obj: Any, name: String) {
+        runCatching {
+            obj::class.declaredMemberFunctions.forEach { function ->
+                val exportedFunction = "${name}_${function.name}"
+                val realFunction = "$name.${function.name}"
+                functionsMap[realFunction] = exportedFunction
+
+                page.exposeFunction(exportedFunction) { args ->
+                    val result = function.call(obj, *args)
+                    when {
+                        result is Unit -> ""
+                        else -> result
+                    }
+                }
             }
         }
     }
 
-    override var webViewClient: WebViewClient
-        get() = FakeWebViewClient(webclient, ctx)
-        set(value) { FakeWebViewClient(webclient, ctx, value) }
-
-    class FakeStatics : Statics {
-        override fun getDefaultUserAgent(context: Context): String =
-            BrowserVersion.BEST_SUPPORTED.userAgent
-    }
-
-    override fun getStatics(): Statics = FakeStatics()
-
-    override fun loadUrl(url: String, additionalHeaders: Map<String, String>) {
-        val request = WebRequest(URL(url)).apply {
-            setAdditionalHeaders(additionalHeaders)
+    override fun evaluateJavascript(script: String, resultCallback: ValueCallback<String>?) {
+        runCatching {
+            val newScript = functionsMap.entries.fold(script) { code, entry ->
+                code.replace(entry.key, entry.value)
+            }
+            val result = page.evaluate(newScript)
+            resultCallback?.let { it.onReceiveValue(result as String) }
         }
-        webclient.getPage<HtmlPage>(request)
     }
 
-    override fun loadUrl(url: String) { webclient.getPage<HtmlPage>(url) }
+    override val settings by lazy { FakeWebViewSettings() }
 
-    override val settings = FakeWebViewSettings(webclient.options)
+    private val pageOptions by lazy {
+        NewPageOptions().apply {
+            hasTouch = true
+            isMobile = true
+            javaScriptEnabled = settings.javaScriptEnabled
+            serviceWorkers = ServiceWorkerPolicy.BLOCK
+            userAgent = settings.userAgentString
+        }
+    }
+
+    private val browserOptions by lazy {
+        PlaywrightStatics.launchOptions.apply {
+            if (!settings.databaseEnabled) args.add("--disable-databases")
+            if (!settings.domStorageEnabled) args.add("--disable-local-storage")
+        }
+    }
+
+    override val browser by lazy {
+        PlaywrightStatics.playwrightInstance.chromium().launch(browserOptions)
+    }
+
+    override val page by lazy {
+        browser.newPage(pageOptions).also {
+            it.onDOMContentLoaded { pageObj ->
+                webViewClient.onPageFinished(view, pageObj.url())
+            }
+            it.onLoad { pageObj ->
+                webViewClient.onLoadResource(view, pageObj.url())
+            }
+            it.route("**") { route ->
+                runCatching {
+                    val request = route.request().toWebResourceRequest()
+                    if (webViewClient.shouldOverrideUrlLoading(view, request)) {
+                        route.abort()
+                        true
+                    } else {
+                        webViewClient.shouldInterceptRequest(view, request)
+                            ?.also { resource ->
+                                route.fulfill(
+                                    Route.FulfillOptions().apply {
+                                        bodyBytes = resource.data.use { it.readBytes() }
+                                        contentType = resource.mimeType
+                                        headers = resource.responseHeaders
+                                        status = resource.statusCode
+                                    },
+                                )
+                            }
+                    }
+                }.getOrNull() ?: route.resume()
+            }
+        }
+    }
+
+    private fun Request.toWebResourceRequest(): WebResourceRequest = object : WebResourceRequest {
+        override fun getUrl() = Uri.parse(this@toWebResourceRequest.url())
+
+        override fun getRequestHeaders() = allHeaders()
+
+        override fun getMethod() = this@toWebResourceRequest.method()
+
+        override fun isRedirect() = redirectedFrom() == null
+        override fun isForMainFrame() = isNavigationRequest()
+        override fun hasGesture() = false
+    }
 }

@@ -72,9 +72,6 @@ configure(projects) {
         // Dex2Jar
         implementation(libs.bundles.dex2jar)
 
-        // Fake webview implementation
-        implementation(libs.htmlunit)
-
         // JSoup
         implementation(libs.jsoup)
 

@@ -21,6 +21,9 @@ dependencies {
     // Kotlin wrapper around Java Preferences, makes certain things easier
     implementation(androidcompat.bundles.settings)
 
+    // WebView
+    implementation(project(":playwright-utils"))
+
     // Rhino, an pure-java alternative to duktape-android / QuickJS
     implementation(androidcompat.bundles.rhino)
 

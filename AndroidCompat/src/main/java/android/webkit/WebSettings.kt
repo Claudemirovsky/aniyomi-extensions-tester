@@ -17,6 +17,7 @@
 package android.webkit
 
 import android.content.Context
+import playwright.utils.PlaywrightStatics
 
 abstract class WebSettings {
     abstract var loadWithOverviewMode: Boolean
@@ -33,13 +34,18 @@ abstract class WebSettings {
 
     abstract var userAgentString: String?
 
+    abstract var cacheMode: Int
+
     companion object {
         @JvmStatic
-        fun getDefaultUserAgent(context: Context): String {
-            return WebViewFactory
-                .getProvider(context)
-                .getStatics()
-                .getDefaultUserAgent(context)
-        }
+        fun getDefaultUserAgent(context: Context) = PlaywrightStatics.userAgent
+
+        const val LOAD_DEFAULT = -1
+
+        @Deprecated("Obsolete, use LOAD_DEFAULT instead.")
+        const val LOAD_NORMAL = 0
+        const val LOAD_CACHE_ELSE_NETWORK = 1
+        const val LOAD_NO_CACHE = 2
+        const val LOAD_CACHE_ONLY = 3
     }
 }

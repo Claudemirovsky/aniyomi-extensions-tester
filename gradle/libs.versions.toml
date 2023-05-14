@@ -33,7 +33,6 @@ logback = "ch.qos.logback:logback-classic:1.2.11"
 ktlogging = "io.github.microutils:kotlin-logging:2.1.21"
 
 # Webview-based interceptors
-htmlunit = "net.sourceforge.htmlunit:htmlunit:2.70.0"
 playwright = "com.microsoft.playwright:playwright:1.32.0"
 
 # NodejsManager
