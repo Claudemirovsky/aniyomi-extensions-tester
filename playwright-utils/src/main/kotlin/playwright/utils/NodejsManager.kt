@@ -1,7 +1,7 @@
-package eu.kanade.tachiyomi.network.interceptor.playwright
+package playwright.utils
 
-import eu.kanade.tachiyomi.network.GET
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okio.buffer
 import okio.sink
 import org.apache.commons.compress.archivers.ArchiveEntry
@@ -98,9 +98,9 @@ object NodejsManager {
             val tarinput = TarArchiveInputStream(
                 GzipCompressorInputStream(
                     BufferedInputStream(
-                        Files.newInputStream(targetPath)
-                    )
-                )
+                        Files.newInputStream(targetPath),
+                    ),
+                ),
             )
             var archive: ArchiveEntry?
             while (tarinput.getNextEntry().also { archive = it } != null) {
@@ -118,8 +118,9 @@ object NodejsManager {
 
     private fun download(url: String, output: File) {
         val client = OkHttpClient.Builder().build()
+        val request = Request.Builder().url(url).build()
 
-        val response = client.newCall(GET(url)).execute()
+        val response = client.newCall(request).execute()
 
         // i love okio.
         response.body.source().use { source ->

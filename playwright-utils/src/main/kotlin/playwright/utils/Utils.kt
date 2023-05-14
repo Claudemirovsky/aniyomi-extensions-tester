@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.network.interceptor.playwright
+package playwright.utils
 
 import java.io.File
 import java.io.FilenameFilter
@@ -6,7 +6,8 @@ import java.io.FilenameFilter
 enum class SystemType {
     /* GNU */ LINUX,
     MAC,
-    WINDOWS;
+    WINDOWS,
+    ;
 
     companion object {
         val currentSystem by lazy {

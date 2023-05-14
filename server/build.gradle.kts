@@ -23,15 +23,12 @@ dependencies {
     implementation(libs.rxjava)
     implementation(libs.bundles.okhttp)
 
-    // Cloudflare interceptor
-    implementation(libs.playwright)
-
-    // To decompress the downloaded .tar.gz of nodejs.. IF needed.
-    implementation(libs.commons.compress)
-
     // AndroidCompat
     implementation(project(":AndroidCompat"))
     implementation(project(":AndroidCompat:Config"))
+    
+    // Cloudflare interceptor
+    implementation(project(":playwright-utils"))
 
     // Testing
     testImplementation(kotlin("test-junit5"))

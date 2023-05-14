@@ -12,6 +12,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
+import playwright.utils.PlaywrightStatics
 import suwayomi.tachidesk.anime.impl.extension.AnimeExtension
 import suwayomi.tachidesk.anime.impl.extension.tester.ExtensionTests
 import suwayomi.tachidesk.anime.impl.extension.tester.models.SourceResultsDto
@@ -94,5 +95,9 @@ suspend fun main(args: Array<String>) {
                 File(it, "results-$name.json").writeText(result)
             }
         }
+    }
+
+    if (PlaywrightStatics.usedPlaywright) {
+        PlaywrightStatics.playwrightInstance.close()
     }
 }

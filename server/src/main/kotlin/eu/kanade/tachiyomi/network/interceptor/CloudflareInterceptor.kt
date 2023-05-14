@@ -9,24 +9,19 @@ package eu.kanade.tachiyomi.network.interceptor
 */
 
 import com.microsoft.playwright.Browser
-import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Page
-import com.microsoft.playwright.Playwright
-import com.microsoft.playwright.PlaywrightException
 import com.microsoft.playwright.options.WaitForSelectorState
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
-import eu.kanade.tachiyomi.network.interceptor.playwright.CustomDriver
-import eu.kanade.tachiyomi.network.interceptor.playwright.findBinary
 import mu.KotlinLogging
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import playwright.utils.PlaywrightStatics
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
-import java.nio.file.Paths
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
@@ -79,44 +74,14 @@ object CFClearance {
     private val logger = KotlinLogging.logger {}
     private val network: NetworkHelper by injectLazy()
 
-    private val defaultOptions by lazy {
-        LaunchOptions()
-            .setHeadless(false)
-            .setChromiumSandbox(false)
-            .setArgs(
-                listOf(
-                    "--disable-gpu",
-                    "--no-sandbox",
-                    "--disable-dev-shm-usage",
-                    "--no-first-run",
-                    "--no-service-autorun",
-                    "--no-default-browser-check",
-                    "--password-store=basic"
-                )
-            )
-    }
-
-    init {
-        // Fix the default DriverJar issue by using Tachidesk's implementation
-        // ref: https://github.com/microsoft/playwright-java/issues/1138
-        System.setProperty(
-            "playwright.driver.impl",
-            "eu.kanade.tachiyomi.network.interceptor.playwright.CustomDriver"
-        )
-
-        val preinstalledChromium = findBinary("chromium", "chromium.exe", "chromium-browser")
-        if (preinstalledChromium != null) {
-            defaultOptions.setExecutablePath(Paths.get(preinstalledChromium))
-            System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
-        }
-    }
+    private val defaultOptions by lazy { PlaywrightStatics.launchOptions }
 
     fun resolveWithWebView(originalRequest: Request): Request {
         val url = originalRequest.url.toString()
 
         logger.debug { "resolveWithWebView($url)" }
 
-        val cookies = Playwright.create().use { playwright ->
+        val cookies = PlaywrightStatics.playwrightInstance.let { playwright ->
             playwright.chromium().launch(defaultOptions).use { browser ->
                 val userAgent = originalRequest.header("User-Agent")
                 if (userAgent != null) {
@@ -161,26 +126,6 @@ object CFClearance {
         return originalRequest.newBuilder()
             .header("Cookie", newCookies.joinToString("; ") { "${it.name}=${it.value}" })
             .build()
-    }
-
-    fun getWebViewUserAgent(): String {
-        return try {
-            Playwright.create().use { playwright ->
-                playwright.chromium().launch(defaultOptions.setHeadless(true)).use { browser ->
-                    defaultOptions.setHeadless(false)
-                    browser.newPage().use { page ->
-                        val userAgent = (page.evaluate("() => {return navigator.userAgent}") as String)
-                            .replace("Headless", "")
-                        logger.debug { "WebView User-Agent is $userAgent" }
-                        // prevents opening chromium again just to get the user-agent.
-                        System.setProperty("http.agent", userAgent)
-                        return userAgent
-                    }
-                }
-            }
-        } catch (e: PlaywrightException) {
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
-        }
     }
 
     private fun getCookies(page: Page, url: String): List<Cookie> {

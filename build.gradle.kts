@@ -22,6 +22,7 @@ allprojects {
 }
 
 val projects = listOf(
+    project(":playwright-utils"),
     project(":AndroidCompat"),
     project(":AndroidCompat:Config"),
     project(":server")
@@ -79,6 +80,12 @@ configure(projects) {
 
         // Logging
         implementation(libs.bundles.logging)
+
+        // OkHttp3
+        implementation(libs.bundles.okhttp)
+
+        // Playwright
+        implementation(libs.playwright)
 
         // ReactiveX
         implementation(libs.rxjava)

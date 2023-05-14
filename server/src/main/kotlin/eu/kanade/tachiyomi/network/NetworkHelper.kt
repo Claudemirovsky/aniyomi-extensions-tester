@@ -9,11 +9,11 @@ package eu.kanade.tachiyomi.network
  */
 
 import android.content.Context
-import eu.kanade.tachiyomi.network.interceptor.CFClearance.getWebViewUserAgent
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import playwright.utils.PlaywrightStatics
 import java.util.concurrent.TimeUnit
 
 class NetworkHelper(context: Context) {
@@ -60,7 +60,7 @@ class NetworkHelper(context: Context) {
 
     val defaultUserAgent by lazy {
         System.getProperty("http.agent")
-            ?: getWebViewUserAgent()
+            ?: PlaywrightStatics.userAgent
     }
 
     /**

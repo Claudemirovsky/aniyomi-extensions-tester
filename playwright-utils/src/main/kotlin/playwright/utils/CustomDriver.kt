@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.network.interceptor.playwright
+package playwright.utils
 
 import com.microsoft.playwright.impl.driver.Driver
 import java.io.IOException
@@ -84,7 +84,7 @@ class CustomDriver : Driver() {
     private fun extractDriverToTempDir() {
         val classloader = this::class.java.classLoader
         val originalUri = classloader.getResource(
-            "driver/" + platformDir()
+            "driver/" + platformDir(),
         ).toURI()
         val uri = maybeExtractNestedJar(originalUri)
 
@@ -98,7 +98,7 @@ class CustomDriver : Driver() {
             val srcRootDefaultFs = Paths.get(srcRoot.toString())
             Files.walk(srcRoot).forEach { fromPath ->
                 val relative = srcRootDefaultFs.relativize(
-                    Paths.get(fromPath.toString())
+                    Paths.get(fromPath.toString()),
                 )
                 val toPath = driverTempDir.resolve(relative.toString())
                 try {
@@ -143,7 +143,7 @@ class CustomDriver : Driver() {
             try {
                 val fromPath = Paths.get(jarUri)
                 val toPath = driverTempDir.resolve(
-                    fromPath.getFileName().toString()
+                    fromPath.getFileName().toString(),
                 )
                 Files.copy(fromPath, toPath)
                 toPath.toFile().deleteOnExit()
