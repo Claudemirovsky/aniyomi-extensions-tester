@@ -8,6 +8,7 @@ package suwayomi.tachidesk
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -34,6 +35,7 @@ import kotlin.time.ExperimentalTime
 
 private val logger = KotlinLogging.logger {}
 
+@DelicateCoroutinesApi
 @ExperimentalTime
 @ExperimentalSerializationApi
 suspend fun main(args: Array<String>) {

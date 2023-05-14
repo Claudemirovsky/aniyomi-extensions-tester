@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HEAD
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -86,6 +87,7 @@ class ExtensionTests(
     }
 
     @ExperimentalTime
+    @DelicateCoroutinesApi
     suspend fun runTests(): TestsResultsDto {
         tests.forEach { test ->
             try {

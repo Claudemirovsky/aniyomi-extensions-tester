@@ -38,6 +38,7 @@ abstract class WebSettings {
 
     companion object {
         @JvmStatic
+        @Suppress("UNUSED_PARAMETER")
         fun getDefaultUserAgent(context: Context) = PlaywrightStatics.userAgent
 
         const val LOAD_DEFAULT = -1

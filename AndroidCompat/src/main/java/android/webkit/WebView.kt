@@ -12,6 +12,7 @@ class WebView(private val context: Context) {
 
     val settings: WebSettings = mProvider.settings
 
+    @Suppress("UNUSED_PARAMETER")
     fun clearCache(includeDiskFiles: Boolean) {}
 
     fun clearFormData() {}

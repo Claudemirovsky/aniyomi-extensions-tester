@@ -113,6 +113,7 @@ tasks {
                 "-opt-in=kotlin.RequiresOptIn",
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+                "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
                 "-opt-in=kotlin.io.path.ExperimentalPathApi",
             )
         }
