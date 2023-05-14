@@ -54,7 +54,7 @@
 -keep class eu.kanade.tachiyomi.** { *; }
 -keep class kotlin.** { public protected *; }
 -keep class kotlinx.coroutines.** { public protected *; }
--keep class kotlinx.serialization.** { public protected *; }
+-keep class kotlinx.serialization.** { *; }
 -keep class okhttp3.** { public protected *; }
 -keep class org.jsoup.** { *; }
 -keep,allowoptimization class androidx.preference.** { public protected *; }
@@ -71,16 +71,6 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn okhttp3.internal.platform.**
 
-# Xml
--dontwarn com.sun.org.apache.**
--dontwarn javax.xml.**
--dontwarn org.apache.xerces.**
--dontwarn org.xml.sax.**
--keep class org.apache.xerces.** { public *; }
-
-# org.json
--dontwarn org.json.JSONWriter
--dontwarn org.json.XMLTokener
 -keep class org.json.JSONObject { *; }
 
 # Android
@@ -108,8 +98,6 @@
 # Java
 -dontwarn java.util.prefs.**
 -dontwarn javax.annotation.**
--dontwarn javax.imageio.**
--dontwarn javax.swing.**
 
 # GraalVM
 -dontwarn com.oracle.svm.core.configure.ResourcesRegistry
@@ -121,22 +109,17 @@
 -dontwarn org.bouncycastle.jce.provider.BouncyCastleProvider
 -dontwarn org.bouncycastle.util.Store
 
-# HtmlUnit
--keep class com.gargoylesoftware.htmlunit.** { *; }
--keep class org.apache.http.impl.client.** { *; }
+# Rhino
 -keep class org.mozilla.** { *; }
--keep,allowoptimization class net.sourceforge.htmlunit.corejs.** { *; }
 
-# commons-compress
+# Playwright
 -dontwarn org.apache.commons.compress.**
 -keep class com.microsoft.playwright.** { *; }
+-keep class playwright.utils.** { *; }
 -keep class com.google.gson.JsonElement { *; }
 -keep class com.google.gson.JsonObject { *; }
 
 # Other
 -dontwarn com.oracle.svm.core.annotate.**
--dontwarn com.sun.rowset.internal.*
--dontwarn edu.umd.cs.findbugs.**
 -dontwarn org.antlr.runtime.tree.DOTTreeGenerator
--dontwarn org.eclipse.jetty.**
 
