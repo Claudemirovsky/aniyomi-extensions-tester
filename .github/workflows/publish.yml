@@ -61,20 +61,20 @@ jobs:
       - name: Build project
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: :server:shadowJar
+          arguments: :server:optimizeShadowJar
 
       - name: Move files
         run: |
           mv server/build/aniyomi-extensions-tester-v*.jar anitester.jar
-          # mv server/build/min/aniyomi-extensions-tester-v*.jar anitester-min.jar
+          mv server/build/min/aniyomi-extensions-tester-v*.jar anitester-min.jar
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           name: Aniyomi-extensions-tester ${{ github.ref_name }}
           body: ${{ needs.changelog.outputs.release_body }}
-          # anitester-min.jar
           files: |
+              anitester-min.jar
               anitester.jar
           draft: true
           prerelease: false
