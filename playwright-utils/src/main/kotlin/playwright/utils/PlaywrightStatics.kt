@@ -9,14 +9,15 @@ object PlaywrightStatics {
     var usedPlaywright = false
     val playwrightInstance by lazy {
         System.setProperty("playwright.driver.impl", "playwright.utils.CustomDriver")
+        preinstalledChromium?.also {
+            System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
+        }
         usedPlaywright = true
         Playwright.create()
     }
 
     private val preinstalledChromium by lazy {
-        findBinary("chromium", "chromium.exe", "chromium-browser")?.also {
-            System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
-        }
+        findBinary("chromium", "chromium.exe", "chromium-browser")
     }
 
     val launchOptions: LaunchOptions
