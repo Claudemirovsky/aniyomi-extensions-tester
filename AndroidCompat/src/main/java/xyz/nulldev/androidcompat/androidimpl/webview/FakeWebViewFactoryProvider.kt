@@ -22,10 +22,10 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
         loadUrl(url)
     }
 
-    override fun loadUrl(url: String) { page.navigate(url) }
+    override fun loadUrl(url: String) { runCatching { page.navigate(url) } }
 
     override fun loadData(data: String, mimeType: String?, encoding: String?) {
-        page.setContent(data)
+        runCatching { page.setContent(data) }
     }
 
     override fun loadDataWithBaseURL(
