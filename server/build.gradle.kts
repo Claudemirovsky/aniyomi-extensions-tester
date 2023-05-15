@@ -121,7 +121,11 @@ tasks {
     }
 
     test {
-        useJUnit()
+        useJUnitPlatform()
+        testLogging {
+            showStandardStreams = true
+            events("passed", "skipped", "failed")
+        }
     }
 
     withType<ShadowJar> {
@@ -130,6 +134,10 @@ tasks {
     }
 
     named("run") {
+        dependsOn("formatKotlin", "lintKotlin")
+    }
+
+    named("test") {
         dependsOn("formatKotlin", "lintKotlin")
     }
 

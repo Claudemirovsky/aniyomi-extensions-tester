@@ -49,7 +49,6 @@ configure(projects) {
         // Kotlin
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("reflect"))
-        testImplementation(kotlin("test"))
 
         // :AndroidCompat:Config dependency
         implementation(androidcompat.bundles.config)

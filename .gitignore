@@ -1,10 +1,12 @@
 # Ignore Gradle project-specific cache directory
 .gradle
 .idea
+.classpath
+.project
+.settings
 gradle.properties
 local.properties
 
 # Ignore Gradle build output directory
 build
 server/build
-tests/
