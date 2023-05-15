@@ -65,7 +65,7 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
                 code.replace(entry.key, entry.value)
             }
             val result = page.evaluate(newScript)
-            resultCallback?.let { it.onReceiveValue(result as String) }
+            resultCallback?.let { it.onReceiveValue(result.toString()) }
         }
     }
 
