@@ -83,8 +83,8 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
 
     private val browserOptions by lazy {
         PlaywrightStatics.launchOptions.apply {
-            if (!settings.databaseEnabled) args.add("--disable-databases")
-            if (!settings.domStorageEnabled) args.add("--disable-local-storage")
+            if (!settings.databaseEnabled) args = args + listOf("--disable-databases")
+            if (!settings.domStorageEnabled) args = args + listOf("--disable-local-storage")
         }
     }
 
