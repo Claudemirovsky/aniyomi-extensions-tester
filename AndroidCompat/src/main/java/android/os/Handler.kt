@@ -20,5 +20,4 @@ open class Handler(val looper: Looper) {
     }
 
     open fun handleMessage(message: Message) {}
-
 }

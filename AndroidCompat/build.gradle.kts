@@ -3,7 +3,7 @@ dependencies {
     compileOnly(androidcompat.apksig)
 
     // Android stub library
-    //implementation(fileTree("lib/"))
+    // implementation(fileTree("lib/"))
     implementation(androidcompat.android.jar)
 
     // Android version of SimpleDateFormat

@@ -32,11 +32,11 @@ data class InstalledPackage(val root: File) {
                 appTag?.childNodes?.toList()
                     ?.filter { it.nodeType == Node.ELEMENT_NODE }
                     ?.map { it as Element }
-                    ?.filter {  it.tagName == "meta-data"   }
+                    ?.filter { it.tagName == "meta-data" }
                     ?.map {
                         putString(
                             it.attributes.getNamedItem("android:name").nodeValue,
-                            it.attributes.getNamedItem("android:value").nodeValue
+                            it.attributes.getNamedItem("android:value").nodeValue,
                         )
                     }
             }

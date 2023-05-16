@@ -23,6 +23,7 @@ class StubbedCookieManager : CookieManager() {
     init {
         for ((key, value) in prefs.all) {
             val realKey = key.substringBeforeLast(".")
+
             @Suppress("UNCHECKED_CAST")
             val cookieString = value as? String
             if (cookieString != null) {
@@ -61,6 +62,7 @@ class StubbedCookieManager : CookieManager() {
         cookieMap.put(key, cookiesForDomain)
         return cookiesForDomain
     }
+
     @Synchronized
     fun setCookie(uri: URI, value: String) {
         val key = uri.host ?: return

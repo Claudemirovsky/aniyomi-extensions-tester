@@ -90,7 +90,7 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
 
         override fun putStringSet(
             key: String,
-            values: MutableSet<String>?
+            values: MutableSet<String>?,
         ): SharedPreferences.Editor {
             if (values != null) {
                 itemsToAdd[key] = values
