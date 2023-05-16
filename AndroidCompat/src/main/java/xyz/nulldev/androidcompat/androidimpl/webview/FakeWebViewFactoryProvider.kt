@@ -95,10 +95,13 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
     override val page by lazy {
         browser.newPage(pageOptions).also {
             it.onDOMContentLoaded { pageObj ->
-                webViewClient.onPageFinished(view, pageObj.url())
+                webViewClient.onPageStarted(view, pageObj.url())
             }
             it.onLoad { pageObj ->
-                webViewClient.onLoadResource(view, pageObj.url())
+                webViewClient.onPageFinished(view, pageObj.url())
+            }
+            it.onRequest { request ->
+                webViewClient.onLoadResource(view, request.url())
             }
             it.route("**") { route ->
                 runCatching {

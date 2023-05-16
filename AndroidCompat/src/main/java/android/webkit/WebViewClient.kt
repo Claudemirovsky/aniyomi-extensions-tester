@@ -17,6 +17,8 @@
 package android.webkit
 
 open class WebViewClient {
+    open fun onPageStarted(view: WebView, url: String) {}
+
     open fun onPageFinished(view: WebView, url: String) {}
 
     open fun onLoadResource(view: WebView, url: String) {}
