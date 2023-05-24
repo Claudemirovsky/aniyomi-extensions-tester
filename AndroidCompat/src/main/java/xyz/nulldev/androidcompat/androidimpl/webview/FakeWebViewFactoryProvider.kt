@@ -64,8 +64,11 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
             val newScript = functionsMap.entries.fold(script) { code, entry ->
                 code.replace(entry.key, entry.value)
             }
-            val result = page.evaluate(newScript)
-            resultCallback?.let { it.onReceiveValue(result.toString()) }
+            page.evaluate(newScript)?.let { result ->
+                resultCallback?.let {
+                    it.onReceiveValue(result.toString()) 
+                }
+            }
         }
     }
 
