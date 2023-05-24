@@ -83,6 +83,7 @@
 -keep class android.util.Base64 { public protected *; }
 -keep class android.webkit.CookieManager { public protected *; }
 -keep class android.webkit.WebView { public *; }
+-keep class android.webkit.WebSettings { public *; }
 -keep,allowoptimization class android.** { public protected *; }
 
 # Logging
