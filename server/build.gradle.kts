@@ -83,7 +83,7 @@ tasks {
         dependencies {
             exclude(
                 // Useless icu-related files
-                "com/ibm/icu/impl/data/icudt72b/*/*",
+                "com/ibm/icu/impl/data/icudt*/*/*",
                 // Useless and heavy files from playwright-bundle
                 "driver/*/node*",
                 "driver/linux*/",
