@@ -122,11 +122,13 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
 
         override fun remove(key: String): SharedPreferences.Editor {
             itemsToAdd.remove(key)
+            preferences.remove(key)
             return this
         }
 
         override fun clear(): SharedPreferences.Editor {
             itemsToAdd.clear()
+            preferences.clear()
             return this
         }
 

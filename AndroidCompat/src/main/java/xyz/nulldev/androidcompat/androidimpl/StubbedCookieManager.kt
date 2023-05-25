@@ -104,7 +104,6 @@ class StubbedCookieManager : CookieManager() {
     override fun removeAllCookie() {
         prefs.edit().clear().apply()
         cookieMap.clear()
-        Preferences.userRoot().node("suwayomi/tachidesk/$COOKIE_KEY").removeNode()
     }
 
     override fun removeAllCookies(callback: ValueCallback<Boolean>?) {
