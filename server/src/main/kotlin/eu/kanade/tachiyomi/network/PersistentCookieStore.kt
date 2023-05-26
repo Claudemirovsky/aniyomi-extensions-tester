@@ -11,32 +11,15 @@ package eu.kanade.tachiyomi.network
 import android.content.Context
 import okhttp3.Cookie
 import okhttp3.HttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import xyz.nulldev.androidcompat.androidimpl.StubbedCookieManager
+import xyz.nulldev.androidcompat.androidimpl.hasExpired
 import java.net.URI
-import java.util.concurrent.ConcurrentHashMap
 
 // from TachiWeb-Server
 class PersistentCookieStore(context: Context) {
 
-    private val cookieMap = ConcurrentHashMap<String, List<Cookie>>()
-    private val prefs = context.getSharedPreferences("cookie_store", Context.MODE_PRIVATE)
-
-    init {
-        for ((key, value) in prefs.all) {
-            @Suppress("UNCHECKED_CAST")
-            val cookies = value as? Set<String>
-            if (cookies != null) {
-                try {
-                    val url = "http://$key".toHttpUrlOrNull() ?: continue
-                    val nonExpiredCookies = cookies.mapNotNull { Cookie.parse(url, it) }
-                        .filter { !it.hasExpired() }
-                    cookieMap.put(key, nonExpiredCookies)
-                } catch (e: Exception) {
-                    // Ignore
-                }
-            }
-        }
-    }
+    private val cookieMap by lazy { StubbedCookieManager.cookieMap }
+    private val prefs by lazy { StubbedCookieManager.preferences }
 
     @Synchronized
     fun addAll(url: HttpUrl, cookies: List<Cookie>) {
@@ -75,13 +58,11 @@ class PersistentCookieStore(context: Context) {
         cookieMap.remove(uri.host)
     }
 
-    fun get(url: HttpUrl) = get(url.toUri().host)
+    fun get(url: HttpUrl) = get(url.host)
 
     fun get(uri: URI) = get(uri.host)
 
     private fun get(url: String): List<Cookie> {
         return cookieMap[url].orEmpty().filter { !it.hasExpired() }
     }
-
-    private fun Cookie.hasExpired() = System.currentTimeMillis() >= expiresAt
 }

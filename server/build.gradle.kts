@@ -2,8 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
-import java.io.BufferedReader
 import proguard.gradle.ProGuardTask
+import java.io.BufferedReader
 
 plugins {
     application
@@ -26,7 +26,7 @@ dependencies {
     // AndroidCompat
     implementation(project(":AndroidCompat"))
     implementation(project(":AndroidCompat:Config"))
-    
+
     // Cloudflare interceptor
     implementation(project(":playwright-utils"))
 
@@ -88,7 +88,7 @@ tasks {
                 "driver/*/node*",
                 "driver/linux*/",
                 "driver/mac-arm64/",
-                "driver/win32_x64/package/"
+                "driver/win32_x64/package/",
             )
         }
         manifest {
@@ -98,15 +98,14 @@ tasks {
                     "Implementation-Title" to rootProject.name,
                     "Implementation-Vendor" to "The Tachiyomi Open Source Project",
                     "Specification-Version" to inspectorVersion,
-                    "Implementation-Version" to inspectorRevision
-                )
+                    "Implementation-Version" to inspectorRevision,
+                ),
             )
         }
         archiveBaseName.set(rootProject.name)
         archiveVersion.set(inspectorVersion)
         archiveClassifier.set(inspectorRevision)
     }
-
 
     withType<KotlinCompile> {
         kotlinOptions {
@@ -145,7 +144,7 @@ tasks {
         exclude("**/BuildConfig.kt")
         source(files("src/kotlin"))
     }
-    
+
     withType<FormatTask> {
         exclude("**/BuildConfig.kt")
         source(files("src/kotlin"))
@@ -164,7 +163,7 @@ tasks {
         outjars(
             shadowJars.map { file ->
                 File(file.parentFile, "min/" + file.name)
-            }
+            },
         )
         val javaHome = System.getProperty("java.home")
         libraryjars("$javaHome/jmods")

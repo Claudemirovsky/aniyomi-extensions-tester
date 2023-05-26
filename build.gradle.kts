@@ -25,7 +25,7 @@ val projects = listOf(
     project(":playwright-utils"),
     project(":AndroidCompat"),
     project(":AndroidCompat:Config"),
-    project(":server")
+    project(":server"),
 )
 
 configure(projects) {
@@ -67,6 +67,7 @@ configure(projects) {
 
         // Dependency Injection
         implementation(libs.kodein.di)
+        implementation(libs.injekt.core)
 
         // Dex2Jar
         implementation(libs.bundles.dex2jar)

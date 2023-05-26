@@ -1,35 +1,41 @@
 package xyz.nulldev.androidcompat.androidimpl
 
+import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import java.net.HttpCookie
+import okhttp3.Cookie
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
-import java.util.prefs.Preferences
 
 @Suppress("DEPRECATION")
 class StubbedCookieManager : CookieManager() {
-    private val COOKIE_KEY = "cookie_store"
+    companion object {
+        val cookieMap = ConcurrentHashMap<String, List<Cookie>>()
 
-    val prefs by lazy {
-        val ctx = CustomContext()
-        ctx.getSharedPreferences(COOKIE_KEY, Context.MODE_PRIVATE)
-    }
+        val preferences by lazy {
+            Injekt
+                .get<Application>()
+                .getSharedPreferences("cookie_store", Context.MODE_PRIVATE)
+                .also(::fillCookieMap)
+        }
 
-    val cookieMap = ConcurrentHashMap<String, List<HttpCookie>>()
+        private fun fillCookieMap(prefs: SharedPreferences) {
+            for ((key, value) in prefs.all) {
+                val realKey = key.substringBeforeLast(".")
 
-    init {
-        for ((key, value) in prefs.all) {
-            val realKey = key.substringBeforeLast(".")
-
-            @Suppress("UNCHECKED_CAST")
-            val cookieString = value as? String
-            if (cookieString != null) {
+                @Suppress("UNCHECKED_CAST")
+                val cookies = value as? Set<String> ?: continue
+                val url = "http://$realKey".toHttpUrlOrNull() ?: continue
                 runCatching {
-                    val cookie = HttpCookie.parse(cookieString).first()
-                    addOrUpdate(realKey, cookie)
+                    val nonExpiredCookies = cookies.mapNotNull { Cookie.parse(url, it) }
+                        .filter { !it.hasExpired() }
+                    cookieMap.put(realKey, nonExpiredCookies)
                 }
             }
         }
@@ -47,7 +53,7 @@ class StubbedCookieManager : CookieManager() {
         setCookie(URI(url), value)
     }
 
-    private fun addOrUpdate(key: String, cookie: HttpCookie): MutableList<HttpCookie> {
+    private fun addOrUpdate(key: String, cookie: Cookie): MutableList<Cookie> {
         // Append or replace the cookies for this domain.
         val cookiesForDomain = cookieMap[key].orEmpty().toMutableList()
         // Find a cookie with the same name.
@@ -66,15 +72,16 @@ class StubbedCookieManager : CookieManager() {
     @Synchronized
     fun setCookie(uri: URI, value: String) {
         val key = uri.host ?: return
-        val cookie = HttpCookie.parse(value).first()
+        val url = "http://$key".toHttpUrlOrNull() ?: return
+        val cookie = Cookie.parse(url, value) ?: return
         val allCookies = addOrUpdate(key, cookie)
         // Get cookies to be stored in disk
         val newValues = allCookies.asSequence()
             .filter { !it.hasExpired() }
-            .map(HttpCookie::toString)
+            .map(Cookie::toString)
             .toSet()
 
-        prefs.edit().putStringSet(key, newValues).apply()
+        preferences.edit().putStringSet(key, newValues).apply()
     }
 
     override fun setCookie(url: String?, value: String?, callback: ValueCallback<Boolean>?) {
@@ -84,16 +91,15 @@ class StubbedCookieManager : CookieManager() {
     }
 
     override fun getCookie(url: String): String {
-        val host = URI(url).host!!
-        val cookies = cookieMap[host]
+        val host = URI(url).host ?: return ""
+        return cookieMap[host]
             .orEmpty()
             .filter { !it.hasExpired() }
-            .joinToString(";")
-        return cookies
+            .joinToString("; ") { "${it.name}=${it.value}" }
     }
 
     override fun getCookie(url: String?, privateBrowsing: Boolean): String {
-        return runCatching { getCookie(url!!) }.getOrDefault("")
+        return url?.let { runCatching { getCookie(it) }.getOrNull() } ?: ""
     }
 
     override fun removeSessionCookie() {}
@@ -102,7 +108,7 @@ class StubbedCookieManager : CookieManager() {
 
     @Synchronized
     override fun removeAllCookie() {
-        prefs.edit().clear().apply()
+        preferences.edit().clear().apply()
         cookieMap.clear()
     }
 
@@ -122,3 +128,5 @@ class StubbedCookieManager : CookieManager() {
 
     override fun setAcceptFileSchemeCookiesImpl(accept: Boolean) {}
 }
+
+fun Cookie.hasExpired() = System.currentTimeMillis() >= expiresAt
