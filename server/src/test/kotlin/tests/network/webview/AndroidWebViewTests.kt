@@ -3,6 +3,7 @@ package tests.network.webview
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
+import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -93,6 +94,28 @@ class AndroidWebViewTests : AnitesterTest() {
         killWebView()
         assert("google.com" in jsi.passedData) { "JSI Failed at being exposed and called." }
         assert(result) { "A javascript-related function wasn't called." }
+    }
+
+    @Test fun `Test WebView CookieManager`() {
+        val latch = CountDownLatch(1)
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.removeAllCookies() {}
+
+        val cookieUrl = "https://httpbun.org/cookies/set/anitester/isterrible"
+        handler.post {
+            webView = WebView(context)
+            webView?.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    latch.countDown()
+                }
+            }
+            webView?.loadUrl(cookieUrl)
+        }
+
+        latch.await(5, TimeUnit.SECONDS)
+        killWebView()
+
+        assert(cookieManager.getCookie(cookieUrl).isNotEmpty())
     }
 
     fun killWebView() {

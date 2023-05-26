@@ -22,6 +22,8 @@ interface WebViewFactoryProvider {
 
     fun evaluateJavascript(script: String, resultCallback: ValueCallback<String>?)
 
+    fun destroy()
+
     val settings: WebSettings
 
     val browser: Browser

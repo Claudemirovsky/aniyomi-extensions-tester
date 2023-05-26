@@ -1,6 +1,7 @@
 package xyz.nulldev.androidcompat.androidimpl.webview
 
 import android.net.Uri
+import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -10,8 +11,11 @@ import com.microsoft.playwright.Browser.NewPageOptions
 import com.microsoft.playwright.Request
 import com.microsoft.playwright.Route
 import com.microsoft.playwright.options.ServiceWorkerPolicy
+import okhttp3.Cookie
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import playwright.utils.PlaywrightStatics
 import kotlin.reflect.full.declaredMemberFunctions
+import com.microsoft.playwright.options.Cookie as PlaywrightCookie
 
 class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProvider {
 
@@ -22,7 +26,10 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
         loadUrl(url)
     }
 
-    override fun loadUrl(url: String) { runCatching { page.navigate(url) } }
+    override fun loadUrl(url: String) {
+        loadCookies(url)
+        runCatching { page.navigate(url) }
+    }
 
     override fun loadData(data: String, mimeType: String?, encoding: String?) {
         runCatching { page.setContent(data) }
@@ -36,6 +43,7 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
         historyUrl: String?,
     ) {
         baseUrl?.let(pageOptions::setBaseURL)
+        baseUrl?.let(::loadCookies)
         loadData(data, mimeType, encoding)
     }
 
@@ -70,6 +78,43 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
                 }
             }
         }
+    }
+
+    private fun loadCookies(url: String) {
+        runCatching {
+            val httpUrl = url.toHttpUrlOrNull() ?: return
+            val manager = CookieManager.getInstance()
+            val cookies = manager.getCookie(url).split("; ").mapNotNull {
+                Cookie.parse(httpUrl, it)?.let { cookie ->
+                    PlaywrightCookie(cookie.name, cookie.value).setDomain(httpUrl.host)
+                }
+            }
+
+            page.context().addCookies(cookies)
+        }
+    }
+
+    private fun saveCookies() {
+        runCatching {
+            val manager = CookieManager.getInstance()
+            page.context().cookies().forEach {
+                val domain = it.domain.trim('.')
+                val okHttpCookie = Cookie.Builder()
+                    .path(it.path)
+                    .domain(domain)
+                    .name(it.name)
+                    .value(it.value)
+                    .build()
+                    .toString()
+                manager.setCookie("https://$domain", okHttpCookie)
+            }
+        }
+    }
+
+    override fun destroy() {
+        if (!page.isClosed()) saveCookies()
+        runCatching { page.close() }
+        runCatching { browser.close() }
     }
 
     override val settings by lazy { FakeWebViewSettings() }

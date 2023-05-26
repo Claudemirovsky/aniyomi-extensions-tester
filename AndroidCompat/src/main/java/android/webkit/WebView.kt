@@ -18,14 +18,9 @@ class WebView(private val context: Context) {
     fun clearFormData() {}
     fun clearHistory() {}
 
-    fun stopLoading() {
-        destroy()
-    }
+    fun stopLoading() = destroy()
 
-    fun destroy() {
-        runCatching { mProvider.page.close() }
-        runCatching { mProvider.browser.close() }
-    }
+    fun destroy() = mProvider.destroy()
 
     fun loadUrl(url: String, additionalHeaders: Map<String, String>) =
         mProvider.loadUrl(url, additionalHeaders)

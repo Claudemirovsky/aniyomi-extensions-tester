@@ -84,7 +84,7 @@ open class StubbedCookieManager : CookieManager() {
     }
 
     @Synchronized
-    fun setCookie(uri: URI, value: String) {
+    private fun setCookie(uri: URI, value: String) {
         val key = uri.host ?: return
         val url = "http://$key".toHttpUrlOrNull() ?: return
         val cookie = Cookie.parse(url, value) ?: return
