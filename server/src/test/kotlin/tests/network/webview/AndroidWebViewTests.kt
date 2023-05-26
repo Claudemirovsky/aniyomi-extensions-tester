@@ -78,13 +78,14 @@ class AndroidWebViewTests : AnitesterTest() {
         }
 
         val jsi = JSInterface(latch)
+        val url = "about:blank"
 
         handler.post {
             webView = WebView(context)
             webView?.addJavascriptInterface(jsi, "android")
-            webView?.loadUrl("https://www.google.com/")
+            webView?.loadData("", null, null)
             webView?.evaluateJavascript("window.android.passPayload(window.location.href)") {
-                assert("google.com" in it) { "EvaluateJS Callback failed" }
+                assert(url in it) { "EvaluateJS Callback failed" }
                 latch.countDown()
             }
         }
@@ -92,10 +93,11 @@ class AndroidWebViewTests : AnitesterTest() {
         val result = latch.await(10, TimeUnit.SECONDS)
 
         killWebView()
-        assert("google.com" in jsi.passedData) { "JSI Failed at being exposed and called." }
+        assert(url in jsi.passedData) { "JSI Failed at being exposed and called." }
         assert(result) { "A javascript-related function wasn't called." }
     }
 
+    // TODO: Use something like MockServer instead of relying on a third-party service.
     @Test fun `Test WebView CookieManager`() {
         val latch = CountDownLatch(1)
         val cookieManager = CookieManager.getInstance()
