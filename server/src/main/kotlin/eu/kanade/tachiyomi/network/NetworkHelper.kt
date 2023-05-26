@@ -16,9 +16,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import playwright.utils.PlaywrightStatics
 import java.util.concurrent.TimeUnit
 
+@Suppress("UNUSED_PARAMETER")
 class NetworkHelper(context: Context) {
 
-    val cookieManager = PersistentCookieJar(context)
+    val cookieManager = PersistentCookieJar()
 
     val client by lazy {
         val builder = OkHttpClient.Builder()
