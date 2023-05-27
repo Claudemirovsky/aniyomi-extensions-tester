@@ -26,6 +26,7 @@ import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.timeTest
 import suwayomi.tachidesk.server.applicationSetup
 import suwayomi.tachidesk.utils.AnitesterUtils.loadCookies
+import suwayomi.tachidesk.utils.AnitesterUtils.loadPreferences
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -48,7 +49,8 @@ suspend fun main(args: Array<String>) {
     options.userAgent?.let { System.setProperty("http.agent", it) }
     options.proxy?.let { System.setProperty("ANIEXT_TESTER_PROXY", it) }
 
-    options.cookiesFile.let { loadCookies(Paths.get(it)) }
+    options.cookiesFile?.let { loadCookies(Paths.get(it)) }
+    options.preferencesFile?.let { loadPreferences(Paths.get(it)) }
 
     val apksPath = Paths.get(options.apksPath)
     if (apksPath.notExists()) {

@@ -94,6 +94,12 @@ object CliOptions {
             description = "Directory to put the JSON result files"
         )
 
+        val preferencesFile by parser.option(
+            ArgType.String,
+            "prefs",
+            description = "Special Json file with shared preferences to extensions. Read the README to understand how it works."
+        )
+
         val prettyJson by parser.option(
             ArgType.Boolean,
             "pretty-json",
@@ -194,6 +200,7 @@ object CliOptions {
             cookieJar,
             debug,
             jsonDir,
+            preferencesFile,
             prettyJson,
             proxy,
             tmpDir,

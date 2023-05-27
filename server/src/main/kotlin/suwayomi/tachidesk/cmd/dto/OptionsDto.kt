@@ -17,6 +17,7 @@ data class OptionsDto(
     val cookiesFile: String?,
     val debugMode: Boolean,
     val jsonFilesDir: String?,
+    val preferencesFile: String?,
     val prettyJson: Boolean = false,
     val proxy: String?,
     val tmpDir: String,

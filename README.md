@@ -35,6 +35,7 @@ Options:
     --episode-url, -e -> Target episode url { String }
     --increment-pages, -i [false] -> Try using pagination when possible
     --json-dir, -D -> Directory to put the JSON result files { String }
+    --prefs -> Special Json file with shared preferences to extensions. Read the README to understand how it works. { String }
     --pretty-json, -P [false] -> Dumps prettified JSON data to files
     --json, -j -> Show JSON data instead of tables
     --proxy -> Proxy address to use when doing the requests. Like <protocol>://<host>:<port> { String }
@@ -49,10 +50,40 @@ Options:
     --help, -h -> Usage info
 ```
 
+## About custom preferences
+The json model that the `--prefs` option expects is:
+```json
+{
+    "preference_filename": {
+        "preference_key": "preference_value",
+    },
+    "another_preferences_file": {
+        "some": ["prefs"]
+    }
+}
+```
+
+For extensions preferences(common usage), you can use `source_<ExtensionName>/<language>`
+as the preference filename, or `source_<id>` if you somehow have the id in hands.
+
+Example:
+```json
+{
+    "source_GogoAnime/en": {
+        "string_preference_key": "some string",
+        "boolean_preference": false,
+        "int_preference": 70,
+        "float_preference": 3.141592,
+        "long_num_preference": 2147483641,
+        "strset_pref": ["some", "items"],
+        "preferred_domain": "https://duckduckgo.com"
+    }
+}
+```
 ## TODOs
 - [ ] Read configs/arguments from a file
 - [ ] Support search filters
-- [ ] Support custom preferences
+- [x] [Support custom preferences](#about-custom-preferences)
 - [x] Support custom cookies
 - [x] Support webview-related interceptors
 > - [x] Implement a proper and functional Cloudflare bypasser/interceptor (Needs a GUI, and doesnt work on CI well)
