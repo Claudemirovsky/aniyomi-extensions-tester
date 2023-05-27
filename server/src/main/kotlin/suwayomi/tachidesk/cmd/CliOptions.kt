@@ -46,6 +46,12 @@ object CliOptions {
             description = "Output JSON files with complete result data"
         ).default(false)
 
+        val cookieJar by parser.option(
+            ArgType.String,
+            "cookies",
+            description = "Load cookies from specified netscape cookie-jar file"
+        )
+
         val dateFormat by parser.option(
             ArgType.String,
             "date-format",
@@ -185,6 +191,7 @@ object CliOptions {
         val options = OptionsDto(
             apksPath,
             configs,
+            cookieJar,
             debug,
             jsonDir,
             prettyJson,

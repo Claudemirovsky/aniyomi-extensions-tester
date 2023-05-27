@@ -101,7 +101,6 @@ open class StubbedCookieManager : CookieManager() {
         val host = URI(url).host ?: return ""
         return cookieMap[host]
             .orEmpty()
-            .filter { !it.hasExpired() }
             .joinToString("; ") { "${it.name}=${it.value}" }
     }
 

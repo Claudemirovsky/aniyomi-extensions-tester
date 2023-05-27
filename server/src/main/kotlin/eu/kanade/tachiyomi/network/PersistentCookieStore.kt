@@ -29,6 +29,6 @@ class PersistentCookieStore : StubbedCookieManager() {
     fun get(uri: URI) = get(uri.host)
 
     private fun get(url: String): List<Cookie> {
-        return cookieMap[url].orEmpty().filter { !it.hasExpired() }
+        return cookieMap[url].orEmpty()
     }
 }

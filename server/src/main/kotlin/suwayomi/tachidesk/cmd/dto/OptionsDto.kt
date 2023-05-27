@@ -14,6 +14,7 @@ package suwayomi.tachidesk.cmd.dto
 data class OptionsDto(
     val apksPath: String,
     val configs: ConfigsDto,
+    val cookiesFile: String?,
     val debugMode: Boolean,
     val jsonFilesDir: String?,
     val prettyJson: Boolean = false,

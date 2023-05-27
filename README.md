@@ -18,7 +18,7 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v2.3.1-unreleased.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v2.4.0-unreleased.jar -h
 
 Usage: aniyomi-extensions-tester options_list
 Arguments:
@@ -28,6 +28,7 @@ Options:
     --check-thumbnails, -T [false] -> Check if thumbnails are loading
     --check-videos, -V [false] -> Check if videos are playing
     --complete-results, -C [false] -> Output JSON files with complete result data
+    --cookies -> Load cookies from specified netscape cookie-jar file { String }
     --date-format, -f [dd/MM/yyyy] -> Format to use when printing episode date { String }
     --debug, -d [false] -> Enable okHttp debug
     --episode-number, -n -> Target episode number { Int }
@@ -50,9 +51,10 @@ Options:
 
 ## TODOs
 - [ ] Read configs/arguments from a file
-- [ ] Support custom preferences
 - [ ] Support search filters
-- [ ] Support webview-related interceptors
+- [ ] Support custom preferences
+- [x] Support custom cookies
+- [x] Support webview-related interceptors
 > - [x] Implement a proper and functional Cloudflare bypasser/interceptor (Needs a GUI, and doesnt work on CI well)
 
 - [x] Implement all main functions from extensions-lib
