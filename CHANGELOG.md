@@ -1,3 +1,45 @@
+# [v2.4.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.3.1...v2.4.0) - (2023-05-28)
+
+### Bug Fixes
+
+- Copy extension assets to generated .jar file ([65d2495](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/65d24956399a58d8b28f033c03677fdda8f96fd1))
+- (**playwright-utils**) Fix forced/not needed browser download ([ef0cdc1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/ef0cdc1670859685d909c0a64527ace1701185f2))
+- Fix proguard rules ([a1ab663](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a1ab663983a428b4641f86860e7bec8078e98e03))
+- (**FakeWebView**) Fix exception with abstract lists ([4f8e10c](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/4f8e10c23819599ca790a6c332f7dc1ae558d304))
+- (**FakeWebView**) Ignore playwright navigation errors ([3d0b560](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/3d0b560369b6d583470c51871204c4cc102f8bfe))
+- (**FakeWebView**) Prevent type casting error ([563acbb](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/563acbb68cdb2c2a547e3180fe3d95a75077cdec))
+- Fix websettings on optimized jars ([a73ea2a](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a73ea2a2d71185ec6e3fdef9f22104f4addc06bf))
+- Ensure interoperability between OkHttp and android's CookieManager ([21414e6](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/21414e61873ea16eec7cb6287678bc1c795789c9))
+
+### Features
+
+- Implement playwright-based webview ([db0ea7a](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/db0ea7a64c5ca940cba8d9b1356b0495156672f8))
+- Add a single, simple CloudflareInterceptor test ([185d393](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/185d393212d863e6712e97e9e455735e0a64db60))
+- (**FakeWebView**) Implement onPageStarted event ([19459f5](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/19459f541337addf2229649feaa5c280ed167f5f))
+- (**AndroidCompat/AndroidWebView**) Load and save cookies in webview ([6bfcfa1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/6bfcfa1252e1507c20280d8f55449a044686f1ff))
+- (**cli**) Add option to load cookies from netscape cookiejar file ([a732752](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a732752df104fcedced8db6c9681d2c7e6e702fa))
+- (**cli**) Add option to read shared prefs from a special json file ([e602d51](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/e602d5182afba3154aba4bb3ed2a27448674c72c))
+
+### Miscellaneous Tasks
+
+- Suppress some compilation warnings ([3233153](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/3233153c06361553eebd4f6bf000fa3bb652f64b))
+- Bump dependencies ([369ce23](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/369ce23fec4ceaf8c6967a048f0ee916067feaf0))
+- (**CI**) Re-activate optimized builds on releases ([64a2709](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/64a27098676d2c76b32851ad11ea16b1f8359df9))
+- Update dependencies ([111eab4](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/111eab4187686a91ec9a8153841f6dbe06dae175))
+
+### Refactor
+
+- Move playwright-related classes to a separate subproject ([2b25ba6](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2b25ba61e2fe85d119b81a5f4235c1b8130bc048))
+- (**settings.build.kts**) Remove unnecessary repositories ([0df3131](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/0df3131f2981f92150d8a727bc97e9b550ec789a))
+- Ktlint go brrrrrr ([e79d2b8](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/e79d2b86eeb8dd9121c219b48a896c65f8083ab7))
+- Reutilize more code between cookie managers ([4887ca2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/4887ca2380717f32bc8fbba553e4e99ebdb850ea))
+- (**tests/AndroidWebView**) Use blank page in JavascriptInterface test ([08c244e](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/08c244e482d5537f6ba2769418d39aba313202a7))
+
+### Testing
+
+- Add two AndroidWebView tests ([2ae61da](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2ae61da8692948c73ca1ed0054aa20a27072aa79))
+- Add SharedPrefs tests ([49787ad](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/49787ad35ed365ef4a1edfaeaef3e950f467ece1))
+
 # [v2.3.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.3.0...v2.3.1) - (2023-05-10)
 
 ### Bug Fixes
