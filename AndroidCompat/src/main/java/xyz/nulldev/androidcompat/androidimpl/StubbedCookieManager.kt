@@ -2,7 +2,6 @@ package xyz.nulldev.androidcompat.androidimpl
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebView
@@ -17,28 +16,48 @@ import java.util.concurrent.ConcurrentHashMap
 @Suppress("DEPRECATION")
 open class StubbedCookieManager : CookieManager() {
     companion object {
-        val cookieMap = ConcurrentHashMap<String, List<Cookie>>()
-
         val preferences by lazy {
             Injekt
                 .get<Application>()
                 .getSharedPreferences("cookie_store", Context.MODE_PRIVATE)
-                .also(::fillCookieMap)
         }
 
-        private fun fillCookieMap(prefs: SharedPreferences) {
-            for ((key, value) in prefs.all) {
-                val realKey = key.substringBeforeLast(".")
+        val cookieMap by lazy {
+            ConcurrentHashMap<String, List<Cookie>>().apply {
+                val groups = preferences.all.entries.groupBy { (key, _) -> key.substringBeforeLast(".") }
+                for ((domain, items) in groups.entries) {
+                    @Suppress("UNCHECKED_CAST")
+                    val cookies = items.mapNotNull { it.value as? String }
+                    val url = "http://$domain".toHttpUrlOrNull() ?: continue
 
-                @Suppress("UNCHECKED_CAST")
-                val cookies = value as? Set<String> ?: continue
-                val url = "http://$realKey".toHttpUrlOrNull() ?: continue
-                runCatching {
-                    val nonExpiredCookies = cookies.mapNotNull { Cookie.parse(url, it) }
-                        .filter { !it.hasExpired() }
-                    cookieMap.put(realKey, nonExpiredCookies)
+                    runCatching {
+                        val nonExpiredCookies = cookies.mapNotNull { Cookie.parse(url, it) }
+                            .filter { !it.hasExpired() }
+                        addOrReplace(this, domain, nonExpiredCookies)
+                    }
                 }
             }
+        }
+
+        @Synchronized
+        private fun addOrReplace(
+            list: ConcurrentHashMap<String, List<Cookie>>,
+            domain: String,
+            cookies: List<Cookie>,
+        ): List<Cookie> {
+            // Append or replace the cookies for this domain.
+            val cookiesForDomain = list[domain].orEmpty().toMutableList()
+            for (cookie in cookies) {
+                // Find a cookie with the same name. Replace it if found, otherwise add a new one.
+                val pos = cookiesForDomain.indexOfFirst { it.name == cookie.name }
+                if (pos == -1) {
+                    cookiesForDomain.add(cookie)
+                } else {
+                    cookiesForDomain[pos] = cookie
+                }
+            }
+            list.put(domain, cookiesForDomain)
+            return cookiesForDomain
         }
 
         @JvmStatic
@@ -59,20 +78,8 @@ open class StubbedCookieManager : CookieManager() {
 
     @Synchronized
     fun addAll(url: HttpUrl, cookies: List<Cookie>) {
-        val key = url.toUri().host
-
-        // Append or replace the cookies for this domain.
-        val cookiesForDomain = cookieMap[key].orEmpty().toMutableList()
-        for (cookie in cookies) {
-            // Find a cookie with the same name. Replace it if found, otherwise add a new one.
-            val pos = cookiesForDomain.indexOfFirst { it.name == cookie.name }
-            if (pos == -1) {
-                cookiesForDomain.add(cookie)
-            } else {
-                cookiesForDomain[pos] = cookie
-            }
-        }
-        cookieMap.put(key, cookiesForDomain)
+        val domain = url.toUri().host
+        val cookiesForDomain = addOrReplace(cookieMap, domain, cookies)
 
         // Get cookies to be stored in disk
         val newValues = cookiesForDomain.asSequence()
@@ -80,13 +87,13 @@ open class StubbedCookieManager : CookieManager() {
             .map(Cookie::toString)
             .toSet()
 
-        preferences.edit().putStringSet(key, newValues).apply()
+        preferences.edit().putStringSet(domain, newValues).apply()
     }
 
     @Synchronized
     private fun setCookie(uri: URI, value: String) {
-        val key = uri.host ?: return
-        val url = "http://$key".toHttpUrlOrNull() ?: return
+        val domain = uri.host ?: return
+        val url = "http://$domain".toHttpUrlOrNull() ?: return
         val cookie = Cookie.parse(url, value) ?: return
         addAll(url, listOf(cookie))
     }
