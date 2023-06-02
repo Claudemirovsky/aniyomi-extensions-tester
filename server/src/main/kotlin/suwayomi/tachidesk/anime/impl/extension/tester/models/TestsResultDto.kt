@@ -13,7 +13,7 @@ data class TestsResultsDto(
     var search: ResultDto? = null,
     var details: ResultDto? = null,
     var episodes: ResultDto? = null,
-    var videos: ResultDto? = null
+    var videos: ResultDto? = null,
 )
 
 @ExperimentalSerializationApi
@@ -22,12 +22,12 @@ data class ResultDto(
     val result: JsonElement? = null,
     val error: String? = null,
     @EncodeDefault
-    val passed: Boolean = true
+    val passed: Boolean = true,
 )
 
 @ExperimentalSerializationApi
 @Serializable
 data class SourceResultsDto(
     val name: String,
-    val results: TestsResultsDto
+    val results: TestsResultsDto,
 )

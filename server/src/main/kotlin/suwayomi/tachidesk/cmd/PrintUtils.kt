@@ -29,7 +29,7 @@ fun printLine(
     second: String?,
     width: Int = 17,
     subPad: Int = 1,
-    color: String = CYAN
+    color: String = CYAN,
 ) {
     if (second == null) return
 
@@ -107,7 +107,7 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
     printLine("Name", episode.name)
     printLine(
         "Episode number",
-        episode.episode_number.toString().trimEnd { it == '0' }.trimEnd { it == '.' }
+        episode.episode_number.toString().trimEnd { it == '0' }.trimEnd { it == '.' },
     )
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0) {

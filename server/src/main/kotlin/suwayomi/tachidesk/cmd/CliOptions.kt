@@ -15,163 +15,163 @@ object CliOptions {
 
         val apksPath by parser.argument(
             ArgType.String,
-            description = "Apk file or directory with apks"
+            description = "Apk file or directory with apks",
         )
 
         val animeUrl by parser.option(
             ArgType.String,
             "anime-url",
             "a",
-            description = "Target anime url"
+            description = "Target anime url",
         )
 
         val checkThumbnails by parser.option(
             ArgType.Boolean,
             "check-thumbnails",
             "T",
-            description = "Check if thumbnails are loading"
+            description = "Check if thumbnails are loading",
         ).default(false)
 
         val checkVideos by parser.option(
             ArgType.Boolean,
             "check-videos",
             "V",
-            description = "Check if videos are playing"
+            description = "Check if videos are playing",
         ).default(false)
 
         val completeResults by parser.option(
             ArgType.Boolean,
             "complete-results",
             "C",
-            description = "Output JSON files with complete result data"
+            description = "Output JSON files with complete result data",
         ).default(false)
 
         val cookieJar by parser.option(
             ArgType.String,
             "cookies",
-            description = "Load cookies from specified netscape cookie-jar file"
+            description = "Load cookies from specified netscape cookie-jar file",
         )
 
         val dateFormat by parser.option(
             ArgType.String,
             "date-format",
             "f",
-            description = "Format to use when printing episode date"
+            description = "Format to use when printing episode date",
         ).default("dd/MM/yyyy")
 
         val debug by parser.option(
             ArgType.Boolean,
             "debug",
             "d",
-            description = "Enable okHttp debug"
+            description = "Enable okHttp debug",
         ).default(false)
 
         val episodeNumber by parser.option(
             ArgType.Int,
             "episode-number",
             "n",
-            description = "Target episode number"
+            description = "Target episode number",
         )
 
         val episodeUrl by parser.option(
             ArgType.String,
             "episode-url",
             "e",
-            description = "Target episode url"
+            description = "Target episode url",
         )
 
         val increment by parser.option(
             ArgType.Boolean,
             "increment-pages",
             "i",
-            description = "Try using pagination when possible"
+            description = "Try using pagination when possible",
         ).default(false)
 
         val jsonDir by parser.option(
             ArgType.String,
             "json-dir",
             "D",
-            description = "Directory to put the JSON result files"
+            description = "Directory to put the JSON result files",
         )
 
         val preferencesFile by parser.option(
             ArgType.String,
             "prefs",
-            description = "Special Json file with shared preferences to extensions. Read the README to understand how it works."
+            description = "Special Json file with shared preferences to extensions. Read the README to understand how it works.",
         )
 
         val prettyJson by parser.option(
             ArgType.Boolean,
             "pretty-json",
             "P",
-            description = "Dumps prettified JSON data to files"
+            description = "Dumps prettified JSON data to files",
         ).default(false)
 
         val printJson by parser.option(
             ArgType.Boolean,
             "json",
             "j",
-            description = "Show JSON data instead of tables"
+            description = "Show JSON data instead of tables",
         )
 
         val proxy by parser.option(
             ArgType.String,
             "proxy",
-            description = "Proxy address to use when doing the requests. Like <protocol>://<host>:<port>"
+            description = "Proxy address to use when doing the requests. Like <protocol>://<host>:<port>",
         )
 
         val resultsCount by parser.option(
             ArgType.Int,
             "results-count",
             "c",
-            description = "Amount of items to print from result lists"
+            description = "Amount of items to print from result lists",
         ).default(2)
 
         val searchStr by parser.option(
             ArgType.String,
             "search",
             "s",
-            description = "Text to use when testing the search"
+            description = "Text to use when testing the search",
         ).default("world")
 
         val showAll by parser.option(
             ArgType.Boolean,
             "show-all",
             "A",
-            description = "Show all items of lists, instead of the first ~2"
+            description = "Show all items of lists, instead of the first ~2",
         )
 
         val stopOnError by parser.option(
             ArgType.Boolean,
             "stop-on-error",
             "X",
-            description = "Stop the tests on the first error"
+            description = "Stop the tests on the first error",
         )
 
         val tests by parser.option(
             ArgType.String,
             "tests",
             "t",
-            description = "Tests to be made(in order), delimited by commas"
+            description = "Tests to be made(in order), delimited by commas",
         ).default(TestsEnum.getValues())
 
         val timeoutSeconds by parser.option(
             ArgType.Int,
             "timeout",
-            description = "Maximum amount of time(in seconds) spent in each test"
+            description = "Maximum amount of time(in seconds) spent in each test",
         ).default(90)
 
         val tmpDir by parser.option(
             ArgType.String,
             "tmp-dir",
-            description = "Directory to put temporary data"
+            description = "Directory to put temporary data",
         ).default(System.getProperty("java.io.tmpdir"))
 
         val userAgent by parser.option(
             ArgType.String,
             "user-agent",
             "U",
-            description = "Set and use a specific user agent"
+            description = "Set and use a specific user agent",
         )
 
         parser.parse(args)
@@ -191,7 +191,7 @@ object CliOptions {
             showAll ?: false,
             stopOnError ?: false,
             tests,
-            timeoutSeconds.toLong()
+            timeoutSeconds.toLong(),
         )
 
         val options = OptionsDto(
@@ -204,7 +204,7 @@ object CliOptions {
             prettyJson,
             proxy,
             tmpDir,
-            userAgent
+            userAgent,
         )
 
         return options

@@ -44,7 +44,7 @@ class NetworkHelper(context: Context) {
                     // Using mu.Logging makes it almost unreadable, so lets
                     // just use println instead
                     override fun log(message: String) = println(message)
-                }
+                },
             ).apply {
                 level = HttpLoggingInterceptor.Level.HEADERS
             }

@@ -26,6 +26,6 @@ data class SAnimeImpl(
 
     override var is_thumbnail_loading: Boolean = false,
 
-    override var initialized: Boolean = false
+    override var initialized: Boolean = false,
 
 ) : SAnime

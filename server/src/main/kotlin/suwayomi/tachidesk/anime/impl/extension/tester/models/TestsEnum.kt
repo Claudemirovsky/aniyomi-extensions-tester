@@ -6,7 +6,8 @@ enum class TestsEnum {
     SEARCH,
     ANIDETAILS,
     EPLIST,
-    VIDEOLIST;
+    VIDEOLIST,
+    ;
 
     companion object {
         fun getValues(): String {

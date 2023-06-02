@@ -66,7 +66,7 @@ suspend fun main(args: Array<String>) {
         Files.find(
             apksPath,
             2,
-            { _, fileAttributes -> fileAttributes.isRegularFile }
+            { _, fileAttributes -> fileAttributes.isRegularFile },
         )
             .asSequence()
             .filter { it.extension == "apk" }

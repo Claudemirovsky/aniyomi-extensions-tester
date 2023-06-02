@@ -21,7 +21,7 @@ data class OptionsDto(
     val prettyJson: Boolean = false,
     val proxy: String?,
     val tmpDir: String,
-    val userAgent: String?
+    val userAgent: String?,
 )
 
 /**
@@ -57,5 +57,5 @@ data class ConfigsDto(
     val showAll: Boolean = false,
     val stopOnError: Boolean = false,
     val tests: String = "",
-    val timeoutSeconds: Long = 90L
+    val timeoutSeconds: Long = 90L,
 )

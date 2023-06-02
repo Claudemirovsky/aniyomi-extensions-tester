@@ -101,7 +101,7 @@ object CFClearance {
                     .scheme("http")
                     .host(it.domain)
                     .build(),
-                cookies = cookies
+                cookies = cookies,
             )
         }
         // Merge new and existing cookies for this request
@@ -112,7 +112,7 @@ object CFClearance {
         // Extract cookies from current request
         val existingCookies = Cookie.parseAll(
             originalRequest.url,
-            originalRequest.headers
+            originalRequest.headers,
         )
         // Filter out existing values of cookies that we are about to merge in
         val filteredExisting = existingCookies.filter { existing ->
@@ -168,7 +168,7 @@ object CFClearance {
             "/cloudflare-js/navigator.permissions.js",
             "/cloudflare-js/navigator.webdriver.js",
             "/cloudflare-js/chrome.runtime.js",
-            "/cloudflare-js/chrome.plugin.js"
+            "/cloudflare-js/chrome.plugin.js",
         ).map { javaClass.getResource(it)!!.readText() }
     }
 

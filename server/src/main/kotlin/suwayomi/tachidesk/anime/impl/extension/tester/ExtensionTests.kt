@@ -56,7 +56,7 @@ class FailedTestException(error: Throwable) : Exception(error) {
 class ExtensionTests(
     private val source: AnimeHttpSource,
     private val configs: ConfigsDto,
-    private val shouldDumpJson: Boolean
+    private val shouldDumpJson: Boolean,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -161,7 +161,7 @@ class ExtensionTests(
         val anime = getSAnime()
 
         val details = parseObservable<SAnime>(
-            source.fetchAnimeDetails(anime)
+            source.fetchAnimeDetails(anime),
         )
 
         details.url.ifEmpty { details.url = anime.url }
@@ -181,7 +181,7 @@ class ExtensionTests(
         val anime = getSAnime()
 
         val result = parseObservable<List<SEpisode>>(
-            source.fetchEpisodeList(anime)
+            source.fetchEpisodeList(anime),
         )
 
         printLine("Episodes", result.size.toString())
@@ -225,7 +225,7 @@ class ExtensionTests(
         printLine("EP URL", episode.url)
 
         val videoList = parseObservable<List<Video>>(
-            source.fetchVideoList(episode)
+            source.fetchVideoList(episode),
         )
 
         printLine("Videos", videoList.size.toString())
@@ -288,7 +288,7 @@ class ExtensionTests(
         url: String?,
         isVideo: Boolean = false,
         headers: Headers? = null,
-        supportsHEAD: Boolean = true
+        supportsHEAD: Boolean = true,
     ): Boolean {
         if (url == null) return false
         // Prevents loading a heavy image or video by requesting only ONE byte.
@@ -340,14 +340,14 @@ class ExtensionTests(
      */
     private fun printAnimesPage(
         test: TestsEnum,
-        block: (page: Int) -> Observable<AnimesPage>
+        block: (page: Int) -> Observable<AnimesPage>,
     ) {
         var page = 0
         val animesPages = mutableListOf<AnimesPageDto>()
         while (true) {
             page++
             val results = parseObservable<AnimesPage>(
-                block(page)
+                block(page),
             )
             if (configs.completeResults) {
                 animesPages.add(AnimesPageDto(results))
@@ -403,7 +403,7 @@ class ExtensionTests(
                 { it -> data = it },
                 { e: Throwable ->
                     error = e
-                }
+                },
             )
         return data ?: throw error
     }
