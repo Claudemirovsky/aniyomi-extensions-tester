@@ -186,34 +186,36 @@ class ExtensionTests(
 
         printLine("Episodes", result.size.toString())
 
-        if (result.isNotEmpty()) {
-            // Sets the episode url to use in videoList test.
-            if (configs.episodeUrl.isNotBlank()) {
-                EP_URL = configs.episodeUrl
-            } else if (configs.episodeNumber > -1) {
-                runCatching {
-                    EP_OBJ = result.first {
-                        it.episode_number.toInt() == configs.episodeNumber
-                    }
+        if (result.isEmpty()) {
+            throw FailedTestException("Empty episode list")
+        }
+
+        // Sets the episode url to use in videoList test.
+        if (configs.episodeUrl.isNotBlank()) {
+            EP_URL = configs.episodeUrl
+        } else if (configs.episodeNumber > -1) {
+            runCatching {
+                EP_OBJ = result.first {
+                    it.episode_number.toInt() == configs.episodeNumber
                 }
-            } else {
-                EP_OBJ = result.first()
             }
+        } else {
+            EP_OBJ = result.first()
+        }
 
-            // Cut the results list if `configs.showAll` isnt enabled.
-            val episodeList = if (!configs.showAll) {
-                result.take(configs.resultsCount)
-            } else {
-                result
-            }
+        // Cut the results list if `configs.showAll` isnt enabled.
+        val episodeList = if (!configs.showAll) {
+            result.take(configs.resultsCount)
+        } else {
+            result
+        }
 
-            episodeList.forEach(::printItemOrJson)
+        episodeList.forEach(::printItemOrJson)
 
-            writeTestSuccess(TestsEnum.EPLIST) {
-                episodeList.map { it as SEpisodeImpl }
-                    .let(json::encodeToJsonElement)
-                    .jsonArray
-            }
+        writeTestSuccess(TestsEnum.EPLIST) {
+            episodeList.map { it as SEpisodeImpl }
+                .let(json::encodeToJsonElement)
+                .jsonArray
         }
     }
 
