@@ -1,3 +1,18 @@
+# [v2.4.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.0...v2.4.1) - (2023-06-02)
+
+### Bug Fixes
+
+- (**AndroidCompat**) Fix restoration of saved cookies in StubbedCookieManager ([02d501e](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/02d501ea9af8e9cb4082b235058f9e883f7c098f))
+- (**tester**) Prevent not writing episode list test result ([681a6ab](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/681a6abccf8849480c1e84bfb7fba649b87af0c7))
+
+### Miscellaneous Tasks
+
+- Bump dependencies ([93fb3af](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/93fb3afd9c19c436d9757a918c3892f877422459))
+
+### Refactor
+
+- Ktlint moment ([a8f519f](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a8f519fd7384c5e8a587b53dd23e17900fe4742f))
+
 # [v2.4.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.3.1...v2.4.0) - (2023-05-28)
 
 ### Bug Fixes
