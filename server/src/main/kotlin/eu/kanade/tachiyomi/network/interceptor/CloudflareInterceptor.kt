@@ -186,6 +186,7 @@ object CFClearance {
         }
 
         val query = "#challenge-form"
+        val turnstileTexts = setOf("turnstile", "challenge")
         var success = false
 
         for (attempt in 1..10) {
@@ -199,10 +200,12 @@ object CFClearance {
                     ?.click()
 
                 // Turnstile challenge
-                page.querySelector("div.hcaptcha-box > iframe")
-                    ?.contentFrame()
-                    ?.querySelector("input[type='checkbox']")
-                    ?.click()
+                page.mainFrame().childFrames().forEach {
+                    val url = it.url()
+                    if (turnstileTexts.all(url::contains)) {
+                        it.querySelector("input[type='checkbox']")?.click()
+                    }
+                }
 
                 page.waitForSelector(query, waitOptions)
                 success = true
