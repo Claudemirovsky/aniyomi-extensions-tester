@@ -1,3 +1,11 @@
+# [v2.4.2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.1...v2.4.2) - (2023-06-21)
+
+### Bug Fixes
+
+- (**build**) Dex2jar moment ([cd79982](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/cd79982640b11db0c6945eefd4888fe56ab3aae3))
+- (**tests/Cloudflaretests**) Remove previously-added cf-clearance cookies ([23def18](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/23def18450ac122ac4906a859674f6a02f18c673))
+- (**CloudflareInterceptor**) Fix turnstile selector ([6fc6706](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/6fc67060183f344ff050da03df9d2ab9e650a7cb))
+
 # [v2.4.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.0...v2.4.1) - (2023-06-02)
 
 ### Bug Fixes
