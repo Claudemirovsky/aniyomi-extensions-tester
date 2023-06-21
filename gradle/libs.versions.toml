@@ -1,10 +1,9 @@
 [versions]
 coroutines_version = "1.7.1"
-dex2jar_version = "v63"
+dex2jar_version = "26e93de" # v63
 kotlin_version = "1.8.21"
 okhttp_version = "5.0.0-alpha.11"
 serialization_version = "1.5.1"
-
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines_version" }
 coroutines-jdk = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "coroutines_version" }
