@@ -18,7 +18,7 @@ output file path: server/build/aniyomi-extensions-tester-\<version\>.jar
 
 ## Usage
 ```bash
-$ java -jar server/build/aniyomi-extensions-tester-v2.4.1.jar -h
+$ java -jar server/build/aniyomi-extensions-tester-v2.4.2.jar -h
 
 Usage: aniyomi-extensions-tester options_list
 Arguments:
