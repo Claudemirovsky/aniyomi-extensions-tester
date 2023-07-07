@@ -109,6 +109,9 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
         "Episode number",
         episode.episode_number.toString().trimEnd { it == '0' }.trimEnd { it == '.' },
     )
+    episode.scanlator
+        ?.takeIf(String::isNotBlank)
+        ?.let { printLine("Scanlator", it) }
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0) {
         printLine("Date of upload", formatter.format(episode.date_upload))
