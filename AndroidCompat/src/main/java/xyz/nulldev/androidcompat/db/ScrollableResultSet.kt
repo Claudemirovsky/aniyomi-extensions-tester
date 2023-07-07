@@ -205,11 +205,13 @@ class ScrollableResultSet(val parent: ResultSet) : ResultSet by parent {
         return cursor - 1 < resultSetLength
     }
 
+    @Deprecated("Deprecated in java")
     override fun getBigDecimal(columnIndex: Int, scale: Int): BigDecimal {
         // TODO Maybe?
         notImplemented()
     }
 
+    @Deprecated("Deprecated in java")
     override fun getBigDecimal(columnLabel: String?, scale: Int): BigDecimal {
         // TODO Maybe?
         notImplemented()
@@ -769,10 +771,12 @@ class ScrollableResultSet(val parent: ResultSet) : ResultSet by parent {
         return obj(columnLabel) as Double
     }
 
+    @Deprecated("Deprecated in java")
     override fun getUnicodeStream(columnIndex: Int): InputStream {
         return getBinaryStream(columnIndex)
     }
 
+    @Deprecated("Deprecated in java")
     override fun getUnicodeStream(columnLabel: String?): InputStream {
         return getBinaryStream(columnLabel)
     }

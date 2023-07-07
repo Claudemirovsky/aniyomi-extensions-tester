@@ -115,11 +115,13 @@ open class StubbedCookieManager : CookieManager() {
         return url?.let { runCatching { getCookie(it) }.getOrNull() } ?: ""
     }
 
+    @Deprecated("Deprecated in java")
     override fun removeSessionCookie() {}
 
     override fun removeSessionCookies(callback: ValueCallback<Boolean>?) {}
 
     @Synchronized
+    @Deprecated("Deprecated in java")
     override fun removeAllCookie() {
         preferences.edit().clear().apply()
         cookieMap.clear()
@@ -133,6 +135,7 @@ open class StubbedCookieManager : CookieManager() {
 
     override fun hasCookies(privateBrowsing: Boolean) = hasCookies()
 
+    @Deprecated("Deprecated in java")
     override fun removeExpiredCookie() {}
 
     override fun flush() {}
