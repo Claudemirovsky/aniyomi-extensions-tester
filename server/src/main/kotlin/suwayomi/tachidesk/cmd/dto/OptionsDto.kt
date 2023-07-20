@@ -21,6 +21,7 @@ data class OptionsDto(
     val prettyJson: Boolean = false,
     val proxy: String?,
     val tmpDir: String,
+    val useChromium: Boolean = false,
     val userAgent: String?,
 )
 

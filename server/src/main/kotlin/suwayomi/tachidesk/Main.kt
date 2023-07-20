@@ -45,6 +45,7 @@ suspend fun main(args: Array<String>) {
 
     val options = parseArgs(args)
 
+    PlaywrightStatics.useChromium = options.useChromium
     if (options.debugMode) System.setProperty("ANIEXT_TESTER_DEBUG", "true")
     options.userAgent?.let { System.setProperty("http.agent", it) }
     options.proxy?.let { System.setProperty("ANIEXT_TESTER_PROXY", it) }

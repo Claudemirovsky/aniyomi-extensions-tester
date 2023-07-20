@@ -14,6 +14,7 @@ import com.microsoft.playwright.options.ServiceWorkerPolicy
 import okhttp3.Cookie
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import playwright.utils.PlaywrightStatics
+import playwright.utils.PlaywrightStatics.browser
 import kotlin.reflect.full.declaredMemberFunctions
 import com.microsoft.playwright.options.Cookie as PlaywrightCookie
 
@@ -122,7 +123,6 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
     private val pageOptions by lazy {
         NewPageOptions().apply {
             hasTouch = true
-            isMobile = true
             javaScriptEnabled = settings.javaScriptEnabled
             serviceWorkers = ServiceWorkerPolicy.BLOCK
             userAgent = settings.userAgentString
@@ -137,7 +137,7 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
     }
 
     override val browser by lazy {
-        PlaywrightStatics.playwrightInstance.chromium().launch(browserOptions)
+        PlaywrightStatics.playwrightInstance.browser().launch(browserOptions)
     }
 
     override val page by lazy {

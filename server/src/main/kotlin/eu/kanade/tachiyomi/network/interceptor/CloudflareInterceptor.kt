@@ -20,6 +20,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import playwright.utils.PlaywrightStatics
+import playwright.utils.PlaywrightStatics.browser
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
@@ -82,7 +83,7 @@ object CFClearance {
         logger.debug { "resolveWithWebView($url)" }
 
         val cookies = PlaywrightStatics.playwrightInstance.let { playwright ->
-            playwright.chromium().launch(defaultOptions).use { browser ->
+            playwright.browser().launch(defaultOptions).use { browser ->
                 val userAgent = originalRequest.header("User-Agent")
                 if (userAgent != null) {
                     browser.newContext(Browser.NewContextOptions().setUserAgent(userAgent)).use { browserContext ->
@@ -195,15 +196,11 @@ object CFClearance {
             }.getOrNull() ?: true
             if (success) break
             runCatching {
-                // Simple challenge
-                page.querySelector("#challenge-stage > div > input[type='button']")
-                    ?.click()
-
                 // Turnstile challenge
                 page.mainFrame().childFrames().forEach {
                     val url = it.url()
                     if (turnstileTexts.all(url::contains)) {
-                        it.querySelector("input[type='checkbox']")?.click()
+                        it.querySelector("input[type=checkbox]")?.click()
                     }
                 }
 

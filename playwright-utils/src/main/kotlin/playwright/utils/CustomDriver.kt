@@ -171,7 +171,12 @@ class CustomDriver : Driver() {
 
         val pb = createProcessBuilder()
         pb.command().add("install")
-        pb.command().add("chromium")
+        if (PlaywrightStatics.useChromium) {
+            pb.command().add("chromium")
+        } else {
+            pb.command().add("firefox")
+        }
+
         pb.redirectError(ProcessBuilder.Redirect.INHERIT)
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT)
         pb.environment().putAll(env)

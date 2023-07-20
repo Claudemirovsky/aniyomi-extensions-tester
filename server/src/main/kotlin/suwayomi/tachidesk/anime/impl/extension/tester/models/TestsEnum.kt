@@ -10,8 +10,8 @@ enum class TestsEnum {
     ;
 
     companion object {
-        fun getValues(): String {
-            return values().joinToString(",") { it.name.lowercase() }
+        fun testList(): String {
+            return entries.joinToString(",") { it.name.lowercase() }
         }
     }
 }

@@ -153,7 +153,7 @@ object CliOptions {
             "tests",
             "t",
             description = "Tests to be made(in order), delimited by commas",
-        ).default(TestsEnum.getValues())
+        ).default(TestsEnum.testList())
 
         val timeoutSeconds by parser.option(
             ArgType.Int,
@@ -166,6 +166,12 @@ object CliOptions {
             "tmp-dir",
             description = "Directory to put temporary data",
         ).default(System.getProperty("java.io.tmpdir"))
+
+        val useChromium by parser.option(
+            ArgType.Boolean,
+            "chromium",
+            description = "Use chromium for webview (it uses firefox by default)",
+        )
 
         val userAgent by parser.option(
             ArgType.String,
@@ -204,6 +210,7 @@ object CliOptions {
             prettyJson,
             proxy,
             tmpDir,
+            useChromium ?: false,
             userAgent,
         )
 

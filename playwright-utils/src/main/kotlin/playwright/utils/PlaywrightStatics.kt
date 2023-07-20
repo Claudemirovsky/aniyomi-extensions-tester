@@ -7,17 +7,27 @@ import java.nio.file.Paths
 
 object PlaywrightStatics {
     var usedPlaywright = false
+    var useChromium = false
+
     val playwrightInstance by lazy {
         System.setProperty("playwright.driver.impl", "playwright.utils.CustomDriver")
-        preinstalledChromium?.also {
+        preinstalledBrowser?.also {
             System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
         }
         usedPlaywright = true
         Playwright.create()
     }
 
-    private val preinstalledChromium by lazy {
-        findBinary("chromium", "chromium.exe", "chromium-browser")
+    fun Playwright.browser() = when {
+        useChromium -> chromium()
+        else -> firefox()
+    }
+
+    private val preinstalledBrowser by lazy {
+        when {
+            useChromium -> findBinary("chromium", "chromium.exe", "chromium-browser")
+            else -> null // Playwright needs a patched firefox
+        }
     }
 
     val launchOptions: LaunchOptions
@@ -25,7 +35,7 @@ object PlaywrightStatics {
             return LaunchOptions().apply {
                 headless = false
                 chromiumSandbox = false
-                executablePath = preinstalledChromium?.let(Paths::get)
+                executablePath = preinstalledBrowser?.let(Paths::get)
                 args = listOf(
                     "--disable-gpu",
                     "--no-sandbox",
@@ -42,7 +52,7 @@ object PlaywrightStatics {
     val userAgent by lazy {
         val logger = KotlinLogging.logger {}
         runCatching {
-            playwrightInstance.chromium().launch(launchOptions.setHeadless(true)).use { browser ->
+            playwrightInstance.browser().launch(launchOptions.setHeadless(true)).use { browser ->
                 browser.newPage().use { page ->
                     val userAgent = (page.evaluate("() => {return navigator.userAgent}") as String)
                         .replace("Headless", "")
@@ -51,8 +61,11 @@ object PlaywrightStatics {
                     userAgent
                 }
             }
-        }.getOrDefault(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-        )
+        }.getOrElse {
+            when {
+                useChromium -> "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.133 Safari/537.36"
+                else -> "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+            }
+        }
     }
 }
