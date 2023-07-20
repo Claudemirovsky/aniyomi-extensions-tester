@@ -21,7 +21,7 @@ gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.3.0"
+okio = "com.squareup.okio:okio:3.4.0"
 
 # Serialization
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
@@ -33,7 +33,7 @@ logback = "ch.qos.logback:logback-classic:1.4.8"
 ktlogging = "io.github.microutils:kotlin-logging:3.0.5"
 
 # Webview-based interceptors
-playwright = "com.microsoft.playwright:playwright:1.35.1"
+playwright = "com.microsoft.playwright:playwright:1.36.0"
 
 # NodejsManager
 commons-compress = "org.apache.commons:commons-compress:1.23.0"
