@@ -10,6 +10,7 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import com.microsoft.playwright.Browser
 import com.microsoft.playwright.Page
+import com.microsoft.playwright.Route
 import com.microsoft.playwright.options.WaitForSelectorState
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
@@ -85,12 +86,13 @@ object CFClearance {
         val cookies = PlaywrightStatics.playwrightInstance.let { playwright ->
             playwright.browser().launch(defaultOptions).use { browser ->
                 val userAgent = originalRequest.header("User-Agent")
-                if (userAgent != null) {
-                    browser.newContext(Browser.NewContextOptions().setUserAgent(userAgent)).use { browserContext ->
-                        browserContext.newPage().use { getCookies(it, url) }
-                    }
-                } else {
-                    browser.newPage().use { getCookies(it, url) }
+                val ctxOptions = Browser.NewContextOptions().apply {
+                    originalRequest.header("User-Agent")
+                        ?.let(::setUserAgent)
+                }
+
+                browser.newContext(ctxOptions).use { browserContext ->
+                    browserContext.newPage().use { getCookies(it, url) }
                 }
             }
         }
@@ -131,6 +133,25 @@ object CFClearance {
 
     private fun getCookies(page: Page, url: String): List<Cookie> {
         applyStealthInitScripts(page)
+        page.route("**") { route ->
+            val resp = route.fetch()
+            // Fix https://github.com/microsoft/playwright/issues/21780
+            val headers = resp.headers().apply {
+                remove("cross-origin-embedder-policy")
+                remove("cross-origin-opener-policy")
+                remove("cross-origin-resource-policy")
+                remove("origin-agent-cluster")
+                remove("referrer-policy")
+                remove("x-frame-options")
+                remove("sec-fetch-site")
+                remove("sec-fetch-mode")
+                remove("sec-fetch-dest")
+                remove("sec-fetch-user")
+                remove("upgrade-insecure-requests")
+            }
+
+            route.fulfill(Route.FulfillOptions().setResponse(resp).setHeaders(headers))
+        }
         page.navigate(url)
         val challengeResolved = waitForChallengeResolve(page)
 
@@ -186,7 +207,7 @@ object CFClearance {
             state = WaitForSelectorState.DETACHED
         }
 
-        val query = "#challenge-form"
+        val query = ".main-content > #challenge-stage"
         val turnstileTexts = setOf("turnstile", "challenge")
         var success = false
 

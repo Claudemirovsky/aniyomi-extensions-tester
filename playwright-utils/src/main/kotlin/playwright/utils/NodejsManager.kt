@@ -14,7 +14,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 object NodejsManager {
-    private const val NODEJS_VERSION = "v18.13.0"
+    private const val NODEJS_VERSION = "v18.17.1"
     private const val NODEJS_URL = "https://nodejs.org/dist/$NODEJS_VERSION"
 
     private val system = SystemType.currentSystem

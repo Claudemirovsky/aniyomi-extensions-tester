@@ -33,7 +33,7 @@ logback = "ch.qos.logback:logback-classic:1.4.8"
 ktlogging = "io.github.microutils:kotlin-logging:3.0.5"
 
 # Webview-based interceptors
-playwright = "com.microsoft.playwright:playwright:1.36.0"
+playwright = "com.microsoft.playwright:playwright:1.37.0"
 
 # NodejsManager
 commons-compress = "org.apache.commons:commons-compress:1.23.0"
