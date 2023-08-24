@@ -25,6 +25,8 @@ okio = "com.squareup.okio:okio:3.4.0"
 
 # Serialization
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
+serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "serialization_version" }
+
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
 
 # Logging
@@ -53,7 +55,7 @@ dex2jar = ["d2j-translator", "d2j-tools"]
 extensions_deps = ["jsoup", "injekt-core", "rxjava"]
 logging = ["ktlogging", "logback", "sfl4j-api"]
 okhttp = ["okhttp-core", "okhttp-dnsoverhttps", "okhttp-logging", "okio"]
-serialization = ["serialization-json", "serialization-protobuf"]
+serialization = ["serialization-json", "serialization-json-okio", "serialization-protobuf"]
 
 [plugins]
 buildconfig = { id = "com.github.gmazzo.buildconfig", version = "4.1.1" }
