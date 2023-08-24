@@ -78,7 +78,10 @@ suspend fun main(args: Array<String>) {
             }
     }
 
-    val json = Json { prettyPrint = options.prettyJson; explicitNulls = false }
+    val json = Json {
+        prettyPrint = options.prettyJson
+        explicitNulls = false
+    }
 
     extensions.forEachIndexed { index, ext ->
         logger.debug { "Installing $ext" }
