@@ -1,3 +1,30 @@
+# [v2.5.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.2...v2.5.0) - (2023-08-25)
+
+### Bug Fixes
+
+- (**build**) Update dex2jar ([e4e040b](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/e4e040b942201ff5bc867add9df6ef76ac09d9c8))
+- Fix cloudflare challenge solving in firefox ([061a29a](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/061a29a01e21041110379df3bfc468db29e9392b))
+
+### Features
+
+- (**cmd**) Show scanlator on SAnime entries ([a9f5718](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a9f57187eca9bca137a7f89856a0d548752ca417))
+- Add support to use firefox/chromium on webview ([6870ce5](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/6870ce55a76e69b1bc19a6f841486f4d83eb415c))
+- Show the source name and language in tests ([f93ce41](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/f93ce4120a5a1fdd442f09f7eb48212241ec1cb2))
+
+### Miscellaneous Tasks
+
+- Bump dependencies ([55b7770](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/55b77700cbc087574f5ac053259c99885674d48a))
+- **BREAKING:** Remove Duktape wrapper ([2ce2d55](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2ce2d55a84afec23227b26f128452443b1ca1207))
+- Bump dependencies ([a990610](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/a9906104e2db8f4ddef310c6d038afce69bd7a8d))
+- Add serialization-json-okio lib ([29d01d8](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/29d01d8bc81431129f40df65e853c482b7f67b62))
+- Bump dependencies ([9a1bb17](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/9a1bb17e073f30fcf23f96aaffb465840871c6fe))
+- Update KtLogging to v5 ([161b8c2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/161b8c29d4ff28e14e7e7e22dac5239488788a0e))
+- (**release**) Prepare for new release ([1729bac](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/1729baca0ca59cc7f7889c7fd48a074af8881a50))
+
+### Refactor
+
+- Convert QuickJS wrapper to kotlin ([1c1e298](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/1c1e298ac961d2de9295fdbb4078acae6fa4a3e0))
+
 # [v2.4.2](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.1...v2.4.2) - (2023-06-21)
 
 ### Bug Fixes
