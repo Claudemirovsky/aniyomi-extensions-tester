@@ -47,7 +47,7 @@ configure(projects) {
         val androidcompat = rootProject.androidcompat
 
         // Kotlin
-        implementation(kotlin("stdlib-jdk8"))
+        implementation(kotlin("stdlib"))
         implementation(kotlin("reflect"))
 
         // :AndroidCompat:Config dependency
