@@ -88,10 +88,10 @@ suspend fun main(args: Array<String>) {
         val (pkgName, sources) = AnimeExtension.installAPK(tmpDir) { ext.toFile() }
         val shouldDumpJson = !options.jsonFilesDir.isNullOrBlank()
         val results = sources.map { source ->
-            timeTest("${source.name} TESTS", color = GREEN) {
+            timeTest("$source TESTS", color = GREEN) {
                 val res = ExtensionTests(source, options.configs, shouldDumpJson).runTests()
                 println()
-                SourceResultsDto(source.name, res)
+                SourceResultsDto(source.toString(), res)
             }
         }
         println()
