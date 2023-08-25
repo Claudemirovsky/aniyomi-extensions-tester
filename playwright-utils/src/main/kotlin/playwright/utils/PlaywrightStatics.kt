@@ -2,7 +2,7 @@ package playwright.utils
 
 import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Playwright
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.nio.file.Paths
 
 object PlaywrightStatics {

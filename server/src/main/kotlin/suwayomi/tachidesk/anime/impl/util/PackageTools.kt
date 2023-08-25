@@ -13,7 +13,7 @@ import android.os.Bundle
 import com.googlecode.d2j.dex.Dex2jar
 import com.googlecode.d2j.reader.MultiDexFileReader
 import com.googlecode.dex2jar.tools.BaksmaliBaseDexExceptionHandler
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.ApkParsers
 import org.w3c.dom.Element
@@ -63,7 +63,7 @@ object PackageTools {
 
         if (handler.hasException()) {
             val errorFile: Path = jarFilePath.parent.resolve("${dexFile.nameWithoutExtension}-error.txt")
-            logger.error(
+            logger.error {
                 """
                 Detail Error Information in File $errorFile
                 Please report this file to one of following link if possible (any one).
@@ -71,8 +71,8 @@ object PackageTools {
                 https://bitbucket.org/pxb1988/dex2jar/issues
                 https://github.com/pxb1988/dex2jar/issues
                 dex2jar@googlegroups.com
-                """.trimIndent(),
-            )
+                """.trimIndent()
+            }
             handler.dump(errorFile, emptyArray<String>())
         } else {
             // Copy assets to the output jar
@@ -111,7 +111,7 @@ object PackageTools {
             val dBuilder = dbFactory.newDocumentBuilder()
             val doc = parsed.manifestXml.byteInputStream().use(dBuilder::parse)
 
-            logger.trace(parsed.manifestXml)
+            logger.trace { parsed.manifestXml }
 
             applicationInfo.metaData = Bundle().apply {
                 val appTag = doc.getElementsByTagName("application").item(0)

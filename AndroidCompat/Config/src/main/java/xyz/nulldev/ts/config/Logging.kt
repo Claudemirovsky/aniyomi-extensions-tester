@@ -8,9 +8,15 @@ package xyz.nulldev.ts.config
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import ch.qos.logback.classic.Level
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.DelegatingKLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.slf4j.Logger
+import ch.qos.logback.classic.Logger as LogbackLogger
 
 fun setLogLevel(level: Level) {
-    (KotlinLogging.logger(Logger.ROOT_LOGGER_NAME).underlyingLogger as ch.qos.logback.classic.Logger).level = level
+    val ktlogger = KotlinLogging.logger(Logger.ROOT_LOGGER_NAME)
+
+    @Suppress("UNCHECKED_CAST")
+    val slf4jLogger = (ktlogger as DelegatingKLogger<Logger>).underlyingLogger
+    (slf4jLogger as LogbackLogger).level = level
 }

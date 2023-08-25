@@ -14,7 +14,7 @@ import com.microsoft.playwright.Route
 import com.microsoft.playwright.options.WaitForSelectorState
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import okhttp3.Cookie
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
