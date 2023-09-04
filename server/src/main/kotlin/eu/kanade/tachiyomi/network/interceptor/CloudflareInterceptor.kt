@@ -218,10 +218,15 @@ object CFClearance {
             if (success) break
             runCatching {
                 // Turnstile challenge
-                page.mainFrame().childFrames().forEach {
-                    val url = it.url()
+                page.mainFrame().childFrames().forEach { frame ->
+                    val url = frame.url()
                     if (turnstileTexts.all(url::contains)) {
-                        it.querySelector("input[type=checkbox]")?.click()
+                        frame.querySelector("label.ctp-checkbox-label")
+                            ?.querySelector("area, input")
+                            ?.also { elem ->
+                                val box = elem.boundingBox()
+                                page.mouse().click(box.x + box.width / 2, box.y + box.height / 2)
+                            }
                     }
                 }
 
