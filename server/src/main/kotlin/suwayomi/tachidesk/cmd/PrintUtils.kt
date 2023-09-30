@@ -140,11 +140,20 @@ fun printVideo(video: Video, checkVideo: Boolean) {
         ?.forEach { (first, second) ->
             printLine(first, second, width = 25, subPad = 6)
         }
+
     if (video.subtitleTracks.isNotEmpty()) {
         printLine("Subs", "")
         video.subtitleTracks.forEach {
             printLine("Sub Lang", it.lang, subPad = 6)
             printLine("Sub URL", it.url, subPad = 6)
+        }
+    }
+
+    if (video.audioTracks.isNotEmpty()) {
+        printLine("Audios", "")
+        video.audioTracks.forEach {
+            printLine("Audio Lang", it.lang, subPad = 6)
+            printLine("Audio URL", it.url, subPad = 6)
         }
     }
 }
