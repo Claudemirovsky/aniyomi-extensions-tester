@@ -90,6 +90,11 @@ class ExtensionTests(
     @DelicateCoroutinesApi
     suspend fun runTests(): TestsResultsDto {
         tests.forEach { test ->
+            // Prevents running LATEST test if the source doesnt support it.
+            if (test == TestsEnum.LATEST && !source.supportsLatest) {
+                return@forEach
+            }
+
             try {
                 val testFunction = when (test) {
                     TestsEnum.POPULAR -> ::testPopularAnimesPage
@@ -98,11 +103,6 @@ class ExtensionTests(
                     TestsEnum.ANIDETAILS -> ::testAnimeDetails
                     TestsEnum.EPLIST -> ::testEpisodeList
                     TestsEnum.VIDEOLIST -> ::testVideoList
-                }
-
-                // Prevents running LATEST test if the source doesnt support it.
-                if (test == TestsEnum.LATEST && !source.supportsLatest) {
-                    return@forEach
                 }
 
                 val latch = CountDownLatch(1)
@@ -301,12 +301,12 @@ class ExtensionTests(
 
         // We use the HEAD request type because we just want the response headers.
         //
-        // If the source does not support it (= returns UNDEFINED aa content-type),
+        // If the source does not support it (= returns UNDEFINED as content-type),
         // We use GET instead, at the risk of maybe downloading a entire episode
         // Or in the best-worst case just downloading a m3u8 playlist.
         val req = try {
             val request = if (supportsHEAD) HEAD(url, newHeaders) else GET(url, newHeaders)
-            source.client.newCall(request).execute()
+            source.client.newCall(request).execute().also { it.close() }
         } catch (e: ProtocolException) {
             // Sometimes OkHttp just forgets that it supports HTTP 206 partial content.
             // So trying again will not hurt.
@@ -325,9 +325,26 @@ class ExtensionTests(
             }
         }
 
-        val mimeTypes = listOf("video/", "/x-mpegURL", "/vnd.apple.mpegurl")
-        return if (isVideo) mimeTypes.any { it in resType } else "image/" in resType
+        return when {
+            isVideo -> {
+                VIDEO_MIMETYPES.any { it in resType } ||
+                    (PLAYLIST_SUFFIXES.any { it in url } && "text/plain" in resType)
+            }
+            else -> "image/" in resType
+        }
     }
+
+    private val VIDEO_MIMETYPES = setOf(
+        "video/",
+        "application/mp4",
+        "application/mpeg4",
+        "/x-mpegURL",
+        "application/vnd.apple.mpegurl",
+        "application/octet-stream",
+        "application/dash+xml",
+    )
+
+    private val PLAYLIST_SUFFIXES = setOf(".m3u8", ".mpd", ".dash")
 
     private fun getSAnime(): SAnime {
         return ANIME_OBJ ?: SAnime.create().apply {
