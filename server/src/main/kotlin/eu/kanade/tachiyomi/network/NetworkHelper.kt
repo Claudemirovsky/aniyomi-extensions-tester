@@ -10,8 +10,10 @@ package eu.kanade.tachiyomi.network
 
 import android.content.Context
 import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
+import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.OkHttpClient
+import okhttp3.brotli.BrotliInterceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import playwright.utils.PlaywrightStatics
 import java.util.concurrent.TimeUnit
@@ -28,11 +30,14 @@ class NetworkHelper(context: Context) {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .callTimeout(2, TimeUnit.MINUTES)
-            .addInterceptor(UserAgentInterceptor())
+            .addInterceptor(BrotliInterceptor)
+            .addInterceptor(UncaughtExceptionInterceptor())
+            .addInterceptor(UserAgentInterceptor(::defaultUserAgentProvider))
+            .addInterceptor(CloudflareInterceptor(cookies))
 
         System.getProperty("ANIEXT_TESTER_PROXY")
             ?.let(::parseProxy)
-            ?.let {
+            ?.also {
                 // We usually use proxies to debug https requests, so lets
                 // prevent some headache
                 builder.ignoreAllSSLErrors()
@@ -53,16 +58,19 @@ class NetworkHelper(context: Context) {
         builder.build()
     }
 
-    val cloudflareClient by lazy {
-        client.newBuilder()
-            .addInterceptor(CloudflareInterceptor())
-            .build()
-    }
+    /*
+     * @deprecated Since extension-lib 15
+     */
+    @Deprecated("The regular client handles Cloudflare by default")
+    @Suppress("UNUSED")
+    val cloudflareClient: OkHttpClient = client
 
-    val defaultUserAgent by lazy {
+    private val defaultUserAgent by lazy {
         System.getProperty("http.agent")
             ?: PlaywrightStatics.userAgent
     }
+
+    fun defaultUserAgentProvider() = defaultUserAgent
 
     /**
      * Parses a proxy address and uses it if its valid.

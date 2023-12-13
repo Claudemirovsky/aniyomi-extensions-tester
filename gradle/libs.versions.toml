@@ -21,6 +21,7 @@ gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
+okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okio = "com.squareup.okio:okio:3.6.0"
 
 # Serialization
@@ -54,7 +55,7 @@ coroutines = ["coroutines-core", "coroutines-jdk"]
 dex2jar = ["d2j-translator", "d2j-tools"]
 extensions_deps = ["jsoup", "injekt-core", "rxjava"]
 logging = ["ktlogging", "logback", "sfl4j-api"]
-okhttp = ["okhttp-core", "okhttp-dnsoverhttps", "okhttp-logging", "okio"]
+okhttp = ["okhttp-core", "okhttp-brotli", "okhttp-dnsoverhttps", "okhttp-logging", "okio"]
 serialization = ["serialization-json", "serialization-json-okio", "serialization-protobuf"]
 
 [plugins]

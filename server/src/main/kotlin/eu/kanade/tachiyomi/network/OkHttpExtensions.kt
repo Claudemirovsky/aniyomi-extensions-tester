@@ -8,20 +8,16 @@ package eu.kanade.tachiyomi.network
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.internal.closeQuietly
 import rx.Observable
 import rx.Producer
 import rx.Subscription
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.fullType
 import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -33,28 +29,26 @@ import javax.net.ssl.X509TrustManager
 import kotlin.coroutines.resumeWithException
 
 // Based on https://github.com/gildor/kotlin-coroutines-okhttp
-suspend fun Call.await(): Response {
+@OptIn(ExperimentalCoroutinesApi::class)
+private suspend fun Call.await(callStack: Array<StackTraceElement>): Response {
     return suspendCancellableCoroutine { continuation ->
-        enqueue(
+        val callback =
             object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    if (!response.isSuccessful) {
-                        continuation.resumeWithException(HttpException(response.code))
-                        return
-                    }
-
                     continuation.resume(response) {
-                        response.body.closeQuietly()
+                        response.body.close()
                     }
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
                     // Don't bother with resuming the continuation if it is already cancelled.
                     if (continuation.isCancelled) return
-                    continuation.resumeWithException(e)
+                    val exception = IOException(e.message, e).apply { stackTrace = callStack }
+                    continuation.resumeWithException(exception)
                 }
-            },
-        )
+            }
+
+        enqueue(callback)
 
         continuation.invokeOnCancellation {
             try {
@@ -64,6 +58,39 @@ suspend fun Call.await(): Response {
             }
         }
     }
+}
+
+suspend fun Call.await(): Response {
+    val callStack = Exception().stackTrace.run { copyOfRange(1, size) }
+    return await(callStack)
+}
+
+/**
+ * @since extensions-lib 15
+ */
+suspend fun Call.awaitSuccess(): Response {
+    val callStack = Exception().stackTrace.run { copyOfRange(1, size) }
+    val response = await(callStack)
+    if (!response.isSuccessful) {
+        response.close()
+        throw HttpException(response.code).apply { stackTrace = callStack }
+    }
+    return response
+}
+
+@Suppress("unused_parameter")
+fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: ProgressListener): Call {
+    val progressClient = newBuilder()
+        .cache(null)
+        // .addNetworkInterceptor { chain ->
+        //     val originalResponse = chain.proceed(chain.request())
+        //     originalResponse.newBuilder()
+        //         .body(ProgressResponseBody(originalResponse.body, listener))
+        //         .build()
+        // }
+        .build()
+
+    return progressClient.newCall(request)
 }
 
 fun Call.asObservable(): Observable<Response> {
@@ -82,15 +109,15 @@ fun Call.asObservable(): Observable<Response> {
                         subscriber.onNext(response)
                         subscriber.onCompleted()
                     }
-                } catch (error: Exception) {
+                } catch (e: Exception) {
                     if (!subscriber.isUnsubscribed) {
-                        subscriber.onError(error)
+                        subscriber.onError(e)
                     }
                 }
             }
 
             override fun unsubscribe() {
-                // call.cancel()
+                call.cancel()
             }
 
             override fun isUnsubscribed(): Boolean {
@@ -129,21 +156,4 @@ fun OkHttpClient.Builder.ignoreAllSSLErrors(): OkHttpClient.Builder {
     return this
 }
 
-@Suppress("UNUSED_PARAMETER")
-fun OkHttpClient.newCallWithProgress(request: Request, listener: ProgressListener): Call {
-    val progressClient = newBuilder()
-        .build()
-
-    return progressClient.newCall(request)
-}
-
 class HttpException(val code: Int) : IllegalStateException("HTTP error $code")
-
-inline fun <reified T> Response.parseAs(): T {
-    // Avoiding Injekt.get<Json>() due to compiler issues
-    val json = Injekt.getInstance<Json>(fullType<Json>().type)
-    this.use {
-        val responseBody = it.body.string()
-        return json.decodeFromString(responseBody)
-    }
-}

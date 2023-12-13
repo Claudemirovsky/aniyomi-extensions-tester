@@ -8,14 +8,12 @@ package eu.kanade.tachiyomi.network.interceptor
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import eu.kanade.tachiyomi.network.NetworkHelper
 import okhttp3.Interceptor
 import okhttp3.Response
-import uy.kohesive.injekt.injectLazy
 
-class UserAgentInterceptor : Interceptor {
-
-    private val networkHelper: NetworkHelper by injectLazy()
+class UserAgentInterceptor(
+    private val defaultUserAgentProvider: () -> String,
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -24,7 +22,7 @@ class UserAgentInterceptor : Interceptor {
             val newRequest = originalRequest
                 .newBuilder()
                 .removeHeader("User-Agent")
-                .addHeader("User-Agent", networkHelper.defaultUserAgent)
+                .addHeader("User-Agent", defaultUserAgentProvider())
                 .build()
             chain.proceed(newRequest)
         } else {

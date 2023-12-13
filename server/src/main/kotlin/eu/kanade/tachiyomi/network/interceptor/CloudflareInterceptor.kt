@@ -12,8 +12,7 @@ import com.microsoft.playwright.Browser
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Route
 import com.microsoft.playwright.options.WaitForSelectorState
-import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.network.interceptor.CFClearance.resolveWithWebView
+import eu.kanade.tachiyomi.network.PersistentCookieStore
 import io.github.oshai.kotlinlogging.KotlinLogging
 import okhttp3.Cookie
 import okhttp3.HttpUrl
@@ -22,15 +21,15 @@ import okhttp3.Request
 import okhttp3.Response
 import playwright.utils.PlaywrightStatics
 import playwright.utils.PlaywrightStatics.browser
-import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
-class CloudflareInterceptor : Interceptor {
+class CloudflareInterceptor(
+    private val cookieJar: PersistentCookieStore,
+) : Interceptor {
     private val logger = KotlinLogging.logger {}
-
-    private val network: NetworkHelper by injectLazy()
+    private val cfClearance by lazy { CFClearance(cookieJar) }
 
     @Synchronized
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -49,9 +48,9 @@ class CloudflareInterceptor : Interceptor {
 
         return try {
             originalResponse.close()
-            network.cookies.remove(originalRequest.url.toUri())
+            cookieJar.remove(originalRequest.url.toUri())
 
-            val request = resolveWithWebView(originalRequest)
+            val request = cfClearance.resolveWithWebView(originalRequest)
 
             chain.proceed(request)
         } catch (e: Exception) {
@@ -72,9 +71,10 @@ class CloudflareInterceptor : Interceptor {
  * This class is ported from https://github.com/vvanglro/cf-clearance
  * The original code is licensed under Apache 2.0
 */
-object CFClearance {
+class CFClearance(
+    private val cookieJar: PersistentCookieStore,
+) {
     private val logger = KotlinLogging.logger {}
-    private val network: NetworkHelper by injectLazy()
 
     private val defaultOptions by lazy { PlaywrightStatics.launchOptions }
 
@@ -98,7 +98,7 @@ object CFClearance {
 
         // Copy cookies to cookie store
         cookies.map {
-            network.cookies.addAll(
+            cookieJar.addAll(
                 url = HttpUrl.Builder()
                     .scheme("http")
                     .host(it.domain)
