@@ -85,7 +85,6 @@ object CFClearance {
 
         val cookies = PlaywrightStatics.playwrightInstance.let { playwright ->
             playwright.browser().launch(defaultOptions).use { browser ->
-                val userAgent = originalRequest.header("User-Agent")
                 val ctxOptions = Browser.NewContextOptions().apply {
                     originalRequest.header("User-Agent")
                         ?.let(::setUserAgent)

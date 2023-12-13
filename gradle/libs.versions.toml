@@ -1,9 +1,9 @@
 [versions]
 coroutines_version = "1.7.3"
-dex2jar_version = "v64"
-kotlin_version = "1.9.20"
+dex2jar_version = "2.4.10"
+kotlin_version = "1.9.21"
 okhttp_version = "5.0.0-alpha.11"
-serialization_version = "1.6.0"
+serialization_version = "1.6.2"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines_version" }
@@ -13,7 +13,7 @@ injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 jsoup = "org.jsoup:jsoup:1.16.2"
 rxjava = "io.reactivex:rxjava:1.3.8"
 
-kodein-di = "org.kodein.di:kodein-di-conf-jvm:7.20.2"
+kodein-di = "org.kodein.di:kodein-di-conf-jvm:7.21.1"
 
 gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_version" }
 
@@ -31,14 +31,14 @@ serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization
 
 # Logging
 sfl4j-api = "org.slf4j:slf4j-api:2.0.9"
-logback = "ch.qos.logback:logback-classic:1.4.11"
-ktlogging = "io.github.oshai:kotlin-logging-jvm:5.1.0"
+logback = "ch.qos.logback:logback-classic:1.4.14"
+ktlogging = "io.github.oshai:kotlin-logging-jvm:5.1.1"
 
 # Webview-based interceptors
-playwright = "com.microsoft.playwright:playwright:1.39.0"
+playwright = "com.microsoft.playwright:playwright:1.40.0"
 
 # NodejsManager
-commons-compress = "org.apache.commons:commons-compress:1.24.0"
+commons-compress = "org.apache.commons:commons-compress:1.25.0"
 
 d2j-translator = { module = "com.github.ThexXTURBOXx.dex2jar:dex-translator", version.ref = "dex2jar_version" }
 d2j-tools = { module = "com.github.ThexXTURBOXx.dex2jar:dex-tools", version.ref = "dex2jar_version" }
@@ -47,7 +47,7 @@ apkparser = "net.dongliu:apk-parser:2.6.10"
 
 kotlinx-cli = "org.jetbrains.kotlinx:kotlinx-cli:0.3.6"
 
-proguard = "com.guardsquare:proguard-gradle:7.4.0"
+proguard = "com.guardsquare:proguard-gradle:7.4.1"
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-jdk"]
@@ -58,7 +58,7 @@ okhttp = ["okhttp-core", "okhttp-dnsoverhttps", "okhttp-logging", "okio"]
 serialization = ["serialization-json", "serialization-json-okio", "serialization-protobuf"]
 
 [plugins]
-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "4.1.2" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version = "4.2.0" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.16.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
