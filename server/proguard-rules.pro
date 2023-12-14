@@ -59,6 +59,7 @@
 -keep class org.jsoup.** { *; }
 -keep,allowoptimization class androidx.preference.** { public protected *; }
 -keep,allowoptimization class okio.** { public protected *; }
+-keep,allowoptimization class org.jsoup.parser.** { public protected *; }
 -keep,allowoptimization class org.jsoup.nodes.** { public protected *; }
 -keep,allowoptimization class org.jsoup.select.** { public protected *; }
 -keep,allowoptimization class rx.** { public protected *; }
@@ -92,7 +93,7 @@
 -dontwarn org.slf4j.MDC
 -dontwarn org.slf4j.MarkerFactory
 -keep class ch.qos.logback.** { *; }
--keep class mu.** { *; }
+-keep,allowoptimization class io.github.oshai.kotlinlogging.** { *; }
 -keep class org.apache.commons.logging.** { *; }
 -keep class org.slf4j.** { *; }
 
@@ -121,6 +122,7 @@
 -keep class com.google.gson.JsonObject { *; }
 
 # Other
+-keep class net.dongliu.apk.parser.** { public protected *; }
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.antlr.runtime.tree.DOTTreeGenerator
 
