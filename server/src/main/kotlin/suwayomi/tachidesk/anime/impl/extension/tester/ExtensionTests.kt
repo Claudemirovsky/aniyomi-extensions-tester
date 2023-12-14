@@ -18,7 +18,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -28,7 +27,6 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import okhttp3.Headers
-import rx.Observable
 import suwayomi.tachidesk.anime.impl.extension.tester.models.ResultDto
 import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsResultsDto
@@ -117,10 +115,10 @@ class ExtensionTests(
                     }
                 }
 
-                latch.await(configs.timeoutSeconds, TimeUnit.SECONDS).let {
+                latch.await(configs.timeoutSeconds, TimeUnit.SECONDS).also { isOk ->
                     coro.cancel()
                     exception?.let { throw it }
-                    if (!it) throw FailedTestException("Timeout!")
+                    if (!isOk) throw FailedTestException("Timeout!")
                 }
             } catch (e: FailedTestException) {
                 treatTestException(test, e)
@@ -143,26 +141,24 @@ class ExtensionTests(
         }
     }
 
-    private fun testPopularAnimesPage() {
-        printAnimesPage(TestsEnum.POPULAR, source::fetchPopularAnime)
+    private suspend fun testPopularAnimesPage() {
+        printAnimesPage(TestsEnum.POPULAR, source::getPopularAnime)
     }
 
-    private fun testLatestAnimesPage() {
-        printAnimesPage(TestsEnum.LATEST, source::fetchLatestUpdates)
+    private suspend fun testLatestAnimesPage() {
+        printAnimesPage(TestsEnum.LATEST, source::getLatestUpdates)
     }
 
-    private fun testSearchAnimesPage() {
+    private suspend fun testSearchAnimesPage() {
         printAnimesPage(TestsEnum.SEARCH) { page: Int ->
-            source.fetchSearchAnime(page, configs.searchStr, source.getFilterList())
+            source.getSearchAnime(page, configs.searchStr, source.getFilterList())
         }
     }
 
-    private fun testAnimeDetails() {
+    private suspend fun testAnimeDetails() {
         val anime = getSAnime()
 
-        val details = parseObservable<SAnime>(
-            source.fetchAnimeDetails(anime),
-        )
+        val details = source.getAnimeDetails(anime)
 
         details.url.ifEmpty { details.url = anime.url }
         if (configs.checkThumbnails) {
@@ -177,12 +173,10 @@ class ExtensionTests(
         }
     }
 
-    private fun testEpisodeList() {
+    private suspend fun testEpisodeList() {
         val anime = getSAnime()
 
-        val result = parseObservable<List<SEpisode>>(
-            source.fetchEpisodeList(anime),
-        )
+        val result = source.getEpisodeList(anime)
 
         printLine("Episodes", result.size.toString())
 
@@ -219,16 +213,14 @@ class ExtensionTests(
         }
     }
 
-    private fun testVideoList() {
+    private suspend fun testVideoList() {
         val episode = EP_OBJ ?: SEpisode.create().apply {
             url = EP_URL
         }
 
         printLine("EP URL", episode.url)
 
-        val videoList = parseObservable<List<Video>>(
-            source.fetchVideoList(episode),
-        )
+        val videoList = source.getVideoList(episode)
 
         printLine("Videos", videoList.size.toString())
         if (videoList.isEmpty()) {
@@ -357,17 +349,15 @@ class ExtensionTests(
      *
      * @param block The lambda that receives a page number and returns a `AnimesPage` object.
      */
-    private fun printAnimesPage(
+    private suspend fun printAnimesPage(
         test: TestsEnum,
-        block: (page: Int) -> Observable<AnimesPage>,
+        block: suspend (page: Int) -> AnimesPage,
     ) {
         var page = 0
         val animesPages = mutableListOf<AnimesPageDto>()
         while (true) {
             page++
-            val results = parseObservable<AnimesPage>(
-                block(page),
-            )
+            val results = block(page)
             if (configs.completeResults) {
                 animesPages.add(AnimesPageDto(results))
             }
@@ -406,25 +396,6 @@ class ExtensionTests(
         writeTestSuccess(test) {
             json.encodeToJsonElement(animesPages).jsonArray
         }
-    }
-
-    /*
-     * Returns the value of a observable object, or logs and throws a error.
-     *
-     * @param observable The `Observable<T>` object to be used.
-     * @return The value returned by the `Observable` object
-     */
-    private fun <T> parseObservable(observable: Observable<T>): T {
-        var data: T? = null
-        var error = Throwable()
-        observable
-            .subscribe(
-                { it -> data = it },
-                { e: Throwable ->
-                    error = e
-                },
-            )
-        return data ?: throw error
     }
 
     /**
@@ -473,8 +444,8 @@ class ExtensionTests(
         }
     }
 
-    private inline fun <A, B> Iterable<A>.parallelMap(crossinline f: suspend (A) -> B): List<B> =
-        runBlocking {
-            map { async(Dispatchers.Default) { f(it) } }.awaitAll()
+    private suspend inline fun <A, B> Iterable<A>.parallelMap(crossinline f: suspend (A) -> B): List<B> =
+        withContext(Dispatchers.Default) {
+            map { async { f(it) } }.awaitAll()
         }
 }

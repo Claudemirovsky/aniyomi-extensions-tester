@@ -3,6 +3,7 @@ package suwayomi.tachidesk.cmd
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
+import kotlinx.coroutines.runBlocking
 import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import java.text.SimpleDateFormat
 import kotlin.time.DurationUnit
@@ -179,7 +180,7 @@ fun printIfWorks(value: Boolean, title: String) {
  * @param testBlock The function / lambda block to run and be timed.
  */
 @ExperimentalTime
-fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
+suspend fun timeTestFromEnum(test: TestsEnum, testBlock: suspend () -> Unit) {
     val title = when (test) {
         TestsEnum.ANIDETAILS -> "ANIME DETAILS"
         TestsEnum.EPLIST -> "EPISODE LIST"
@@ -197,10 +198,10 @@ fun timeTestFromEnum(test: TestsEnum, testBlock: () -> Unit) {
  * @param testBlock The function/lambda block to be timed.
  */
 @ExperimentalTime
-inline fun <T> timeTest(title: String, color: String = YELLOW, testBlock: () -> T): T {
+suspend inline fun <T> timeTest(title: String, color: String = YELLOW, crossinline testBlock: suspend () -> T): T {
     println()
     printTitle("STARTING $title", color)
-    return measureTimedValue(testBlock).also {
+    return measureTimedValue { runBlocking { testBlock() } }.also {
         val secs = it.duration.toDouble(DurationUnit.SECONDS)
         println()
         printTitle("COMPLETED $title IN ${String.format("%.2f", secs)}s", color)
