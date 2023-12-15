@@ -72,6 +72,7 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn okhttp3.internal.platform.**
 
+# Prevent errors with extensions that are using org.json.JSON<Type> classes
 -keep class org.json.** { public protected *; }
 
 # Android
@@ -82,9 +83,6 @@
 -keep class android.os.Handler { *; }
 -keep class android.os.Looper { *; }
 -keep class android.util.Base64 { public protected *; }
--keep class android.webkit.CookieManager { public protected *; }
--keep class android.webkit.WebView { public *; }
--keep class android.webkit.WebSettings { public *; }
 -keep,allowoptimization class android.** { public protected *; }
 
 # Logging
@@ -114,10 +112,12 @@
 # Rhino
 -keep class org.mozilla.** { *; }
 
-# Playwright
+# Playwright & WebView
 -dontwarn org.apache.commons.compress.**
+-keep class android.webkit.* { public protected *; }
+-keep,allowoptimization class xyz.nulldev.androidcompat.androidimpl.webview.* { public *; }
 -keep class com.microsoft.playwright.** { *; }
--keep class playwright.utils.** { *; }
+-keep class playwright.utils.** { public *; }
 -keep class com.google.gson.JsonElement { *; }
 -keep class com.google.gson.JsonObject { *; }
 
