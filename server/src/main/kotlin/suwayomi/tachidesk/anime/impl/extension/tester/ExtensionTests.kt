@@ -38,7 +38,7 @@ import suwayomi.tachidesk.cmd.printEpisode
 import suwayomi.tachidesk.cmd.printLine
 import suwayomi.tachidesk.cmd.printTitle
 import suwayomi.tachidesk.cmd.printVideo
-import suwayomi.tachidesk.cmd.timeTestFromEnum
+import suwayomi.tachidesk.cmd.timeTest
 import java.net.ProtocolException
 import java.text.SimpleDateFormat
 import java.util.concurrent.CountDownLatch
@@ -109,7 +109,7 @@ class ExtensionTests(
                 val coro = GlobalScope.launch(Dispatchers.Default) {
                     withContext(Dispatchers.IO) {
                         runCatching {
-                            timeTestFromEnum(test, testFunction)
+                            timeTest(test.title) { testFunction() }
                         }.onFailure { exception = it }
                         latch.countDown()
                     }
@@ -135,7 +135,7 @@ class ExtensionTests(
             showStackTrace -> logger.error(e) { "Test($test): " }
             else -> logger.error { "Test($test): $e" }
         }
-        printTitle("${test.name} TEST FAILED", barColor = RED)
+        printTitle("${test.title} FAILED", barColor = RED)
         if (configs.stopOnError) {
             exitProcess(-1)
         }

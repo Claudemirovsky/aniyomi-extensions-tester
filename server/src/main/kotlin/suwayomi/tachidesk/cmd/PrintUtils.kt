@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
 import kotlinx.coroutines.runBlocking
-import suwayomi.tachidesk.anime.impl.extension.tester.models.TestsEnum
 import java.text.SimpleDateFormat
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -171,23 +170,6 @@ fun printIfWorks(value: Boolean, title: String) {
     } else {
         printLine(title, "NO", color = RED)
     }
-}
-
-/**
- * Prints the time spent on a test, using the TestsEnum to get its title.
- *
- * @param test The TestsEnum item.
- * @param testBlock The function / lambda block to run and be timed.
- */
-@ExperimentalTime
-suspend fun timeTestFromEnum(test: TestsEnum, testBlock: suspend () -> Unit) {
-    val title = when (test) {
-        TestsEnum.ANIDETAILS -> "ANIME DETAILS"
-        TestsEnum.EPLIST -> "EPISODE LIST"
-        TestsEnum.VIDEOLIST -> "VIDEO LIST"
-        else -> "${test.name} PAGE"
-    } + " TEST"
-    timeTest(title, YELLOW, testBlock)
 }
 
 /**
