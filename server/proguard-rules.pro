@@ -72,7 +72,7 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn okhttp3.internal.platform.**
 
--keep class org.json.JSONObject { *; }
+-keep class org.json.** { public protected *; }
 
 # Android
 -dontwarn android.**
