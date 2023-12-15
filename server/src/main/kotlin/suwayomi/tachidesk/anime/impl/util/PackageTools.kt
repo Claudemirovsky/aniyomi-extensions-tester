@@ -8,7 +8,6 @@ package suwayomi.tachidesk.anime.impl.util
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import android.content.pm.PackageInfo
-import android.content.pm.Signature
 import android.os.Bundle
 import com.googlecode.d2j.dex.Dex2jar
 import com.googlecode.d2j.reader.MultiDexFileReader
@@ -27,7 +26,6 @@ import java.net.URLClassLoader
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -63,7 +61,7 @@ object PackageTools {
             .to(jarFilePath)
 
         if (handler.hasException()) {
-            val errorFile: Path = jarFilePath.parent.resolve("${dexFile.nameWithoutExtension}-error.txt")
+            val errorFile = jarFilePath.parent.resolve("${dexFile.nameWithoutExtension}-error.txt")
             logger.error {
                 """
                 Detail Error Information in File $errorFile
@@ -130,18 +128,12 @@ object PackageTools {
                         )
                     }
             }
-
-            signatures = (
-                parsed.apkSingers.flatMap { it.certificateMetas }
-                /*+ parsed.apkV2Singers.flatMap { it.certificateMetas }*/
-                ) // Blocked by: https://github.com/hsiafan/apk-parser/issues/72
-                .map { Signature(it.data) }.toTypedArray()
         }
     }
 
     /**
      * loads the extension main class called $className from the jar located at $jarPath
-     * It may return an instance of HttpSource or SourceFactory depending on the extension.
+     * It may return an instance of AnimeHttpSource or AnimeSourceFactory depending on the extension.
      */
     fun loadExtensionSources(jarPath: String, className: String): Any {
         val classLoader = URLClassLoader(arrayOf<URL>(URL("file:$jarPath")))

@@ -9,8 +9,6 @@ config4k = "io.github.config4k:config4k:0.6.0"
 android-annotations = "androidx.annotation:annotation:1.7.0"
 android-jar = "com.github.Claudemirovsky:android-jar:2.0.0"
 
-apksig = "com.android.tools.build:apksig:8.1.1"
-
 appdirs = "net.harawata:appdirs:1.2.2"
 
 icu4j = "com.ibm.icu:icu4j:74.1"

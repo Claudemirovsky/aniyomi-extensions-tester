@@ -32,7 +32,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.extension
 import kotlin.io.path.notExists
-import kotlin.streams.asSequence
 import kotlin.time.ExperimentalTime
 
 private val logger = KotlinLogging.logger {}
@@ -69,7 +68,6 @@ suspend fun main(args: Array<String>) {
             2,
             { _, fileAttributes -> fileAttributes.isRegularFile },
         )
-            .asSequence()
             .filter { it.extension == "apk" }
             .toList()
             .ifEmpty {

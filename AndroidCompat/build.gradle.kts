@@ -1,7 +1,4 @@
 dependencies {
-    // APK signature verifier
-    compileOnly(androidcompat.apksig)
-
     // Android stub library
     // implementation(fileTree("lib/"))
     implementation(androidcompat.android.jar)

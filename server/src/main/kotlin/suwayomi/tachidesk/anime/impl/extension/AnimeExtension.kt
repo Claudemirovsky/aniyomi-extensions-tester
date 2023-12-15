@@ -27,6 +27,7 @@ object AnimeExtension {
         val apkFile = fetcher()
 
         val jarFile = File(tmpDir, "${apkFile.nameWithoutExtension}.jar")
+            .also(File::deleteOnExit)
 
         val packageInfo = getPackageInfo(apkFile.absolutePath)
 

@@ -42,7 +42,6 @@ class PackageController {
 
             val installed = InstalledPackage(root)
             apk.copyTo(installed.apk)
-            installed.writeIcon()
             installed.writeJar()
 
             if (!installed.jar.exists()) {
