@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     alias(libs.plugins.buildconfig) apply false
+    alias(libs.plugins.detekt)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlinter) apply false
@@ -30,15 +32,33 @@ val projects = listOf(
 
 configure(projects) {
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    val javaVersion = JavaVersion.VERSION_11
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+    }
+
+    detekt {
+        parallel = true
+        ignoreFailures = true
+        buildUponDefaultConfig = true
+    }
+
+    tasks.withType<Detekt>().configureEach {
+        jvmTarget = javaVersion.toString()
+
+        reports {
+            html.required = true
+        }
+        basePath = rootDir.absolutePath
     }
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_11.toString()
+            jvmTarget = javaVersion.toString()
         }
     }
 

@@ -18,16 +18,15 @@ kodein-di = "org.kodein.di:kodein-di-conf-jvm:7.21.1"
 gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_version" }
 
 # OkHttp
+okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
-okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okio = "com.squareup.okio:okio:3.6.0"
 
 # Serialization
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "serialization_version" }
-
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
 
 # Logging
@@ -60,7 +59,8 @@ serialization = ["serialization-json", "serialization-json-okio", "serialization
 
 [plugins]
 buildconfig = { id = "com.github.gmazzo.buildconfig", version = "4.2.0" }
-kotlinter = { id = "org.jmailen.kotlinter", version = "3.16.0" }
-shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.4" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
+kotlinter = { id = "org.jmailen.kotlinter", version = "3.16.0" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
