@@ -393,11 +393,11 @@ abstract class AnimeHttpSource : AnimeCatalogueSource {
     protected open fun videoRequest(video: Video, bytes: Long = 0L): Request {
         val headers = video.headers ?: headers
         val newHeaders = if (bytes > 0L) {
-            Headers.Builder().addAll(headers).add("Range", "bytes=$bytes-").build()
+            headers.newBuilder().add("Range", "bytes=$bytes-").build()
         } else {
-            null
+            headers
         }
-        return GET(video.videoUrl!!, newHeaders ?: headers)
+        return GET(video.videoUrl ?: video.url, newHeaders)
     }
 
     /**

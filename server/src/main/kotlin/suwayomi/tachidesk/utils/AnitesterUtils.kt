@@ -2,7 +2,6 @@ package suwayomi.tachidesk.utils
 
 import android.app.Application
 import android.content.Context
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -24,39 +23,45 @@ import kotlin.io.path.readLines
 import kotlin.io.path.readText
 
 object AnitesterUtils {
+    private const val HTTP_ONLY_STR = "#HttpOnly_"
+
+    private fun cookieFromLine(line: String): Cookie? {
+        return when {
+            line.startsWith(HTTP_ONLY_STR) || !line.startsWith("#") -> {
+                val params = line.split("\t")
+                if (params.size < 7) return null
+                runCatching {
+                    Cookie.Builder().apply {
+                        val host = params.first().run {
+                            if (startsWith(HTTP_ONLY_STR)) httpOnly()
+                            substringAfter(HTTP_ONLY_STR).trim('.')
+                        }
+
+                        domain(host)
+                        if (params.get(1).toBoolean()) {
+                            hostOnlyDomain(host)
+                        }
+
+                        path(params.get(2))
+
+                        if (params.get(3).toBoolean()) secure()
+
+                        expiresAt(params.get(4).toLongOrNull()?.times(1000L) ?: 0L)
+                        name(params.get(5))
+                        value(params.get(6))
+                    }.build()
+                }.getOrNull()
+            }
+            else -> null
+        }
+    }
+
     fun loadCookies(file: Path) {
         if (file.notExists()) return
-        val httpOnlyStr = "#HttpOnly_"
-        val cookieMap = file.readLines().mapNotNull { line ->
-            when {
-                line.startsWith(httpOnlyStr) || !line.startsWith("#") -> {
-                    val params = line.split("\t")
-                    if (params.size < 7) return@mapNotNull null
-                    runCatching {
-                        Cookie.Builder().apply {
-                            val host = params.first().let {
-                                if (it.startsWith(httpOnlyStr)) httpOnly()
-                                it.substringAfter(httpOnlyStr).trim('.')
-                            }
 
-                            domain(host)
-                            if (params.get(1).toBoolean()) {
-                                hostOnlyDomain(host)
-                            }
-
-                            path(params.get(2))
-
-                            if (params.get(3).toBoolean()) secure()
-
-                            expiresAt(params.get(4).toLongOrNull()?.times(1000L) ?: 0L)
-                            name(params.get(5))
-                            value(params.get(6))
-                        }.build()
-                    }.getOrNull()
-                }
-                else -> null
-            }
-        }.groupBy { it.domain }
+        val cookieMap = file.readLines()
+            .mapNotNull(::cookieFromLine)
+            .groupBy { it.domain }
 
         val manager = StubbedCookieManager()
 
@@ -70,14 +75,15 @@ object AnitesterUtils {
         val items = runCatching {
             Json.decodeFromString<Map<String, Map<String, JsonElement>>>(file.readText())
         }.onFailure { it.printStackTrace() }.getOrNull() ?: return
+
         val prefix = "source_"
         val context = Injekt.get<Application>()
         items.entries.forEach { (filename, items) ->
-            val realFilename = filename.let {
+            val realFilename = filename.run {
                 when {
-                    it.startsWith(prefix) && it.contains("/") ->
-                        prefix + generateId(it.removePrefix(prefix))
-                    else -> it
+                    startsWith(prefix) && contains("/") ->
+                        prefix + generateId(removePrefix(prefix))
+                    else -> this
                 }
             }
 
@@ -86,10 +92,10 @@ object AnitesterUtils {
                 items.entries.forEach { (key, element) ->
                     if (element is JsonPrimitive) {
                         val primitive = element.jsonPrimitive
-                        primitive.intOrNull?.let { prefs.putInt(key, it) }
-                            ?: primitive.booleanOrNull?.let { prefs.putBoolean(key, it) }
-                            ?: primitive.longOrNull?.let { prefs.putLong(key, it) }
-                            ?: primitive.floatOrNull?.let { prefs.putFloat(key, it) }
+                        primitive.intOrNull?.also { prefs.putInt(key, it) }
+                            ?: primitive.booleanOrNull?.also { prefs.putBoolean(key, it) }
+                            ?: primitive.longOrNull?.also { prefs.putLong(key, it) }
+                            ?: primitive.floatOrNull?.also { prefs.putFloat(key, it) }
                             ?: run {
                                 if (primitive.isString) {
                                     prefs.putString(key, primitive.content)

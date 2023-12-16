@@ -38,19 +38,17 @@ class NetworkHelper(context: Context) {
         System.getProperty("ANIEXT_TESTER_PROXY")
             ?.let(::parseProxy)
             ?.also {
-                // We usually use proxies to debug https requests, so lets
+                // We usually use proxies to debug https requests, so let's
                 // prevent some headache
                 builder.ignoreAllSSLErrors()
             }
 
-        if (System.getProperty("ANIEXT_TESTER_DEBUG")?.equals("true") ?: false) {
-            val loggingInterceptor = HttpLoggingInterceptor(
-                object : HttpLoggingInterceptor.Logger {
-                    // Using mu.Logging makes it almost unreadable, so lets
-                    // just use println instead
-                    override fun log(message: String) = println(message)
-                },
-            ).apply {
+        if (System.getProperty("ANIEXT_TESTER_DEBUG")?.equals("true") == true) {
+            val loggingInterceptor = HttpLoggingInterceptor { message ->
+                // using logging makes it almost unreadable, so we're using
+                // plain println instead
+                println(message)
+            }.apply {
                 level = HttpLoggingInterceptor.Level.HEADERS
             }
             builder.addInterceptor(loggingInterceptor)

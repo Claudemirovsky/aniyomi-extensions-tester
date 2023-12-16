@@ -1,5 +1,6 @@
 package playwright.utils
 
+import com.microsoft.playwright.BrowserType
 import com.microsoft.playwright.BrowserType.LaunchOptions
 import com.microsoft.playwright.Playwright
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -9,7 +10,7 @@ object PlaywrightStatics {
     var usedPlaywright = false
     var useChromium = false
 
-    val playwrightInstance by lazy {
+    val playwrightInstance: Playwright by lazy {
         System.setProperty("playwright.driver.impl", "playwright.utils.CustomDriver")
         preinstalledBrowser?.also {
             System.setProperty(CustomDriver.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD, "1")
@@ -18,7 +19,7 @@ object PlaywrightStatics {
         Playwright.create()
     }
 
-    fun Playwright.browser() = when {
+    fun Playwright.browser(): BrowserType = when {
         useChromium -> chromium()
         else -> firefox()
     }
@@ -63,9 +64,14 @@ object PlaywrightStatics {
             }
         }.getOrElse {
             when {
-                useChromium -> "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.5790.102 Safari/537.36"
-                else -> "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+                useChromium -> CHROMIUM_UA
+                else -> FIREFOX_UA
             }
         }
     }
 }
+
+private const val CHROMIUM_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" +
+    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+private const val FIREFOX_UA = "Mozilla/5.0 (Windows NT 10.0; rv:120.0) Gecko/20100101 Firefox/120.0"

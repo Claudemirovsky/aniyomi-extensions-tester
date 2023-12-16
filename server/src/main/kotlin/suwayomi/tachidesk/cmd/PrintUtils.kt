@@ -111,7 +111,7 @@ fun printEpisode(episode: SEpisode, formatter: SimpleDateFormat) {
     )
     episode.scanlator
         ?.takeIf(String::isNotBlank)
-        ?.let { printLine("Scanlator", it) }
+        ?.also { printLine("Scanlator", it) }
     printLine("Episode URL", episode.url)
     if (episode.date_upload > 0) {
         printLine("Date of upload", formatter.format(episode.date_upload))
@@ -133,13 +133,13 @@ fun printVideo(video: Video, checkVideo: Boolean) {
         printLine("URL", video.url)
     }
 
-    video.headers
-        ?.also {
-            printLine("Video Headers", "")
-        }
-        ?.forEach { (first, second) ->
+    video.headers?.run {
+        printLine("Video Headers", "")
+
+        forEach { (first, second) ->
             printLine(first, second, width = 25, subPad = 6)
         }
+    }
 
     if (video.subtitleTracks.isNotEmpty()) {
         printLine("Subs", "")

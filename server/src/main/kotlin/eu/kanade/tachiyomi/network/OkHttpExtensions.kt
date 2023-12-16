@@ -78,7 +78,7 @@ suspend fun Call.awaitSuccess(): Response {
     return response
 }
 
-@Suppress("unused_parameter")
+@Suppress("unused_parameter", "UnusedParameter")
 fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: ProgressListener): Call {
     val progressClient = newBuilder()
         .cache(null)
@@ -139,11 +139,12 @@ fun Call.asObservableSuccess(): Observable<Response> {
     }
 }
 
+private typealias ArrayOfCerts = Array<X509Certificate>
 fun OkHttpClient.Builder.ignoreAllSSLErrors(): OkHttpClient.Builder {
     val naiveTrustManager = object : X509TrustManager {
-        override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
-        override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) = Unit
-        override fun checkServerTrusted(certs: Array<X509Certificate>, authType: String) = Unit
+        override fun getAcceptedIssuers(): ArrayOfCerts = emptyArray()
+        override fun checkClientTrusted(certs: ArrayOfCerts, authType: String) = Unit
+        override fun checkServerTrusted(certs: ArrayOfCerts, authType: String) = Unit
     }
 
     val insecureSocketFactory = SSLContext.getInstance("TLSv1.2").apply {

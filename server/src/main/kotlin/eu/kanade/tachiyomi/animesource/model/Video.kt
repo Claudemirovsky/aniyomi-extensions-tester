@@ -24,8 +24,10 @@ data class VideoDto(
         video.url,
         video.quality,
         video.videoUrl,
-        video.headers?.map { it.first to JsonPrimitive(it.second) }?.toMap()?.let {
-            JsonObject(it)
+        video.headers?.run {
+            map { it.first to JsonPrimitive(it.second) }
+                .toMap()
+                .let { JsonObject(it) }
         },
         video.subtitleTracks,
         video.isWorking,

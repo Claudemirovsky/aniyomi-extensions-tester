@@ -2,12 +2,11 @@ package app.cash.quickjs
 
 import org.mozilla.javascript.ConsString
 import org.mozilla.javascript.NativeArray
-
+import java.io.Closeable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
-import java.io.Closeable
 
-class QuickJs private constructor(private var engine: ScriptEngine?): Closeable {
+class QuickJs private constructor(private var engine: ScriptEngine?) : Closeable {
     companion object {
         @JvmStatic
         fun create() = QuickJs(ScriptEngineManager())

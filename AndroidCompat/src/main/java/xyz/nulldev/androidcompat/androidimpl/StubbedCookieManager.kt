@@ -13,7 +13,7 @@ import uy.kohesive.injekt.api.get
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "EmptyFunctionBlock")
 open class StubbedCookieManager : CookieManager() {
     companion object {
         val preferences by lazy {
@@ -98,6 +98,7 @@ open class StubbedCookieManager : CookieManager() {
         addAll(url, listOf(cookie))
     }
 
+    @Suppress("UnsafeCallOnNullableType")
     override fun setCookie(url: String?, value: String?, callback: ValueCallback<Boolean>?) {
         runCatching {
             setCookie(url!!, value!!)
@@ -112,7 +113,7 @@ open class StubbedCookieManager : CookieManager() {
     }
 
     override fun getCookie(url: String?, privateBrowsing: Boolean): String {
-        return url?.let { runCatching { getCookie(it) }.getOrNull() } ?: ""
+        return url?.let { runCatching { getCookie(it) }.getOrNull() }.orEmpty()
     }
 
     @Deprecated("Deprecated in java")

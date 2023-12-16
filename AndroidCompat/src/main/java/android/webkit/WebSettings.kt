@@ -19,6 +19,7 @@ package android.webkit
 import android.content.Context
 import playwright.utils.PlaywrightStatics
 
+@Suppress("UnnecessaryAbstractClass")
 abstract class WebSettings {
     abstract var loadWithOverviewMode: Boolean
 

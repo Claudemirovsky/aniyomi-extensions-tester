@@ -21,7 +21,8 @@ class CustomDriver : Driver() {
         const val SELENIUM_REMOTE_URL = "SELENIUM_REMOTE_URL"
 
         @JvmStatic
-        private fun platformDir() = "mac"
+        @Suppress("FunctionOnlyReturningConstant")
+        private fun platformDir(): String = "mac"
 
         @JvmStatic
         private fun isExecutable(filePath: Path): Boolean {
@@ -43,7 +44,7 @@ class CustomDriver : Driver() {
     private lateinit var preinstalledNodePath: Path
 
     init {
-        getCacheDir().let {
+        getCacheDir().also {
             // Prevent unsupported platform error
             env.set(PLAYWRIGHT_BROWSERS_PATH, it.toString())
         }
@@ -51,14 +52,14 @@ class CustomDriver : Driver() {
             System.getProperty(PLAYWRIGHT_PROP_NODEJS_PATH)!!
         } else {
             val newPath = NodejsManager.getNodejsPath(env)
-            newPath?.let {
+            newPath?.also {
                 System.setProperty(PLAYWRIGHT_NODEJS_FOUND, "true")
                 System.setProperty(PLAYWRIGHT_PROP_NODEJS_PATH, it)
             }
             newPath
         }
 
-        nodePath?.let {
+        nodePath?.also {
             preinstalledNodePath = Paths.get(it)
             if (!Files.exists(preinstalledNodePath)) {
                 throw RuntimeException("Invalid Node.js path: $nodePath")
@@ -139,7 +140,7 @@ class CustomDriver : Driver() {
         }
 
         val jarUri = URI("${parts[0]}$JAR_URL_SEPARATOR${parts[1]}")
-        initFileSystem(jarUri)!!.use {
+        initFileSystem(jarUri)?.use {
             try {
                 val fromPath = Paths.get(jarUri)
                 val toPath = driverTempDir.resolve(
@@ -150,9 +151,14 @@ class CustomDriver : Driver() {
                 val uriStr = "jar:${toPath.toUri()}$JAR_URL_SEPARATOR${parts[2]}"
                 return URI(uriStr)
             } catch (e: IOException) {
-                throw RuntimeException("Failed to extract driver's nested .jar from " + jarUri + "; full uri: " + uri, e)
+                throw RuntimeException(
+                    "Failed to extract driver's nested .jar from $jarUri; full uri: $uri",
+                    e,
+                )
             }
         }
+
+        return uri
     }
 
     private fun installBrowser(env: Map<String, String>) {
@@ -192,5 +198,5 @@ class CustomDriver : Driver() {
         }
     }
 
-    override fun driverDir() = driverTempDir
+    override fun driverDir(): Path = driverTempDir
 }

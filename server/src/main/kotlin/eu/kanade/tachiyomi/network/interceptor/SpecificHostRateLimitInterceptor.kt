@@ -12,12 +12,15 @@ import java.util.concurrent.TimeUnit
  *
  * Examples:
  *
- * httpUrl = "api.manga.com".toHttpUrlOrNull(), permits = 5, period = 1, unit = seconds  =>  5 requests per second to api.manga.com
- * httpUrl = "imagecdn.manga.com".toHttpUrlOrNull(), permits = 10, period = 2, unit = minutes  =>  10 requests per 2 minutes to imagecdn.manga.com
+ * httpUrl = "api.manga.com".toHttpUrlOrNull(), permits = 5, period = 1, unit = seconds
+ * =>  5 requests per second to api.manga.com
+ * httpUrl = "imagecdn.manga.com".toHttpUrlOrNull(), permits = 10, period = 2, unit = minutes
+ * =>  10 requests per 2 minutes to imagecdn.manga.com
  *
  * @since extension-lib 1.3
  *
- * @param httpUrl {HttpUrl} The url host that this interceptor should handle. Will get url's host by using HttpUrl.host()
+ * @param httpUrl {HttpUrl} The url host that this interceptor should handle.
+ * Will get url's host by using HttpUrl.host()
  * @param permits {Int}   Number of requests allowed within a period of units.
  * @param period {Long}   The limiting duration. Defaults to 1.
  * @param unit {TimeUnit} The unit of time for the period. Defaults to seconds.

@@ -97,7 +97,8 @@ object CliOptions {
         val preferencesFile by parser.option(
             ArgType.String,
             "prefs",
-            description = "Special Json file with shared preferences to extensions. Read the README to understand how it works.",
+            description =
+            "Special Json file with shared preferences to extensions. Read the README to understand how it works.",
         )
 
         val prettyJson by parser.option(
@@ -183,19 +184,19 @@ object CliOptions {
         parser.parse(args)
 
         val configs = ConfigsDto(
-            animeUrl ?: "",
+            animeUrl.orEmpty(),
             checkThumbnails,
             checkVideos,
             completeResults,
             dateFormat,
-            episodeUrl ?: "",
+            episodeUrl.orEmpty(),
             episodeNumber ?: -1,
             increment,
-            printJson ?: false,
+            printJson == true,
             resultsCount,
             searchStr,
-            showAll ?: false,
-            stopOnError ?: false,
+            showAll == true,
+            stopOnError == true,
             tests,
             timeoutSeconds.toLong(),
         )
@@ -210,7 +211,7 @@ object CliOptions {
             prettyJson,
             proxy,
             tmpDir,
-            useChromium ?: false,
+            useChromium == true,
             userAgent,
         )
 

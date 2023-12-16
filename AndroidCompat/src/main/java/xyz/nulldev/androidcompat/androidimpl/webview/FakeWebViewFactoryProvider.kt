@@ -43,13 +43,14 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
         encoding: String?,
         historyUrl: String?,
     ) {
-        baseUrl?.let(pageOptions::setBaseURL)
-        baseUrl?.let(::loadCookies)
+        baseUrl?.also(pageOptions::setBaseURL)
+        baseUrl?.also(::loadCookies)
         loadData(data, mimeType, encoding)
     }
 
     private val functionsMap by lazy { mutableMapOf<String, String>() }
 
+    @Suppress("SpreadOperator")
     override fun addJavascriptInterface(obj: Any, name: String) {
         runCatching {
             obj::class.declaredMemberFunctions.forEach { function ->
@@ -73,9 +74,9 @@ class FakeWebViewFactoryProvider(private val view: WebView) : WebViewFactoryProv
             val newScript = functionsMap.entries.fold(script) { code, entry ->
                 code.replace(entry.key, entry.value)
             }
-            page.evaluate(newScript)?.let { result ->
-                resultCallback?.let {
-                    it.onReceiveValue(result.toString())
+            page.evaluate(newScript)?.also { result ->
+                resultCallback?.run {
+                    onReceiveValue(result.toString())
                 }
             }
         }

@@ -1,5 +1,6 @@
 package android.os
 
+@Suppress("UtilityClassWithPublicConstructor")
 class Looper {
     companion object {
         @JvmStatic

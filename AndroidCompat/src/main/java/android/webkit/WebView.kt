@@ -3,6 +3,7 @@ package android.webkit
 import android.content.Context
 import xyz.nulldev.androidcompat.androidimpl.webview.FakeWebViewFactoryProvider
 
+@Suppress("EmptyFunctionBlock", "UnusedPrivateProperty")
 class WebView(private val context: Context) {
     private val mProvider by lazy { FakeWebViewFactoryProvider(this) }
 

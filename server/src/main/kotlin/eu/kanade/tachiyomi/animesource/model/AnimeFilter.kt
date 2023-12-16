@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.animesource.model
 
+@Suppress("UnnecessaryAbstractClass")
 sealed class AnimeFilter<T>(val name: String, var state: T) {
     open class Header(name: String) : AnimeFilter<Any>(name, 0)
     open class Separator(name: String = "") : AnimeFilter<Any>(name, 0)

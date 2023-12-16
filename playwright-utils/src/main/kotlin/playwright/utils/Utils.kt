@@ -1,35 +1,13 @@
 package playwright.utils
 
 import java.io.File
-import java.io.FilenameFilter
-
-enum class SystemType {
-    /* GNU */ LINUX,
-    MAC,
-    WINDOWS,
-    ;
-
-    companion object {
-        val currentSystem by lazy {
-            val systemString = System.getProperty("os.name")
-                .substringBefore(" ")
-                .uppercase()
-            runCatching { valueOf(systemString) }.getOrDefault(LINUX)
-        }
-    }
-}
 
 fun findBinary(vararg binaries: String): String? {
     val pathSeparator = System.getProperty("path.separator")
-    val envPath = System.getenv("PATH") ?: System.getenv("PATHEXT")!!
-
-    val binaryFilter = object : FilenameFilter {
-        override fun accept(dir: File, name: String): Boolean =
-            binaries.any(name::equals)
-    }
+    val envPath = System.getenv("PATH") ?: System.getenv("PATHEXT") ?: return null
 
     envPath.split(pathSeparator).forEach {
-        val results = File(it).list(binaryFilter)
+        val results = File(it).list { _, name -> binaries.any(name::equals) }
         if (results != null && results.isNotEmpty()) {
             return "$it/${results.first()}"
         }

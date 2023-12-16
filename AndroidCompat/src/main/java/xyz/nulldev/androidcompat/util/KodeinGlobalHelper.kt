@@ -28,36 +28,20 @@ object KodeinGlobalHelper {
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> instance(type: Class<T>, kodein: DI? = null): T {
         return when (type) {
-            AndroidFiles::class.java -> {
-                val instance: AndroidFiles by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            ApplicationInfoImpl::class.java -> {
-                val instance: ApplicationInfoImpl by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            ServiceSupport::class.java -> {
-                val instance: ServiceSupport by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            FakePackageManager::class.java -> {
-                val instance: FakePackageManager by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            PackageController::class.java -> {
-                val instance: PackageController by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            CustomContext::class.java -> {
-                val instance: CustomContext by (kodein ?: kodein()).instance()
-                instance as T
-            }
-            Context::class.java -> {
-                val instance: Context by (kodein ?: kodein()).instance()
-                instance as T
-            }
+            AndroidFiles::class.java -> getInjectedInstance<AndroidFiles>(kodein) as T
+            ApplicationInfoImpl::class.java -> getInjectedInstance<ApplicationInfoImpl>(kodein) as T
+            ServiceSupport::class.java -> getInjectedInstance<ServiceSupport>(kodein) as T
+            FakePackageManager::class.java -> getInjectedInstance<FakePackageManager>(kodein) as T
+            PackageController::class.java -> getInjectedInstance<PackageController>(kodein) as T
+            CustomContext::class.java -> getInjectedInstance<CustomContext>(kodein) as T
+            Context::class.java -> getInjectedInstance<Context>(kodein) as T
             else -> throw IllegalArgumentException("Kodein instance not found")
         }
+    }
+
+    private inline fun <reified A> getInjectedInstance(kodein: DI? = null): A {
+        val instance: A by (kodein ?: kodein()).instance()
+        return instance
     }
 
     @JvmStatic

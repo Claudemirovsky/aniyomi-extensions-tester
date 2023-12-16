@@ -18,11 +18,11 @@ class UserAgentInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        return if (originalRequest.header("User-Agent").isNullOrEmpty()) {
+        return if (originalRequest.header(USER_AGENT_HEADER).isNullOrEmpty()) {
             val newRequest = originalRequest
                 .newBuilder()
-                .removeHeader("User-Agent")
-                .addHeader("User-Agent", defaultUserAgentProvider())
+                .removeHeader(USER_AGENT_HEADER)
+                .addHeader(USER_AGENT_HEADER, defaultUserAgentProvider())
                 .build()
             chain.proceed(newRequest)
         } else {
@@ -30,3 +30,5 @@ class UserAgentInterceptor(
         }
     }
 }
+
+private const val USER_AGENT_HEADER = "User-Agent"

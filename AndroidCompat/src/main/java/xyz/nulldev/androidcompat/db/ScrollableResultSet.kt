@@ -79,6 +79,7 @@ class ScrollableResultSet(val parent: ResultSet) : ResultSet by parent {
         return obj(cachedFindColumn(column))
     }
 
+    @Suppress("UnsafeCallOnNullableType")
     private fun cachedFindColumn(column: String?) =
         columnCache.getOrPut(column!!, {
             findColumn(column)

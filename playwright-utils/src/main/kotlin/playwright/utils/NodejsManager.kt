@@ -24,11 +24,11 @@ object NodejsManager {
             ?: System.getenv(CustomDriver.PLAYWRIGHT_NODEJS_PATH)
             ?: System.getProperty(CustomDriver.PLAYWRIGHT_PROP_NODEJS_PATH)
 
-        customNodePath?.let { return it }
+        customNodePath?.also { return it }
 
         // Let's try to find nodejs in PATH environment variable
         // ... or PATHEXT
-        findBinary("node", "node.exe")?.let { return it }
+        findBinary("node", "node.exe")?.also { return it }
 
         // If no custom binary has been defined and the node
         // is not found in the PATH, we have to install it
@@ -104,7 +104,7 @@ object NodejsManager {
             )
             var archive: ArchiveEntry?
             while (tarinput.getNextEntry().also { archive = it } != null) {
-                if (archive!!.name.endsWith("node")) {
+                if (archive?.name.orEmpty().endsWith("node")) {
                     Files.copy(tarinput, outputBinary)
                     outputBinary.toFile().setExecutable(true, true)
                     break

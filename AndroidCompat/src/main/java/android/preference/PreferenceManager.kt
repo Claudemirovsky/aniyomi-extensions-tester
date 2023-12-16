@@ -5,7 +5,7 @@ import android.content.Context
 /**
  * Created by nulldev on 3/26/17.
  */
-
+@Suppress("UtilityClassWithPublicConstructor")
 class PreferenceManager {
     companion object {
         @JvmStatic

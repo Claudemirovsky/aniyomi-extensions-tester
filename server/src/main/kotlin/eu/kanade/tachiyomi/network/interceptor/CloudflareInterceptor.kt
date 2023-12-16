@@ -63,7 +63,6 @@ class CloudflareInterceptor(
     companion object {
         private val ERROR_CODES = listOf(403, 503)
         private val SERVER_CHECK = arrayOf("cloudflare-nginx", "cloudflare")
-        private val COOKIE_NAMES = listOf("cf_clearance")
     }
 }
 
@@ -166,7 +165,7 @@ class CFClearance(
             cookies.map {
                 Cookie.Builder()
                     .domain(it.domain.removePrefix("."))
-                    .expiresAt(it.expires?.times(1000)?.toLong() ?: Long.MAX_VALUE)
+                    .expiresAt(it.expires?.run { times(1000).toLong() } ?: Long.MAX_VALUE)
                     .name(it.name)
                     .path(it.path)
                     .value(it.value).apply {
@@ -210,11 +209,11 @@ class CFClearance(
         val turnstileTexts = setOf("turnstile", "challenge")
         var success = false
 
-        for (attempt in 1..10) {
-            success = runCatching {
-                page.querySelector(query)?.let { false }
-            }.getOrNull() ?: true
-            if (success) break
+        repeat(10) {
+            success = runCatching { page.querySelector(query) }.getOrNull() == null
+
+            if (success) return success
+
             runCatching {
                 // Turnstile challenge
                 page.mainFrame().childFrames().forEach { frame ->

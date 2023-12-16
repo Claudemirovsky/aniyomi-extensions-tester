@@ -27,7 +27,6 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
     private val preferences = PreferencesSettings(javaPreferences)
     private val listeners = mutableMapOf<SharedPreferences.OnSharedPreferenceChangeListener, PreferenceChangeListener>()
 
-    // TODO: 2021-05-29 Need to find a way to get this working with all pref types
     override fun getAll(): MutableMap<String, *> {
         return preferences.keys.associateWith(preferences::getStringOrNull).toMutableMap()
     }
@@ -157,7 +156,9 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
         }
     }
 
-    override fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+    override fun registerOnSharedPreferenceChangeListener(
+        listener: SharedPreferences.OnSharedPreferenceChangeListener,
+    ) {
         val javaListener = PreferenceChangeListener {
             listener.onSharedPreferenceChanged(this, it.key)
         }
@@ -165,7 +166,9 @@ class JavaSharedPreferences(key: String) : SharedPreferences {
         javaPreferences.addPreferenceChangeListener(javaListener)
     }
 
-    override fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+    override fun unregisterOnSharedPreferenceChangeListener(
+        listener: SharedPreferences.OnSharedPreferenceChangeListener,
+    ) {
         val registeredListener = listeners.remove(listener)
         if (registeredListener != null) {
             javaPreferences.removePreferenceChangeListener(registeredListener)
