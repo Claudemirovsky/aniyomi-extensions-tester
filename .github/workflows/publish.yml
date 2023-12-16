@@ -50,8 +50,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 11
-          distribution: adopt
+          java-version: 17
+          distribution: zulu
 
       - name: Copy CI gradle.properties
         run: |
