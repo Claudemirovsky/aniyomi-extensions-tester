@@ -37,4 +37,4 @@ jobs:
       - name: Build project
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: :server:shadowJar
+          arguments: :anitester:shadowJar

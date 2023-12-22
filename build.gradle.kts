@@ -19,7 +19,7 @@ buildscript {
 }
 
 allprojects {
-    group = "suwayomi"
+    group = "aniyomi"
     version = "1.0"
 }
 
@@ -27,7 +27,7 @@ val projects = listOf(
     project(":playwright-utils"),
     project(":AndroidCompat"),
     project(":AndroidCompat:Config"),
-    project(":server"),
+    project(":anitester"),
 )
 
 configure(projects) {
