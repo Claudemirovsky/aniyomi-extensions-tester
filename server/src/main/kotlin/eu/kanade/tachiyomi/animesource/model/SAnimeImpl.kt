@@ -22,7 +22,7 @@ data class SAnimeImpl(
 
     override var thumbnail_url: String? = null,
 
-    override var update_strategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,
+    override var update_strategy: AnimeUpdateStrategy = AnimeUpdateStrategy.ALWAYS_UPDATE,
 
     override var is_thumbnail_loading: Boolean = false,
 

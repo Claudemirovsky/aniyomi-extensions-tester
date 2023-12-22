@@ -22,7 +22,7 @@ interface SAnime : Serializable {
 
     var thumbnail_url: String?
 
-    var update_strategy: UpdateStrategy
+    var update_strategy: AnimeUpdateStrategy
 
     var is_thumbnail_loading: Boolean
 
