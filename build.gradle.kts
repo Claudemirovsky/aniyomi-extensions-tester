@@ -34,7 +34,7 @@ configure(projects) {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
-    val javaVersion = JavaVersion.VERSION_11
+    val javaVersion = JavaVersion.VERSION_17
 
     java {
         sourceCompatibility = javaVersion
