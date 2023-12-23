@@ -123,6 +123,7 @@
 
 # Other
 -keep class net.dongliu.apk.parser.** { public protected *; }
+-dontwarn org.jspecify.annotations.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.antlr.runtime.tree.DOTTreeGenerator
 

@@ -6,14 +6,14 @@ rhino_version = "1.7.14"
 typesafe-config = "com.typesafe:config:1.4.3"
 config4k = "io.github.config4k:config4k:0.6.0"
 
-android-annotations = "androidx.annotation:annotation:1.7.0"
+android-annotations = "androidx.annotation:annotation:1.7.1"
 android-jar = "com.github.Claudemirovsky:android-jar:2.0.0"
 
 appdirs = "net.harawata:appdirs:1.2.2"
 
-icu4j = "com.ibm.icu:icu4j:74.1"
+icu4j = "com.ibm.icu:icu4j:74.2"
 
-jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.15.2"
+jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.16.0"
 
 rhino-engine = { module = "org.mozilla:rhino-engine", version.ref = "rhino_version" }
 rhino-runtime = { module = "org.mozilla:rhino-runtime", version.ref = "rhino_version" }
