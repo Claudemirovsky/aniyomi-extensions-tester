@@ -38,6 +38,7 @@ import java.nio.file.Paths
 import kotlin.io.path.extension
 import kotlin.io.path.notExists
 import kotlin.streams.toList
+import kotlin.system.exitProcess
 import kotlin.time.ExperimentalTime
 
 private val logger = KotlinLogging.logger {}
@@ -61,7 +62,7 @@ suspend fun main(args: Array<String>) {
     val apksPath = Paths.get(options.apksPath)
     if (apksPath.notExists()) {
         println("${RED}ERROR: Path \"$apksPath\" does not exist. $RESET")
-        return
+        exitProcess(1)
     }
 
     val tmpDir = File(options.tmpDir, "aniyomi-extension-tester").also(File::mkdir)
@@ -78,7 +79,7 @@ suspend fun main(args: Array<String>) {
             .toList()
             .ifEmpty {
                 println("${RED}ERROR: No .apk file was found inside \"$apksPath\" path.$RESET")
-                return
+                exitProcess(1)
             }
     }
 
@@ -115,6 +116,8 @@ suspend fun main(args: Array<String>) {
     if (PlaywrightStatics.usedPlaywright) {
         PlaywrightStatics.playwrightInstance.close()
     }
+
+    exitProcess(0)
 }
 
 internal fun initApplication() {

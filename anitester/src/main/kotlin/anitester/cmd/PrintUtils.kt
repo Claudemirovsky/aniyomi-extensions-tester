@@ -3,7 +3,6 @@ package anitester.cmd
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
-import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -183,7 +182,7 @@ fun printIfWorks(value: Boolean, title: String) {
 suspend inline fun <T> timeTest(title: String, color: String = YELLOW, crossinline testBlock: suspend () -> T): T {
     println()
     printTitle("STARTING $title", color)
-    return measureTimedValue { runBlocking { testBlock() } }.also {
+    return measureTimedValue { testBlock() }.also {
         val secs = it.duration.toDouble(DurationUnit.SECONDS)
         println()
         printTitle("COMPLETED $title IN ${String.format("%.2f", secs)}s", color)
