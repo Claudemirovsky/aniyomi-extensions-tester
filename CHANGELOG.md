@@ -1,3 +1,42 @@
+# [v2.6.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.5.0...v2.6.0) - (2024-01-16)
+
+### Bug Fixes
+
+- Fix CloudflareInterceptor AGAIN ([8efdf28](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/8efdf2876b0e0a6296893daf960366af80cb06d1))
+- Check more video playlist mimetypes in testMediaResult function ([382baf6](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/382baf61716fb7102d2fe73c5e2996528ea45d9a))
+- Update & fix proguard rules ([8731eb5](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/8731eb5af13d52094799307d3049411c90d7a216))
+- (**proguard-rules**) Don't remove org.json.* classes/methods ([d1f1c67](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/d1f1c67f0730fed46ba4508859f7a79039530f6d))
+- (**proguard-rules**) Fix fake webview in optimized jars ([2a8b05f](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2a8b05f0df0a4e2d70a70a38a8e8e02d4dcf03a7))
+- Fix build in jdk 11 ([d2936ae](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/d2936ae9de80953c5a790e5e9f1016163c83c8e7))
+- Rename UpdateStrategy to AnimeUpdateStrategy ([bd4509f](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/bd4509f2ffde2d93e787f7974e418e6c062c3928))
+- Workaround to prevent hanging in the end of all tests ([3d29777](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/3d29777481f31468ed7dcabc721a08e12360539e))
+
+### Features
+
+- Show audio tracks ([11d7316](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/11d7316180f29381c97004f9dc43e176e777584a))
+- Add initial support for extensions-lib v15 functions ([65ebb0a](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/65ebb0ac3590e4c1c5dc4754d3d4bbcecd1a5a29))
+- Pull some network-related changes from ani/tachiyomi ([c9043bb](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/c9043bbfffa28a1c67005d1402b68909a9900c8f))
+- Add required functions for extlib v14 ([e2fb55c](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/e2fb55cc0777695638476fb1b2d66a4d161274f8))
+
+### Miscellaneous Tasks
+
+- Bump dependencies ([60d3d2b](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/60d3d2b6fd48d5c3ccbf9b37c444b88a24d8df3f))
+- Bump dependencies ([f0cc162](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/f0cc1624448e6a8c7bd3f07c830d92cb5efac78d))
+- Remove (now) useless files ([347a6bd](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/347a6bd24b24a7593085bd1f6ebbaea976d20247))
+- (**CI**) Update actions ([2af1727](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/2af1727e7ab2d12fe6e65ac9cafac9b21f6c70c9))
+- Remove some unnecessary code ([811377a](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/811377aaf69604c528c0df2bcfeb2ea1e9a77b05))
+- Add Detekt gradle plugin ([4322592](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/4322592406eab87d87e78cfa6c1d2e66bccda1c4))
+- Bump CI JDK version anyway ([be38cb1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/be38cb13c9e272c04a26a41cd17fc971a265a942))
+- Bump Java version ([c7853ca](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/c7853cade6ca1b2658869d62e82cc18140407ad8))
+- Bump dependencies ([06c7328](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/06c73284f55a9b2bcd511457f96e3cc7c8dddfe5))
+
+### Refactor
+
+- Get rid of RXJava in tests ([c2602fe](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/c2602fefc39e2a93caa8b3bfbc8c2de6074e6d86))
+- Minor refactoration ([487e584](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/487e5849a8a2c950be9db84292076d30b2395552))
+- Address Detekt complains ([dc6ee06](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/dc6ee06b36277c0f7a9b70da6502da292bc55491))
+- Backport cleanup from tachiyomi-extensions-inspector ([bf8f590](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/bf8f5901a46fd9fe137401dd6b66b1b74f3305da))
+
 # [v2.5.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.4.2...v2.5.0) - (2023-08-25)
 
 ### Bug Fixes
