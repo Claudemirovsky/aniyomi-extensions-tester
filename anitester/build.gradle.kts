@@ -48,7 +48,7 @@ sourceSets {
 }
 
 // should be bumped with each stable release
-val anitesterVersion = "v2.5.0"
+val anitesterVersion = "v2.6.0"
 
 // counts commit count on master
 val anitesterRevision = runCatching {
