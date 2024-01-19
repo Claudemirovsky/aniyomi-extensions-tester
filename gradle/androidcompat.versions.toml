@@ -13,7 +13,7 @@ appdirs = "net.harawata:appdirs:1.2.2"
 
 icu4j = "com.ibm.icu:icu4j:74.2"
 
-jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.16.0"
+jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.16.1"
 
 rhino-engine = { module = "org.mozilla:rhino-engine", version.ref = "rhino_version" }
 rhino-runtime = { module = "org.mozilla:rhino-runtime", version.ref = "rhino_version" }
