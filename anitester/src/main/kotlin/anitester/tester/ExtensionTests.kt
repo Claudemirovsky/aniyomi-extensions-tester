@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.animesource.model.VideoDto
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.HEAD
+import eu.kanade.tachiyomi.network.await
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -272,7 +273,7 @@ class ExtensionTests(
      * @param headers Video headers that may be needed to complete the request.
      * @return The result of the test: It loads or not?
      */
-    private fun testMediaResult(
+    private suspend fun testMediaResult(
         url: String?,
         isVideo: Boolean = false,
         headers: Headers? = null,
@@ -292,7 +293,7 @@ class ExtensionTests(
         // Or in the best-worst case just downloading a m3u8 playlist.
         val req = try {
             val request = if (supportsHEAD) HEAD(url, newHeaders) else GET(url, newHeaders)
-            source.client.newCall(request).execute().also { it.close() }
+            source.client.newCall(request).await()
         } catch (e: ProtocolException) {
             // Sometimes OkHttp just forgets that it supports HTTP 206 partial content.
             // So trying again will not hurt.
@@ -302,7 +303,7 @@ class ExtensionTests(
         // HTTP codes outside 2xx or 3xx are a bad signal...
         if (!req.isSuccessful) return false
 
-        val resType = req.header("content-type", "").orEmpty()
+        val resType = req.use { it.header("content-type", "").orEmpty() }
         if (resType == "undefined" || resType.isBlank()) {
             if (!supportsHEAD) {
                 return false
