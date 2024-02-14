@@ -1,3 +1,20 @@
+# [v2.6.1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.6.0...v2.6.1) - (2024-02-14)
+
+### Bug Fixes
+
+- (**test**) Change cookie testing url ([e465fec](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/e465fecf0e1c78d15b22fa9f7fb6ad0758a94ac2))
+- (**anitester**) Add forgotten class - Fixes crash with jellyfin ([d862f22](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/d862f22d450f52e83db935db094c990122c717b8))
+
+### Miscellaneous Tasks
+
+- Bump dependencies ([7845c03](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/7845c034eda91ec5c6a9ecd498f3790eee2a158a))
+- (**release**) Prepare for new release ([1080e5d](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/1080e5d8365fee92cc4f29e526ba207f0c13fbb7))
+
+### Refactor
+
+- Asynchronous testMediaResult function ([afe5ff1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/afe5ff11bf62a0e0b7a34484374f3d903b8a9a16))
+- (**anitester**) Move assets-extraction step to AnimeExtension class ([61d1035](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/61d10352b2604ebcead8f8a073828694348f92ae))
+
 # [v2.6.0](https://github.com/Claudemirovsky/aniyomi-extensions-tester/compare/v2.5.0...v2.6.0) - (2024-01-16)
 
 ### Bug Fixes
@@ -29,6 +46,10 @@
 - Bump CI JDK version anyway ([be38cb1](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/be38cb13c9e272c04a26a41cd17fc971a265a942))
 - Bump Java version ([c7853ca](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/c7853cade6ca1b2658869d62e82cc18140407ad8))
 - Bump dependencies ([06c7328](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/06c73284f55a9b2bcd511457f96e3cc7c8dddfe5))
+
+### Other
+
+- [skip ci] chore(changelog): Update changelog ([dd50622](https://github.com/Claudemirovsky/aniyomi-extensions-tester/commit/dd50622b25b795e31e883494192443eb7c4c2e70))
 
 ### Refactor
 
