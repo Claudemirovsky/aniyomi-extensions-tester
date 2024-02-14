@@ -48,19 +48,17 @@ sourceSets {
 }
 
 // should be bumped with each stable release
-val anitesterVersion = "v2.6.0"
+val anitesterVersion = "v2.6.1"
 
 // counts commit count on master
 val anitesterRevision = runCatching {
     System.getenv("ProductRevision") ?: Runtime
         .getRuntime()
-        .exec("git rev-list HEAD --count")
-        .let { process ->
-            process.waitFor()
-            val output = process.inputStream.use {
-                it.bufferedReader().use(BufferedReader::readText)
-            }
-            process.destroy()
+        .exec(arrayOf("git", "rev-list", "HEAD", "--count"))
+        .run {
+            waitFor()
+            val output = inputStream.bufferedReader().use(BufferedReader::readText)
+            destroy()
             "r" + output.trim()
         }
 }.getOrDefault("r0")
