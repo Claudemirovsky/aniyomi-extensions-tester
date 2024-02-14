@@ -126,4 +126,5 @@
 -dontwarn org.jspecify.annotations.**
 -dontwarn com.oracle.svm.core.annotate.**
 -dontwarn org.antlr.runtime.tree.DOTTreeGenerator
+-dontwarn com.googlecode.d2j.signapk.**
 
