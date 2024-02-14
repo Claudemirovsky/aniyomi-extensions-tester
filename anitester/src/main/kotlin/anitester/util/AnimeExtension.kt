@@ -20,6 +20,11 @@ import eu.kanade.tachiyomi.animesource.AnimeSourceFactory
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
+import java.net.URI
+import java.nio.file.FileSystem
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 object AnimeExtension {
     private val logger = KotlinLogging.logger {}
@@ -55,12 +60,37 @@ object AnimeExtension {
         logger.trace { "Main class for extension is $className" }
 
         dex2jar(apkFile, jarFile)
+        extractAssetsFromApk(apkFile, jarFile)
 
         // collect sources from the extension
-        return packageInfo.packageName to when (val instance = loadExtensionSources(jarFile.absolutePath, className)) {
+        return packageInfo.packageName to when (val instance = loadExtensionSources(jarFile, className)) {
             is AnimeSource -> listOf(instance).filterIsInstance<AnimeHttpSource>()
             is AnimeSourceFactory -> instance.createSources().filterIsInstance<AnimeHttpSource>()
             else -> throw RuntimeException("Unknown source class type! ${instance.javaClass}")
         }
+    }
+
+    private fun extractAssetsFromApk(apkFile: File, jarFile: File) {
+        initFileSystem(apkFile)?.use { apkfs ->
+            val assets = apkfs.getPath("assets")
+            if (Files.exists(assets)) {
+                initFileSystem(jarFile)?.use { zipfs ->
+                    val jarRoot = zipfs.getPath("/")
+                    Files.walk(assets).forEach { assetFile ->
+                        val dest = jarRoot.resolve(assetFile)
+                        try {
+                            Files.copy(assetFile, dest, StandardCopyOption.REPLACE_EXISTING)
+                        } catch (_: Exception) {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initFileSystem(file: File): FileSystem? {
+        val uri = URI("jar:${file.toURI()}!/")
+        return try {
+            FileSystems.newFileSystem(uri, emptyMap<String, String>())
+        } catch (_: Exception) { null }
     }
 }
