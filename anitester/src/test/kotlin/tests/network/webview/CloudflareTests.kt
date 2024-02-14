@@ -15,8 +15,8 @@ class CloudflareTests : AnitesterTest() {
     @Test fun `Is passing Cloudflare IUAM protection`() {
         network.cookieManager.store.remove(URI(URL))
         val request = GET(URL)
-        val response = network.cloudflareClient.newCall(request).execute()
-        val doc = response.use { it.asJsoup() }
+        val response = network.client.newCall(request).execute()
+        val doc = response.asJsoup()
         assertNotNull(doc.selectFirst(".hystericalbg"))
     }
 

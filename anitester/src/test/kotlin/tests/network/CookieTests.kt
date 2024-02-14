@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.PersistentCookieStore
 import okhttp3.Cookie
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import xyz.nulldev.androidcompat.androidimpl.StubbedCookieManager
 import java.io.File
@@ -53,7 +52,7 @@ class CookieTests : AnitesterTest() {
     }
 
     @Test fun `Test network CookieJar`() {
-        val httpUrl = "https://httpbun.org/cookies/set/anitester/isterrible".toHttpUrl()
+        val httpUrl = "https://postman-echo.com/cookies/set?anitester=sucks".toHttpUrl()
         network.client.newCall(GET(httpUrl)).execute()
         assert(network.client.cookieJar.loadForRequest(httpUrl).isNotEmpty())
     }

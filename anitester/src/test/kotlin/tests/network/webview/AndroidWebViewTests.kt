@@ -103,7 +103,7 @@ class AndroidWebViewTests : AnitesterTest() {
         val cookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies() {}
 
-        val cookieUrl = "https://httpbun.org/cookies/set/anitester/isterrible"
+        val cookieUrl = "https://postman-echo.com/cookies/set?anitester=sucks"
         handler.post {
             webView = WebView(context)
             webView?.webViewClient = object : WebViewClient() {
