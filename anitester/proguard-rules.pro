@@ -2,6 +2,7 @@
 -optimizations !library/gson
 -dontnote **
 -keepattributes Signature,LineNumberTable
+-ignorewarnings
 
 -keepclassmembers class * extends java.lang.Enum {
     <fields>;

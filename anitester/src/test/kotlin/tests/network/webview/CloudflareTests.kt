@@ -17,10 +17,10 @@ class CloudflareTests : AnitesterTest() {
         val request = GET(URL)
         val response = network.client.newCall(request).execute()
         val doc = response.asJsoup()
-        assertNotNull(doc.selectFirst(".hystericalbg"))
+        assertNotNull(doc.selectFirst("div.index-popular div.gallery"))
     }
 
     companion object {
-        private const val URL = "https://nowsecure.nl/#relax"
+        private const val URL = "https://nhentai.net/"
     }
 }

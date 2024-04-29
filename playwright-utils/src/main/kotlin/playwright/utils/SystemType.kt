@@ -1,7 +1,8 @@
 package playwright.utils
 
 enum class SystemType {
-    /* GNU */ LINUX,
+    /* GNU */
+    LINUX,
     MAC,
     WINDOWS,
     ;
@@ -11,7 +12,7 @@ enum class SystemType {
             val systemString = System.getProperty("os.name")
                 .substringBefore(" ")
                 .uppercase()
-            runCatching { valueOf(systemString) }.getOrDefault(LINUX)
+            try { valueOf(systemString) } catch (_: Throwable) { LINUX }
         }
     }
 }

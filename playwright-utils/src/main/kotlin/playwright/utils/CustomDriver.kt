@@ -70,7 +70,7 @@ class CustomDriver : Driver() {
 
     protected override fun initialize(installBrowsers: Boolean) {
         extractDriverToTempDir()
-        logMessage("extracted driver from jar to " + driverPath())
+        logMessage("extracted driver from jar to " + driverDir())
         if (installBrowsers) installBrowser(env)
     }
 
@@ -104,6 +104,7 @@ class CustomDriver : Driver() {
                 val toPath = driverTempDir.resolve(relative.toString())
                 try {
                     val file = toPath.toFile()
+                    file.deleteOnExit()
                     if (Files.isDirectory(fromPath)) {
                         Files.createDirectories(toPath)
                     } else {
@@ -112,19 +113,10 @@ class CustomDriver : Driver() {
                             file.setExecutable(true, true)
                         }
                     }
-                    file.deleteOnExit()
                 } catch (e: IOException) {
                     throw RuntimeException("Failed to extract driver from $uri, full uri: $originalUri", e)
                 }
             }
-        }
-
-        val winDriverURI = classloader.getResource("driver/win32_x64").toURI()
-        initFileSystem(maybeExtractNestedJar(winDriverURI))?.use {
-            val target = it.getPath("driver/win32_x64/playwright.cmd")
-            val output = driverTempDir.resolve("playwright.cmd")
-            output.toFile().deleteOnExit()
-            Files.copy(target, output)
         }
     }
 
@@ -170,7 +162,7 @@ class CustomDriver : Driver() {
             return
         }
 
-        val driver = driverPath()
+        val driver = driverDir()
         if (!Files.exists(driver)) {
             throw RuntimeException("Failed to find driver: $driver")
         }

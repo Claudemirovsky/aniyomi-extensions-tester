@@ -86,7 +86,7 @@ tasks {
                 "driver/*/node*",
                 "driver/linux*/",
                 "driver/mac-arm64/",
-                "driver/win32_x64/package/",
+                "driver/win32_x64/",
             )
         }
         manifest {
@@ -106,13 +106,13 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf(
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
-                "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-                "-opt-in=kotlin.io.path.ExperimentalPathApi",
+        compilerOptions {
+            optIn = listOf(
+                "kotlin.RequiresOptIn",
+                "kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "kotlinx.coroutines.InternalCoroutinesApi",
+                "kotlinx.serialization.ExperimentalSerializationApi",
+                "kotlin.io.path.ExperimentalPathApi",
             )
         }
     }

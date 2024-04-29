@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.buildconfig) apply false
@@ -57,8 +58,8 @@ configure(projects) {
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = javaVersion.toString()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
         }
     }
 

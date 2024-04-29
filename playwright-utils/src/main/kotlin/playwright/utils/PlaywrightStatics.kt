@@ -52,7 +52,7 @@ object PlaywrightStatics {
 
     val userAgent by lazy {
         val logger = KotlinLogging.logger {}
-        runCatching {
+        try {
             playwrightInstance.browser().launch(launchOptions.setHeadless(true)).use { browser ->
                 browser.newPage().use { page ->
                     val userAgent = (page.evaluate("() => {return navigator.userAgent}") as String)
@@ -62,7 +62,7 @@ object PlaywrightStatics {
                     userAgent
                 }
             }
-        }.getOrElse {
+        } catch (_: Throwable) {
             when {
                 useChromium -> CHROMIUM_UA
                 else -> FIREFOX_UA
@@ -71,7 +71,7 @@ object PlaywrightStatics {
     }
 }
 
-private const val CHROMIUM_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" +
-    "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+private const val CHROMIUM_UA = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36" +
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
-private const val FIREFOX_UA = "Mozilla/5.0 (Windows NT 10.0; rv:120.0) Gecko/20100101 Firefox/120.0"
+private const val FIREFOX_UA = "Mozilla/5.0 (Windows NT 10.0; rv:124.0) Gecko/20100101 Firefox/124.0"
